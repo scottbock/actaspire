@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="app.css">
+    
+    <!-- JS -->
+    <!-- load angular, nganimate, and ui-router -->
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="app.js"></script>
+    
+</head>
+<body ng-app="myApp">
+
+<!-- views will be injected here -->
+<div class="container">
+    <div ui-view></div>
+</div>
+
+<div class="row">
+    <div class="col-sm-8 col-sm-offset-2">
+    <div class="jumbotron text-muted text-center">
+        <p>a tutorial by <a href="http://scotch.io" target="_blank">scotch.io</a></p>
+        <p><a href="http://scotch.io/tutorials/javascript/angularjs-multi-step-form-using-ui-router">Create a Multi-Step Form Using Angular and UI-Router</a></p>
+    </div>
+    </div>
+</div>
+
+</body>
+</html>
