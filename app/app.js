@@ -14,30 +14,47 @@ angular.module('myApp', [
             templateUrl: 'form.html',
             controller: 'formController'
         })
+		
+		.state('form.customer', {
+			url: '/customer',
+			templateUrl: 'form-customer.html'
+		})		
         
-        // nested states 
-        // each of these sections will have their own view
-        // url will be nested (/form/profile)
-        .state('form.profile', {
-            url: '/profile',
-            templateUrl: 'form-profile.html'
-        })
-        
-        // url will be /form/interests
-        .state('form.interests', {
-            url: '/interests',
-            templateUrl: 'form-interests.html'
-        })
-        
-        // url will be /form/payment
-        .state('form.payment', {
-            url: '/payment',
-            templateUrl: 'form-payment.html'
-        });
+		.state('form.group', {
+			url: '/group',
+			templateUrl: 'form-group.html'
+		})
+
+		.state('form.comprehensive', {
+			url: '/comprehensive',
+			templateUrl: 'form-comprehensive.html'
+		})
+
+		.state('form.summative', {
+			url: '/summative',
+			templateUrl: 'form-summative.html'
+		})
+
+		.state('form.periodic', {
+			url: '/periodic',
+			templateUrl: 'form-periodic.html'
+		})
+
+		.state('form.implementation', {
+			url: '/implementation',
+			templateUrl: 'form-implementation.html'
+		})	
+		
+		.state('form.billing', {
+			url: '/billing',
+			templateUrl: 'form-billing.html'
+		})	
+		
+      
         
     // catch all route
     // send users to the form page 
-    $urlRouterProvider.otherwise('/form/profile');
+    $urlRouterProvider.otherwise('/form/customer');
 })
 
 // our controller for the form
