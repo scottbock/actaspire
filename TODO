@@ -1,0 +1,19 @@
+TODO
+
+Coupon codes as json 
+Coupon codes manage as plugin
+Grunt build for angular app
+grunt-angular-templates to load html templates as js
+order form as angular app
+order form generate emails
+order form create excel and attach
+
+
+
+1 Plugin to do
+coupon code table creation
+coupon code management
+coupon code json retrieval
+include angular app
+rest call to send emails and generate/attach excel
+
