@@ -1,11 +1,88 @@
 <div class="form-group">
-    <label for="name">Name</label>
-    <input type="text" class="form-control" name="name" ng-model="formData.name">
+	<label>Are you creating or joining a group?</label>
+  <label>
+    <input type="radio" ng-model="formData.group.createOrJoin" value="create">
+    Create
+  </label>
+  <label>
+    <input type="radio" ng-model="formData.group.createOrJoin" value="join">
+    Join
+  </label>
 </div>
 
-<div class="form-group">
-    <label for="email">Email</label>
-    <input type="text" class="form-control" name="email" ng-model="formData.email">
+<div class="panel panel-default" ng-show="formData.group.createOrJoin == 'create'">
+ 	<div class="panel-heading">Create Group</div>
+  <div class="panel-body">
+  	<div class="form-group">
+		  <label>
+		    <input type="radio" ng-model="formData.group.payOption" value="oneCheck">
+		    I'm paying for the entire group.
+		  </label>
+		  <label>
+		    <input type="radio" ng-model="formData.group.payOption" value="splitCheck">
+		    Each member will pay for their own portion.
+		  </label>
+		</div>
+		<div>
+			<h4>Schools</h4>
+			<div class="form-group" ng-repeat="school in formData.group.schools">
+			  <input type="text" ng-model="school.name" name="" placeholder="Enter a school name">
+			  <button ng-click="removeSchool(school)">x</button>
+			</div>
+		  <button ng-click="addNewSchool()">Add another school</button>
+		</div>
+  </div>
+</div>
+
+<div class="panel panel-default">
+ 	<div class="panel-heading">Group Information</div>
+  <div class="panel-body">
+
+		<div class="form-group">
+		    <label for="name">Your Organization Name (Customer):</label>
+		    <input type="text" class="form-control" name="name" ng-model="formData.group.name">
+		</div>
+
+		<div class="form-group">
+		    <label for="attention">Attention:</label>
+		    <input type="text" class="form-control" name="attention" ng-model="formData.group.attention">
+		</div>
+
+		<div class="form-group">
+		    <label for="address1">Address1:</label>
+		    <input type="text" class="form-control" name="address1" ng-model="formData.group.address1">
+		</div>
+
+		<div class="form-group">
+		    <label for="address2">Address2:</label>
+		    <input type="text" class="form-control" name="address2" ng-model="formData.group.address2">
+		</div>
+
+		<div class="form-group">
+		    <label for="city">City:</label>
+		    <input type="text" class="form-control" name="city" ng-model="formData.group.city">
+		</div>
+
+		<div class="form-group">
+		    <label for="state">State:</label>
+		    <input type="text" class="form-control" name="state" ng-model="formData.group.state">
+		</div>
+
+		<div class="form-group">
+		    <label for="zip">Zip:</label>
+		    <input type="text" class="form-control" name="zip" ng-model="formData.group.zip">
+		</div>
+
+		<div class="form-group">
+		    <label for="phone">Phone #:</label>
+		    <input type="text" class="form-control" name="phone" ng-model="formData.group.phone">
+		</div>
+
+		<div class="form-group">
+		    <label for="email">Email:</label>
+		    <input type="text" class="form-control" name="email" ng-model="formData.group.email">
+		</div>
+	</div>
 </div>
 
 <div class="form-group row">

@@ -60,14 +60,54 @@ angular.module('myApp', [
 // our controller for the form
 // =============================================================================
 .controller('formController', function($scope) {
-    
+ 
+ 	$scope.currentYear = new Date().getFullYear();
+
     // we will store all of our form data in this object
     $scope.formData = {};
+    $scope.formData.group = {};
+    $scope.formData.group.createOrJoin == 'create';
+    $scope.formData.group.schools=[{'id':1}];
+    $scope.formData.comprehensive = {};
+    $scope.formData.comprehensive.schoolYears = [{'year':$scope.currentYear}];
+
     
     // function to process the form
     $scope.processForm = function() {
-        alert('awesome!');
+
     };
+
+    $scope.addNewSchool = function() {
+    	var schools = $scope.formData.group.schools;
+  		var newItemNo = schools[schools.length - 1].id + 1;
+  		$scope.formData.group.schools.push({'id':newItemNo});
+	};
+
+	$scope.removeSchool = function(school){
+		var schools = $scope.formData.group.schools;
+		if(schools.length > 1){
+			var index = schools.indexOf(school);
+			if (index > -1) {
+			    schools.splice(index, 1);
+			}
+		}
+	}
+
+	$scope.addYear = function(years){
+		var nextYear = years[years.length - 1].year + 1;
+		years.push({'year':nextYear});
+	}
+
+	$scope.removeYear = function(years){
+		if(years.length > 1){
+			years.splice(years.length -1, 1);
+		}
+	}
+
+	$scope.totalStudents = function(schoolYear){
+		var total = 0;
+		angular.forEach(schoolYear.grades, function(filterObj , filterKey) { total += filterObj.cbt + filterObj.pbt });
+	}
     
 });
 
