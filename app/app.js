@@ -65,6 +65,11 @@ angular.module('myApp', [
 
     // we will store all of our form data in this object
     $scope.formData = {};
+	$scope.formData.customer = {};
+	$scope.formData.customer.groupOrder = true;
+	$scope.formData.customer.comprehensiveOrder = true;
+	$scope.formData.customer.summativeOrder = true;
+	$scope.formData.customer.periodicOrder = true;
     $scope.formData.group = {};
     $scope.formData.group.createOrJoin == 'create';
     $scope.formData.group.schools=[{'id':1}];
@@ -91,23 +96,38 @@ angular.module('myApp', [
 			    schools.splice(index, 1);
 			}
 		}
-	}
+	};
 
 	$scope.addYear = function(years){
 		var nextYear = years[years.length - 1].year + 1;
 		years.push({'year':nextYear});
-	}
+	};
 
 	$scope.removeYear = function(years){
 		if(years.length > 1){
 			years.splice(years.length -1, 1);
 		}
-	}
+	};
+	
+	$scope.totalStudents =  function(newValue, oldValue) {
+		var years = newValue;
+		angular.forEach(years, function(year, key) {
+			var total = 0;
+			angular.forEach(year.grade, function(grade, key) {
+				if(!isNaN(grade.cbt)){
+					total += parseInt(grade.cbt);
+				}
+				if(!isNaN(grade.pbt)){
+					total += parseInt(grade.pbt);
+				}
+			});
+			year.totalStudents = total;
+		});
+	};
+	$scope.$watch('formData.comprehensive.schoolYears', $scope.totalStudents, true);
 
-	$scope.totalStudents = function(schoolYear){
-		var total = 0;
-		angular.forEach(schoolYear.grades, function(filterObj , filterKey) { total += filterObj.cbt + filterObj.pbt });
-	}
+
+
     
 });
 

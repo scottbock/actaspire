@@ -14,23 +14,23 @@
  	<div class="panel-heading">Create Group</div>
   <div class="panel-body">
   	<div class="form-group">
-		  <label>
-		    <input type="radio" ng-model="formData.group.payOption" value="oneCheck">
-		    I'm paying for the entire group.
-		  </label>
-		  <label>
-		    <input type="radio" ng-model="formData.group.payOption" value="splitCheck">
-		    Each member will pay for their own portion.
-		  </label>
+	  <label>
+		<input type="radio" ng-model="formData.group.payOption" value="oneCheck">
+		I'm paying for the entire group.
+	  </label>
+	  <label>
+		<input type="radio" ng-model="formData.group.payOption" value="splitCheck">
+		Each member will pay for their own portion.
+	  </label>
+	</div>
+	<div>
+		<h4>Schools</h4>
+		<div class="form-group" ng-repeat="school in formData.group.schools">
+		  <input type="text" ng-model="school.name" name="" placeholder="Enter a school name">
+		  <button ng-click="removeSchool(school)">x</button>
 		</div>
-		<div>
-			<h4>Schools</h4>
-			<div class="form-group" ng-repeat="school in formData.group.schools">
-			  <input type="text" ng-model="school.name" name="" placeholder="Enter a school name">
-			  <button ng-click="removeSchool(school)">x</button>
-			</div>
-		  <button ng-click="addNewSchool()">Add another school</button>
-		</div>
+	  <button ng-click="addNewSchool()">Add another school</button>
+	</div>
   </div>
 </div>
 
