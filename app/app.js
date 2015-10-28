@@ -60,75 +60,150 @@ angular.module('myApp', [
 // our controller for the form
 // =============================================================================
 .controller('formController', function($scope) {
- 
- 	$scope.currentYear = new Date().getFullYear();
 
-    // we will store all of our form data in this object
-    $scope.formData = {};
-	$scope.formData.customer = {};
-	$scope.formData.customer.groupOrder = true;
-	$scope.formData.customer.comprehensiveOrder = true;
-	$scope.formData.customer.summativeOrder = true;
-	$scope.formData.customer.periodicOrder = true;
-    $scope.formData.group = {};
-    $scope.formData.group.createOrJoin == 'create';
-    $scope.formData.group.schools=[{'id':1}];
-    $scope.formData.comprehensive = {};
-    $scope.formData.comprehensive.schoolYears = [{'year':$scope.currentYear}];
-
-    
-    // function to process the form
-    $scope.processForm = function() {
-
-    };
-
-    $scope.addNewSchool = function() {
-    	var schools = $scope.formData.group.schools;
-  		var newItemNo = schools[schools.length - 1].id + 1;
-  		$scope.formData.group.schools.push({'id':newItemNo});
+	$scope.currentYear = new Date().getFullYear();
+	$scope.administrationWindows = ['Fall', 'Spring'];		
+	$scope.calendarYears = [$scope.currentYear, $scope.currentYear + 1, $scope.currentYear + 2, $scope.currentYear + 3, $scope.currentYear + 4];
+	$scope.summative = {
+		'administrationWindow' : $scope.administrationWindows[0],
+		'calendarYear' : $scope.calendarYears[0]
 	};
 
-	$scope.removeSchool = function(school){
-		var schools = $scope.formData.group.schools;
-		if(schools.length > 1){
-			var index = schools.indexOf(school);
-			if (index > -1) {
-			    schools.splice(index, 1);
-			}
-		}
-	};
-
-	$scope.addYear = function(years){
-		var nextYear = years[years.length - 1].year + 1;
-		years.push({'year':nextYear});
-	};
-
-	$scope.removeYear = function(years){
-		if(years.length > 1){
-			years.splice(years.length -1, 1);
+	// we will store all of our form data in this object
+	$scope.formData = {
+		customer: {},
+		summative: {
+			orders: []
+		},
+		periodic: {
+			orders: []
+		},
+		summary:{
+			grade:{},
+			summativeOnlineTotal:0,
+			summativePaperTotal:0,
+			periodicTotal:0,
+			summativeOnlinePrice:0,
+			summativePaperPrice:0,
+			periodicPrice:0
 		}
 	};
 	
-	$scope.totalStudents =  function(newValue, oldValue) {
-		var years = newValue;
-		angular.forEach(years, function(year, key) {
-			var total = 0;
-			angular.forEach(year.grade, function(grade, key) {
-				if(!isNaN(grade.cbt)){
-					total += parseInt(grade.cbt);
+	$scope.updateTotals = function(){
+		var summativeOnlineTotal = 0;
+		var summativePaperTotal = 0;
+		var periodicTotal = 0;
+		var gradeTotals = {
+			'3':{'summativeOnline':0, 'summativePaper':0, 'periodic':0},
+			'4':{'summativeOnline':0, 'summativePaper':0, 'periodic':0},
+			'5':{'summativeOnline':0, 'summativePaper':0, 'periodic':0},
+			'6':{'summativeOnline':0, 'summativePaper':0, 'periodic':0},
+			'7':{'summativeOnline':0, 'summativePaper':0, 'periodic':0},
+			'8':{'summativeOnline':0, 'summativePaper':0, 'periodic':0},
+			'9':{'summativeOnline':0, 'summativePaper':0, 'periodic':0},
+			'10':{'summativeOnline':0, 'summativePaper':0, 'periodic':0}
+		};
+		
+		angular.forEach($scope.formData.summative.orders, function(order, key) {
+			summativeOnlineTotal += order.onlineTotal;
+			summativePaperTotal += order.paperTotal;		
+			angular.forEach(order.grade, function(grade, key) {
+				if(!isNaN(grade.online)){
+					gradeTotals[key].summativeOnline += parseInt(grade.online);
 				}
-				if(!isNaN(grade.pbt)){
-					total += parseInt(grade.pbt);
+				if(!isNaN(grade.paper)){
+					gradeTotals[key].summativePaper += parseInt(grade.paper);
 				}
 			});
-			year.totalStudents = total;
 		});
+		
+		angular.forEach($scope.formData.periodic.orders, function(order, key) {
+			periodicTotal += order.onlineTotal;
+			angular.forEach(order.grade, function(grade, key) {
+				if(!isNaN(grade.online)){
+					gradeTotals[key].periodic += parseInt(grade.online);
+				}
+			});
+		});
+		
+		$scope.formData.summary.summativeOnlineTotal = summativeOnlineTotal;
+		$scope.formData.summary.summativePaperTotal = summativePaperTotal;
+		$scope.formData.summary.periodicTotal = periodicTotal;
+		
+		$scope.formData.summary.grade = gradeTotals;
+		
+		//TODO Retrieve based on amounts and subjects
+		$scope.formData.summary.summativeOnlinePrice = 28.50;
+		$scope.formData.summary.summativePaperPrice = 30.50;
+		$scope.formData.summary.periodicPrice = 32.00;
 	};
-	$scope.$watch('formData.comprehensive.schoolYears', $scope.totalStudents, true);
+	
+	$scope.addOrder = function(orders, administrationWindow, calendarYear){
+		var alreadyInList = false;
+		angular.forEach(orders, function(order, key) {
+			alreadyInList = alreadyInList || (order.administrationWindow == administrationWindow && order.calendarYear == calendarYear);
+		});
+		if(!alreadyInList){
+			var order = {};
+			
+			if(orders.length > 0){ //copy in the last order
+				var lastOrder = orders[orders.length - 1];
+				angular.copy(lastOrder, order);
+			}			
+			
+			//set window and year
+			order.administrationWindow = administrationWindow;
+			order.calendarYear = calendarYear;
+			
+			orders.push(order);		
+			
+			$scope.summative.error = null;
+		}
+		else{
+			$scope.summative.error = administrationWindow + ' ' + calendarYear + ' already exists';
+		}		
+	};
+	
+	$scope.removeOrder = function(orders, order){
+		var index = orders.indexOf(order);
+		if (index > -1) {
+				orders.splice(index, 1);
+		}			
+	};		
+		
+	$scope.$watch('formData.summative.orders', function(newValue, oldValue){
+		var orders = newValue;
+		angular.forEach(orders, function(order, key) {
+			var onlineTotal = 0;
+			var paperTotal = 0;
+			angular.forEach(order.grade, function(grade, key) {
+				if(!isNaN(grade.online)){
+					onlineTotal += parseInt(grade.online);
+				}
+				if(!isNaN(grade.paper)){
+					paperTotal += parseInt(grade.paper);
+				}
+			});
+			order.onlineTotal = onlineTotal;
+			order.paperTotal = paperTotal;			
+		});
+		$scope.updateTotals();
+	}, true);
+	
+	$scope.addDiscountCode = function(){
+		//call service to validate and retrieve info for discount code
 
-
-
+		//if invalid set error message
+		//if valid apply discount
+		$scope.formData.discount = {'code':$scope.discountCode, 'percentage':10, 'amount':25};
+		
+		$scope.discountCode = null;		
+	}
     
+	// function to process the form
+	$scope.processForm = function() {
+
+	};    
 });
 
 

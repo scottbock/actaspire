@@ -115,3 +115,206 @@
     </div>
 </div>
 
+<h2>Summative Order Data</h2>
+<p>Blah Blah Blah summative order stuff</p>
+	
+<div class="panel panel-default" ng-repeat="order in formData.summative.orders">
+	<div class="panel-heading">
+		{{order.administrationWindow}} {{order.calendarYear}} Summative Order
+		<button type="button" class="pull-right btn btn-default btn-xs" aria-label="Remove" ng-click="removeOrder(formData.summative.orders, order)">
+			<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+		</button>
+	</div>
+	<div class="panel-body">
+		Student Estimate
+	</div>
+	<table class="table table-striped">
+		<thead>
+			<th></th>
+			<th>Online Test</th>
+			<th>Paper Test</th>
+			<th>Total Student Estimate</th>
+		</thead>
+		<tr ng-repeat="grade in [3,4,5,6,7,8,9,10]">
+			<td>Grade {{grade}}</td>
+			<td><input type="number" ng-model="order.grade[grade].online" name=""></td>
+			<td><input type="number" ng-model="order.grade[grade].paper" name=""></td>
+			<td>{{order.grade[grade].online + order.grade[grade].paper}}</td>
+		</tr>
+		<tr>
+			<td>Total</td>
+			<td>{{order.onlineTotal}}</td>
+			<td>{{order.paperTotal}}</td>
+			<td>{{order.paperTotal + order.onlineTotal}}</td>
+		</tr>
+	</table>
+</div>
+
+<div class="row">
+	<div class="form-group col-sm-5">
+		<label for="administrationWindow" class="control-label">Test Administration Window</label>
+		<select class="form-control" name="administrationWindow" ng-model="summative.administrationWindow" ng-options="item for item in administrationWindows"></select>
+	</div>
+	<div class="form-group col-sm-5">
+		<label for="calendarYear" class="control-label">Calendar Year</label>
+		<select class="form-control" name="calendarYear" ng-model="summative.calendarYear" ng-options="item for item in calendarYears"></select>
+	</div>
+	<div class="form-group col-sm-2">
+		<button ng-click="addOrder(formData.summative.orders, summative.administrationWindow, summative.calendarYear, summative.error)">Add Order</button>
+	</div>
+</div>
+<div class="row">
+	<div class="alert alert-danger" role="alert" ng-show="summative.error">
+		<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+		<span class="sr-only">Error:</span>
+		{{summative.error}}
+	</div>
+</div> 	
+
+<h2>Periodic Order Data</h2>
+<p>Blah Blah Blah periodic order stuff</p>
+	
+<div class="panel panel-default" ng-repeat="order in formData.periodic.orders">
+	<div class="panel-heading">
+		{{order.calendarYear + ' - ' + (order.calendarYear + 1)}} Periodic Order
+		<button type="button" class="pull-right btn btn-default btn-xs" aria-label="Remove" ng-click="removeOrder(formData.periodic.orders, order)">
+			<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+		</button>
+	</div>
+	<div class="panel-body">
+		Student Estimate
+	</div>
+	<table class="table table-striped">
+		<thead>
+			<th></th>
+			<th>Online Test</th>
+		</thead>
+		<tr ng-repeat="grade in [3,4,5,6,7,8,9,10]">
+			<td>Grade {{grade}}</td>
+			<td><input type="number" ng-model="order.grade[grade].online" name=""></td>
+		</tr>
+		<tr>
+			<td>Total</td>
+			<td>{{order.onlineTotal}}</td>
+		</tr>
+	</table>
+</div>
+
+<div class="row">
+	<div class="form-group col-sm-5">
+		<label for="administrationWindow" class="control-label">Test Administration Window</label>
+		<select class="form-control" name="administrationWindow" ng-model="summative.administrationWindow" ng-options="item for item in administrationWindows"></select>
+	</div>
+	<div class="form-group col-sm-5">
+		<label for="calendarYear" class="control-label">Calendar Year</label>
+		<select class="form-control" name="calendarYear" ng-model="summative.calendarYear" ng-options="item for item in calendarYears"></select>
+	</div>
+	<div class="form-group col-sm-2">
+		<button ng-click="addOrder(formData.summative.orders, summative.administrationWindow, summative.calendarYear, summative.error)">Add Order</button>
+	</div>
+</div>
+<div class="row">
+	<div class="alert alert-danger" role="alert" ng-show="summative.error">
+		<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+		<span class="sr-only">Error:</span>
+		{{summative.error}}
+	</div>
+</div> 	
+
+<h2>Order Summary</h2>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		Order Summary
+	</div>
+	<div class="panel-body">
+		<div class="row">
+			<div class="form-group col-sm-4">
+					<label for="discountCode" class="control-label">Discount Code</label>
+					<input type="text" class="form-control" name="discountCode" ng-model="discountCode">
+			</div>
+			<div class="col-sm-2">
+				<button ng-click="addDiscountCode()">Add</button>
+			</div>
+		</div>
+	</div>
+	<table class="table table-striped">
+		<thead>
+			<th></th>
+			<th>Summative Online</th>
+			<th>Summative Paper</th>
+			<th>Periodic</th>
+		</thead>
+		<tr ng-repeat="grade in [3,4,5,6,7,8,9,10]">
+			<td>Grade {{grade}}</td>
+			<td>{{formData.summary.grade[grade].summativeOnline}}</td>
+			<td>{{formData.summary.grade[grade].summativePaper}}</td>
+			<td>{{formData.summary.grade[grade].periodic}}</td>
+		</tr>
+		<tr>
+			<td>Total</td>
+			<td>{{formData.summary.summativeOnlineTotal}}</td>
+			<td>{{formData.summary.summativePaperTotal}}</td>
+			<td>{{formData.summary.periodicTotal}}</td>
+		</tr>
+		<tr><td colspan="4"></td></tr>
+		<tr>
+			<td>Price</td>
+			<td>{{formData.summary.summativeOnlinePrice}}</td>
+			<td>{{formData.summary.summativePaperPrice}}</td>
+			<td>{{formData.summary.periodicPrice}}</td>
+		</tr>		
+		<tr><td colspan="4"></td></tr>
+		<tr>
+			<td>Extended Price</td>
+			<td>{{formData.summary.summativeOnlineTotal * formData.summary.summativeOnlinePrice}}</td>
+			<td>{{formData.summary.summativePaperTotal * formData.summary.summativePaperPrice}}</td>
+			<td>{{formData.summary.periodicTotal * formData.summary.periodicPrice}}</td>
+		</tr>
+		<tr><td colspan="4"></td></tr>		
+		<tr><td>Discounts</td><td colspan="3"></td></tr>
+		<tr>
+			<td>Volume Discount (per student)</td>
+			<td>{{}}</td>
+			<td>{{}}</td>
+			<td></td>
+		</tr>			
+		<tr>
+			<td>Multi-grade Discount (per student)</td>
+			<td>{{}}</td>
+			<td>{{}}</td>
+			<td></td>
+		</tr>			
+		<tr>
+			<td>Periodic Discount (per student)</td>
+			<td>{{}}</td>
+			<td>{{}}</td>
+			<td></td>
+		</tr>			
+		<tr>
+			<td>Special Discount (per student)</td>
+			<td>{{}}</td>
+			<td>{{}}</td>
+			<td>{{}}</td>
+		</tr>
+		<tr>
+			<td>Total (per student)</td>
+			<td>{{}}</td>
+			<td>{{}}</td>
+			<td>{{}}</td>
+		</tr>		
+		<tr>
+			<td>Total Discount Applied</td>
+			<td>{{}}</td>
+			<td>{{}}</td>
+			<td>{{}}</td>
+		</tr>
+		<tr><td colspan="4"></td></tr>
+		<tr>
+			<td>Total Order Balance</td>
+			<td>{{}}</td>
+			<td>{{}}</td>
+			<td>{{}}</td>
+		</tr>		
+	</table>
+</div>
+
