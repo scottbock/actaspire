@@ -1,87 +1,117 @@
-<div class="form-group">
-    <label for="groupOrder">Group order:</label>
-    <input type="checkbox" class="form-control" name="groupOrder" ng-model="formData.customer.groupOrder">
+<div class="row">
+    <div class="form-group col-sm-3">
+        <label for="firstName" class="control-label">First Name</label>
+        <input type="text" class="form-control" name="firstName" ng-model="formData.customer.firstName">
+    </div>
+
+    <div class="form-group col-sm-3">
+        <label for="lastName" class="control-label">Last Name</label>
+        <input type="text" class="form-control" name="lastName" ng-model="formData.customer.lastName">
+    </div>
+
+    <div class="form-group col-sm-6">
+        <label for="organization" class="control-label">School / District / Organization</label>
+        <input type="text" class="form-control" name="organization" ng-model="formData.customer.organization">
+    </div>
 </div>
 
-<div class="form-group">
-    <label for="comprehensiveOrder">Comprehensive order:</label>
-    <input type="checkbox" class="form-control" name="comprehensiveOrder" ng-model="formData.customer.comprehensiveOrder">
+<div class="row">
+    <div class="form-group col-sm-6">
+        <label for="jobTitle" class="control-label">Job Title</label>
+        <input type="text" class="form-control" name="jobTitle" ng-model="formData.customer.jobTitle">
+    </div>
+
+    <div class="form-group col-sm-4">
+        <label for="email" class="control-label">Email</label>
+        <input type="email" class="form-control" name="lastName" ng-model="formData.customer.email">
+    </div>
 </div>
 
-<div class="form-group">
-    <label for="summativieOrder">Summative order:</label>
-    <input type="checkbox" class="form-control" name="summativieOrder" ng-model="formData.customer.summativeOrder">
+<div class="panel panel-default">
+    <div class="panel-heading">Contact Information</div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="form-group col-sm-4">
+                <label for="billingName" class="control-label">Billing Contact Name</label>
+                <input type="text" class="form-control" name="billingName" ng-model="formData.billingContact.name">
+            </div>
+
+            <div class="form-group col-sm-4">
+                <label for="billingEmail" class="control-label">Billing Contact Email</label>
+                <input type="email" class="form-control" name="billingEmail" ng-model="formData.billingContact.email">
+            </div>
+
+            <div class="form-group col-sm-4">
+                <label for="billingPhone" class="control-label">Billing Contact Phone</label>
+                <input type="phone" class="form-control" name="billingPhone" ng-model="formData.billingContact.phone">
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-sm-4">
+                <label for="implementationName" class="control-label">Implementation Contact Name</label>
+                <input type="text" class="form-control" name="implementationName" ng-model="formData.implementationContact.name">
+            </div>
+
+            <div class="form-group col-sm-4">
+                <label for="implementationEmail" class="control-label">Implementation Contact Email</label>
+                <input type="email" class="form-control" name="implementationEmail" ng-model="formData.implementationContact.email">
+            </div>
+
+            <div class="form-group col-sm-4">
+                <label for="implementationPhone" class="control-label">Implementation Contact Phone</label>
+                <input type="phone" class="form-control" name="implementationPhone" ng-model="formData.implementationContact.phone">
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-sm-4">
+                <label for="backupName" class="control-label">Backup Contact Name</label>
+                <input type="text" class="form-control" name="backupName" ng-model="formData.backupContact.name">
+            </div>
+
+            <div class="form-group col-sm-4">
+                <label for="backupEmail" class="control-label">Backup Contact Email</label>
+                <input type="email" class="form-control" name="backupEmail" ng-model="formData.backupContact.email">
+            </div>
+
+            <div class="form-group col-sm-4">
+                <label for="backupPhone" class="control-label">Backup Contact Phone</label>
+                <input type="phone" class="form-control" name="backupPhone" ng-model="formData.backupContact.phone">
+            </div>
+        </div>        
+    </div>
 </div>
 
-<div class="form-group">
-    <label for="periodicOrder">Periodic order:</label>
-    <input type="checkbox" class="form-control" name="periodicOrder" ng-model="formData.customer.periodicOrder">
+<div class="panel panel-default">
+    <div class="panel-heading">Billing Information</div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="form-group col-sm-12">
+                <label for="billingAddress" class="control-label">Billing Address Line 1</label>
+                <input type="text" class="form-control" name="billingAddress" ng-model="formData.billing.address.line1">
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-sm-12">
+                <label for="billingAddress" class="control-label">Billing Address Line 2</label>
+                <input type="text" class="form-control" name="billingAddress" ng-model="formData.billing.address.line2">
+            </div>
+        </div>        
+        <div class="row">
+            <div class="form-group col-sm-4">
+                <label for="city" class="control-label">City</label>
+                <input type="text" class="form-control" name="city" ng-model="formData.billing.address.city">
+            </div>
+
+            <div class="form-group col-sm-4">
+                <label for="state" class="control-label">State</label>
+                <input type="text" class="form-control" name="state" ng-model="formData.billing.address.state">
+            </div>
+
+            <div class="form-group col-sm-4">
+                <label for="zip" class="control-label">Zip</label>
+                <input type="text" class="form-control" name="zip" ng-model="formData.billing.address.zip">
+            </div>
+        </div>      
+    </div>
 </div>
 
-<div class="form-group">
-    <label for="name">Your Organization Name (Customer):</label>
-    <input type="text" class="form-control" name="name" ng-model="formData.customer.name">
-</div>
-
-<div class="form-group">
-    <label for="attention">Attention:</label>
-    <input type="text" class="form-control" name="attention" ng-model="formData.customer.attention">
-</div>
-
-<div class="form-group">
-    <label for="address1">Address1:</label>
-    <input type="text" class="form-control" name="address1" ng-model="formData.customer.address1">
-</div>
-
-<div class="form-group">
-    <label for="address2">Address2:</label>
-    <input type="text" class="form-control" name="address2" ng-model="formData.customer.address2">
-</div>
-
-<div class="form-group">
-    <label for="city">City:</label>
-    <input type="text" class="form-control" name="city" ng-model="formData.customer.city">
-</div>
-
-<div class="form-group">
-    <label for="state">State:</label>
-    <input type="text" class="form-control" name="state" ng-model="formData.customer.state">
-</div>
-
-<div class="form-group">
-    <label for="zip">Zip:</label>
-    <input type="text" class="form-control" name="zip" ng-model="formData.customer.zip">
-</div>
-
-<div class="form-group">
-    <label for="phone">Phone #:</label>
-    <input type="text" class="form-control" name="phone" ng-model="formData.customer.phone">
-</div>
-
-<div class="form-group">
-    <label for="email">Email:</label>
-    <input type="text" class="form-control" name="email" ng-model="formData.customer.email">
-</div>
-
-<div class="form-group">
-    <label for="backup">Backup Contact:</label>
-    <input type="text" class="form-control" name="backup" ng-model="formData.customer.backup">
-</div>
-
-<div class="form-group">
-    <label for="backupEmail">Backup Contact Email:</label>
-    <input type="text" class="form-control" name="backupEmail" ng-model="formData.customer.backupEmail">
-</div>
-
-<div class="form-group">
-    <label for="backupPhone">Backup Contact Phone #:</label>
-    <input type="text" class="form-control" name="backupPhone" ng-model="formData.customer.backupPhone">
-</div>
-
-<div class="form-group row">
-<div class="col-xs-6 col-xs-offset-3">
-    <a ui-sref="form.group" class="btn btn-block btn-info">
-    Next Section <span class="glyphicon glyphicon-circle-arrow-right"></span>
-    </a>
-</div>
-</div>
