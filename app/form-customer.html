@@ -276,40 +276,40 @@
 		</tr>			
 		<tr>
 			<td>Multi-grade Discount (per student)</td>
-			<td>{{}}</td>
-			<td>{{}}</td>
+			<td>{{formData.summary.discount.multiGrade.summativeOnline}}</td>
+			<td>{{formData.summary.discount.multiGrade.summativePaper}}</td>
 			<td></td>
 		</tr>			
 		<tr>
 			<td>Periodic Discount (per student)</td>
-			<td>{{}}</td>
-			<td>{{}}</td>
+			<td>{{formData.summary.discount.periodic.summativeOnline}}</td>
+			<td>{{formData.summary.discount.periodic.summativePaper}}</td>
 			<td></td>
 		</tr>			
 		<tr>
 			<td>Special Discount (per student)</td>
-			<td>{{}}</td>
-			<td>{{}}</td>
-			<td>{{}}</td>
+			<td>{{formData.summary.discount.special.summativeOnline}}</td>
+			<td>{{formData.summary.discount.special.summativePaper}}</td>
+			<td>{{formData.summary.discount.special.summativeOnline}}</td>
 		</tr>
 		<tr>
 			<td>Total (per student)</td>
-			<td>{{}}</td>
-			<td>{{}}</td>
-			<td>{{}}</td>
+			<td>{{formData.summary.discount.volume.summativeOnline + formData.summary.discount.multiGrade.summativeOnline + formData.summary.discount.periodic.summativeOnline + formData.summary.discount.special.summativeOnline}}</td>
+			<td>{{formData.summary.discount.volume.summativePaper + formData.summary.discount.multiGrade.summativePaper + formData.summary.discount.periodic.summativePaper + formData.summary.discount.special.summativePaper}}</td>
+			<td>{{formData.summary.discount.special.summativeOnline}}</td>
 		</tr>		
 		<tr>
 			<td>Total Discount Applied</td>
-			<td>{{}}</td>
-			<td>{{}}</td>
-			<td>{{}}</td>
+			<td>{{(formData.summary.discount.volume.summativeOnline + formData.summary.discount.multiGrade.summativeOnline + formData.summary.discount.periodic.summativeOnline + formData.summary.discount.special.summativeOnline) * formData.summary.summativeOnlineTotal}}</td>
+			<td>{{(formData.summary.discount.volume.summativePaper + formData.summary.discount.multiGrade.summativePaper + formData.summary.discount.periodic.summativePaper + formData.summary.discount.special.summativePaper) * formData.summary.summativePaperTotal}}</td>
+			<td>{{formData.summary.discount.special.summativeOnline * formData.summary.periodicTotal}}</td>
 		</tr>
 		<tr><td colspan="4"></td></tr>
 		<tr>
 			<td>Total Order Balance</td>
-			<td>{{}}</td>
-			<td>{{}}</td>
-			<td>{{}}</td>
+			<td>{{(formData.summary.summativeOnlinePrice - (formData.summary.discount.volume.summativeOnline + formData.summary.discount.multiGrade.summativeOnline + formData.summary.discount.periodic.summativeOnline + formData.summary.discount.special.summativeOnline)) * formData.summary.summativeOnlineTotal}}</td>
+			<td>{{(formData.summary.summativePaperPrice - (formData.summary.discount.volume.summativePaper + formData.summary.discount.multiGrade.summativePaper + formData.summary.discount.periodic.summativePaper + formData.summary.discount.special.summativePaper)) * formData.summary.summativePaperTotal}}</td>
+			<td>{{(formData.summary.periodicPrice - formData.summary.discount.special.summativeOnline) * formData.summary.periodicTotal}}</td>
 		</tr>		
 	</table>
 </div>
