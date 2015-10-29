@@ -59,7 +59,7 @@ angular.module('myApp', [
 
 // our controller for the form
 // =============================================================================
-.controller('formController', function($scope) {
+.controller('formController', ['$scope', 'DiscountService', function($scope, discountService) {
 
 	$scope.currentYear = new Date().getFullYear();
 	$scope.administrationWindows = ['Fall', 'Spring'];		
@@ -67,6 +67,9 @@ angular.module('myApp', [
 	$scope.summative = {
 		'administrationWindow' : $scope.administrationWindows[0],
 		'calendarYear' : $scope.calendarYears[0]
+	};
+	$scope.periodic = {		
+		'schoolYear' : $scope.calendarYears[0]
 	};
 
 	// we will store all of our form data in this object
@@ -136,9 +139,17 @@ angular.module('myApp', [
 		$scope.formData.summary.summativeOnlinePrice = 28.50;
 		$scope.formData.summary.summativePaperPrice = 30.50;
 		$scope.formData.summary.periodicPrice = 32.00;
+
+		var discount = {
+			volume: {
+				summativePaper: discountService.getVolumeDiscount(summativePaperTotal),
+				summativeOnline: discountService.getVolumeDiscount(summativeOnlineTotal)
+			}
+		};
+		$scope.formData.summary.discount = discount;
 	};
 	
-	$scope.addOrder = function(orders, administrationWindow, calendarYear){
+	$scope.addOrder = function(orders, calendarYear, administrationWindow){
 		var alreadyInList = false;
 		angular.forEach(orders, function(order, key) {
 			alreadyInList = alreadyInList || (order.administrationWindow == administrationWindow && order.calendarYear == calendarYear);
@@ -158,9 +169,15 @@ angular.module('myApp', [
 			orders.push(order);		
 			
 			$scope.summative.error = null;
+			$scope.periodic.error = null;
 		}
 		else{
-			$scope.summative.error = administrationWindow + ' ' + calendarYear + ' already exists';
+			if(administrationWindow){
+				$scope.summative.error = administrationWindow + ' ' + calendarYear + ' already exists';
+			}
+			else{
+				$scope.periodic.error = calendarYear + ' already exists';
+			}
 		}		
 	};
 	
@@ -169,7 +186,22 @@ angular.module('myApp', [
 		if (index > -1) {
 				orders.splice(index, 1);
 		}			
-	};		
+	};	
+
+	$scope.$watch('formData.periodic.orders', function(newValue, oldValue){
+		var orders = newValue;
+		angular.forEach(orders, function(order, key) {
+			var onlineTotal = 0;
+			var paperTotal = 0;
+			angular.forEach(order.grade, function(grade, key) {
+				if(!isNaN(grade.online)){
+					onlineTotal += parseInt(grade.online);
+				}
+			});
+			order.onlineTotal = onlineTotal;		
+		});
+		$scope.updateTotals();
+	}, true);	
 		
 	$scope.$watch('formData.summative.orders', function(newValue, oldValue){
 		var orders = newValue;
@@ -204,6 +236,24 @@ angular.module('myApp', [
 	$scope.processForm = function() {
 
 	};    
+}])
+
+.service('DiscountService', function() {
+    this.getVolumeDiscount = function(number, type) {
+    	return 3.5;       
+    };
+ 
+    this.getMultiGradeDiscount = function(number, type) {
+    	return 1.5;
+    };
+
+    this.getPeriodicDiscount = function(summative, periodic){
+    	return 2.5;
+    };
+
+    this.getSpecialDiscount = function(couponCode){
+    	return 1.75;
+    };
 });
 
 

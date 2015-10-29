@@ -160,7 +160,7 @@
 		<select class="form-control" name="calendarYear" ng-model="summative.calendarYear" ng-options="item for item in calendarYears"></select>
 	</div>
 	<div class="form-group col-sm-2">
-		<button ng-click="addOrder(formData.summative.orders, summative.administrationWindow, summative.calendarYear, summative.error)">Add Order</button>
+		<button ng-click="addOrder(formData.summative.orders, summative.calendarYear, summative.administrationWindowcalendarYear, summative.error)">Add Order</button>
 	</div>
 </div>
 <div class="row">
@@ -202,22 +202,18 @@
 
 <div class="row">
 	<div class="form-group col-sm-5">
-		<label for="administrationWindow" class="control-label">Test Administration Window</label>
-		<select class="form-control" name="administrationWindow" ng-model="summative.administrationWindow" ng-options="item for item in administrationWindows"></select>
-	</div>
-	<div class="form-group col-sm-5">
-		<label for="calendarYear" class="control-label">Calendar Year</label>
-		<select class="form-control" name="calendarYear" ng-model="summative.calendarYear" ng-options="item for item in calendarYears"></select>
+		<label for="schoolYear" class="control-label">School Year</label>
+		<select class="form-control" name="schoolYear" ng-model="periodic.schoolYear" ng-options="item for item in calendarYears"></select>
 	</div>
 	<div class="form-group col-sm-2">
-		<button ng-click="addOrder(formData.summative.orders, summative.administrationWindow, summative.calendarYear, summative.error)">Add Order</button>
+		<button ng-click="addOrder(formData.periodic.orders, periodic.schoolYear)">Add Order</button>
 	</div>
 </div>
 <div class="row">
-	<div class="alert alert-danger" role="alert" ng-show="summative.error">
+	<div class="alert alert-danger" role="alert" ng-show="periodic.error">
 		<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 		<span class="sr-only">Error:</span>
-		{{summative.error}}
+		{{periodic.error}}
 	</div>
 </div> 	
 
@@ -274,8 +270,8 @@
 		<tr><td>Discounts</td><td colspan="3"></td></tr>
 		<tr>
 			<td>Volume Discount (per student)</td>
-			<td>{{}}</td>
-			<td>{{}}</td>
+			<td>{{formData.summary.discount.volume.summativeOnline}}</td>
+			<td>{{formData.summary.discount.volume.summativePaper}}</td>
 			<td></td>
 		</tr>			
 		<tr>
