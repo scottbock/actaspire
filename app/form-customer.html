@@ -23,7 +23,21 @@
 
     <div class="form-group col-sm-4">
         <label for="email" class="control-label">Email</label>
-        <input type="email" class="form-control" name="lastName" ng-model="formData.customer.email">
+        <input type="email" class="form-control" name="email" ng-model="formData.customer.email">
+    </div>
+</div>
+
+<div class="row">
+	<div class="col-sm-6 form-group">
+	    <label class="checkbox-inline">
+	    	<input type="checkbox" ng-model="formData.customer.groupOrder">
+	    	Part of a Group Order
+	    </label>
+	</div>
+
+    <div class="form-group col-sm-6" ng-show="formData.customer.groupOrder">
+        <label for="groupContact" class="control-label">Group Contact Name</label>
+        <input type="text" class="form-control" name="groupContact" ng-model="formData.customer.groupContact">
     </div>
 </div>
 
@@ -43,7 +57,7 @@
 
             <div class="form-group col-sm-4">
                 <label for="billingPhone" class="control-label">Billing Contact Phone</label>
-                <input type="phone" class="form-control" name="billingPhone" ng-model="formData.billingContact.phone">
+                <input type="tel" class="form-control" name="billingPhone" ng-model="formData.billingContact.phone">
             </div>
         </div>
         <div class="row">
@@ -59,7 +73,7 @@
 
             <div class="form-group col-sm-4">
                 <label for="implementationPhone" class="control-label">Implementation Contact Phone</label>
-                <input type="phone" class="form-control" name="implementationPhone" ng-model="formData.implementationContact.phone">
+                <input type="tel" class="form-control" name="implementationPhone" ng-model="formData.implementationContact.phone">
             </div>
         </div>
         <div class="row">
@@ -75,7 +89,7 @@
 
             <div class="form-group col-sm-4">
                 <label for="backupPhone" class="control-label">Backup Contact Phone</label>
-                <input type="phone" class="form-control" name="backupPhone" ng-model="formData.backupContact.phone">
+                <input type="tel" class="form-control" name="backupPhone" ng-model="formData.backupContact.phone">
             </div>
         </div>        
     </div>
@@ -104,7 +118,7 @@
 
             <div class="form-group col-sm-4">
                 <label for="state" class="control-label">State</label>
-                <input type="text" class="form-control" name="state" ng-model="formData.billing.address.state">
+        		<select class="form-control" name="state" ng-model="formData.billing.address.state" ng-options="key as value for (key , value) in states"></select>
             </div>
 
             <div class="form-group col-sm-4">
@@ -126,6 +140,15 @@
 		</button>
 	</div>
 	<div class="panel-body">
+	<div class="row">
+    	<div class="col-sm-2 form-group" ng-repeat="(subject,enabled) in order.subjects">
+            <label class="checkbox-inline">
+            	<input type="checkbox" ng-model="order.subjects[subject]">
+            	{{subject}}
+            </label>
+        </div>
+    </div>
+  </label>
 		Student Estimate
 	</div>
 	<table class="table table-striped">
@@ -160,7 +183,7 @@
 		<select class="form-control" name="calendarYear" ng-model="summative.calendarYear" ng-options="item for item in calendarYears"></select>
 	</div>
 	<div class="form-group col-sm-2">
-		<button ng-click="addOrder(formData.summative.orders, summative.calendarYear, summative.administrationWindowcalendarYear, summative.error)">Add Order</button>
+		<button ng-click="addOrder(formData.summative.orders, summative.calendarYear, summative.administrationWindow, summative.error)">Add Order</button>
 	</div>
 </div>
 <div class="row">

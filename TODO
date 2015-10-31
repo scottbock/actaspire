@@ -1,5 +1,14 @@
 TODO
 
+Multiple years with different numbers of subjects -- Summary show what???
+
+Group Fields
+Required fields
+States dropdown
+Rules about which years they can order
+Pricing as json
+Discounts as json
+project test dates
 Coupon codes as json 
 Coupon codes manage as plugin
 Grunt build for angular app
@@ -7,6 +16,10 @@ grunt-angular-templates to load html templates as js
 order form as angular app
 order form generate emails
 order form create excel and attach
+
+--Extra things
+-Sales Tax
+-Save and Restore
 
 
 

@@ -59,11 +59,16 @@ angular.module('myApp', [
 
 // our controller for the form
 // =============================================================================
-.controller('formController', ['$scope', 'DiscountService', function($scope, discountService) {
+.controller('formController', ['$scope', '$http', 'DiscountService', function($scope, $http, discountService) {
+
+	$http.get('json/states.json').success(function(data) { 
+    	$scope.states = data;
+	});
 
 	$scope.currentYear = new Date().getFullYear();
 	$scope.administrationWindows = ['Fall', 'Spring'];		
 	$scope.calendarYears = [$scope.currentYear, $scope.currentYear + 1, $scope.currentYear + 2, $scope.currentYear + 3, $scope.currentYear + 4];
+	$scope.subjects = {'Math' :true, 'Science':true, 'Reading':true, 'English':true, 'Writing':true};
 	$scope.summative = {
 		'administrationWindow' : $scope.administrationWindows[0],
 		'calendarYear' : $scope.calendarYears[0]
@@ -155,7 +160,8 @@ angular.module('myApp', [
 			alreadyInList = alreadyInList || (order.administrationWindow == administrationWindow && order.calendarYear == calendarYear);
 		});
 		if(!alreadyInList){
-			var order = {};
+			var order = {'subjects':{}};
+			angular.copy($scope.subjects, order.subjects);
 			
 			if(orders.length > 0){ //copy in the last order
 				var lastOrder = orders[orders.length - 1];
