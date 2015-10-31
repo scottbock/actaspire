@@ -65,6 +65,10 @@ angular.module('myApp', [
     	$scope.states = data;
 	});
 
+	$http.get('json/discounts.json').success(function(data) { 
+    	$scope.discounts = data;
+	});
+
 	$scope.currentYear = new Date().getFullYear();
 	$scope.administrationWindows = ['Fall', 'Spring'];		
 	$scope.calendarYears = [$scope.currentYear, $scope.currentYear + 1, $scope.currentYear + 2, $scope.currentYear + 3, $scope.currentYear + 4];
