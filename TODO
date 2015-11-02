@@ -2,13 +2,12 @@ TODO
 
 Multiple years with different numbers of subjects -- Summary show what???
 
-Group Fields
 Required fields
-States dropdown
-Rules about which years they can order
+field type validation - zip, phone?, etc.
+Rules about which years they can order (e.g. when can they not order for 2015 anymore)
 Pricing as json
 Discounts as json
-project test dates
+projected test dates
 Coupon codes as json 
 Coupon codes manage as plugin
 Grunt build for angular app
