@@ -51,7 +51,9 @@ module.exports = function(grunt) {
         files: [
           // includes files within path
           {expand: true, flatten: true, src: ['app/*.html', 'app/bower_components/bootstrap/dist/css/bootstrap.min.css', 'app/app.css'], dest: 'dist/', filter: 'isFile'},
-          {expand: true, flatten: true, src: ['app/json/*.json'], dest: 'dist/json/', filter: 'isFile'}
+          {expand: true, flatten: true, src: ['app/json/*.json'], dest: 'dist/json/', filter: 'isFile'},
+          {expand: true, flatten: true, src: ['app/bower_components/bootstrap/dist/fonts/*.*'], dest: 'dist/fonts/', filter: 'isFile'},
+          {expand: true, flatten: true, src: ['app/bower_components/bootstrap/dist/css/bootstrap.min.css'], dest: 'dist/css/', filter: 'isFile'}
         ],
       },
     }

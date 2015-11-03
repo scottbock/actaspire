@@ -169,7 +169,8 @@ angular.module('myApp', [
 				summativePaper: costService.getMultigradeDiscount(summativePaperTotalGrades),
 				summativeOnline: costService.getMultigradeDiscount(summativeOnlineTotalGrades),
 				periodic: costService.getMultigradeDiscount(periodicTotalGrades)
-			}
+			},
+			special: $scope.formData.summary.discount
 		};
 		$scope.formData.summary.discount = discount;
 	};
@@ -248,14 +249,9 @@ angular.module('myApp', [
 		$scope.updateTotals();
 	}, true);
 	
-	$scope.addDiscountCode = function(){
-		//call service to validate and retrieve info for discount code
-
-		//if invalid set error message
-		//if valid apply discount
-		$scope.formData.discount = {'code':$scope.discountCode, 'percentage':10, 'amount':25};
-		
-		$scope.discountCode = null;		
+	$scope.addDiscountCode = function(code){
+		$scope.formData.summary.discount.special = costService.getSpecialDiscount(code);
+		$scope.formData.summary.discount.special.code = code.toUpperCase();
 	}
     
 	// function to process the form
@@ -269,6 +265,7 @@ angular.module('myApp', [
 	$http.get('json/cost.json').success(function(data) { 
     	cost.pricing = data.pricing;
     	cost.discounts = data.discounts;
+    	cost.coupons = data.coupons;
 	});
 
 	var getVolumeDiscount = function(amount){
@@ -303,11 +300,28 @@ angular.module('myApp', [
 		return discountAmount;
 	};
 
+	var getSpecialDiscount = function(couponCode){
+		var discountAmount = {};
+		if(cost.coupons){
+			angular.forEach(cost.coupons, function(coupon, key) {
+				if(key.toUpperCase() === couponCode.toUpperCase()){
+					discountAmount = coupon;
+				}
+			});
+		}
+
+		if(jQuery.isEmptyObject(discountAmount)){
+			discountAmount.error = "No matching coupon for code " + couponCode.toUpperCase();
+		}
+		return discountAmount;
+	}
+
 	return {
 		'cost':cost,
 		'getVolumeDiscount':getVolumeDiscount,
 		'getMultigradeDiscount':getMultigradeDiscount,
-		'getPeriodicDiscount':getPeriodicDiscount
+		'getPeriodicDiscount':getPeriodicDiscount,
+		'getSpecialDiscount':getSpecialDiscount
 	}
 }]);
 
