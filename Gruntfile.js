@@ -42,15 +42,21 @@ module.exports = function(grunt) {
         }
       }
     },
+    ngtemplates:  {
+      app:        {
+        src:      'app/**.html',
+        dest:     'app/templates.js'
+      }
+    },
     watch: {
       files: ['<%= jshint.files %>', 'app/*.js', 'app/*.html', 'app/json/*.json'],
-      tasks: ['concat', 'uglify', 'copy']
+      tasks: ['ngtemplates', 'concat', 'uglify', 'copy']
     },
     copy: {
       main: {
         files: [
           // includes files within path
-          {expand: true, flatten: true, src: ['app/*.html', 'app/bower_components/bootstrap/dist/css/bootstrap.min.css', 'app/app.css'], dest: 'dist/', filter: 'isFile'},
+          {expand: true, flatten: true, src: ['app/index.html', 'app/bower_components/bootstrap/dist/css/bootstrap.min.css', 'app/app.css'], dest: 'dist/', filter: 'isFile'},
           {expand: true, flatten: true, src: ['app/json/*.json'], dest: 'dist/json/', filter: 'isFile'},
           {expand: true, flatten: true, src: ['app/bower_components/bootstrap/dist/fonts/*.*'], dest: 'dist/fonts/', filter: 'isFile'},
           {expand: true, flatten: true, src: ['app/bower_components/bootstrap/dist/css/bootstrap.min.css'], dest: 'dist/css/', filter: 'isFile'}
@@ -65,9 +71,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-angular-templates');
 
   grunt.registerTask('test', ['jshint', 'qunit']);
 
-  grunt.registerTask('default', ['concat', 'uglify', 'copy']);
+  grunt.registerTask('default', ['ngtemplates', 'concat', 'uglify', 'copy']);
 
 };

@@ -11,46 +11,14 @@ angular.module('myApp', [
         // route to show our basic form (/form)
         .state('form', {
             url: '/form',
-            templateUrl: 'form.html',
+            templateUrl: '/app/form.html',
             controller: 'formController'
         })
 		
 		.state('form.customer', {
 			url: '/customer',
-			templateUrl: 'form-customer.html'
-		})		
-        
-		.state('form.group', {
-			url: '/group',
-			templateUrl: 'form-group.html'
+			templateUrl: '/app/form-customer.html'
 		})
-
-		.state('form.comprehensive', {
-			url: '/comprehensive',
-			templateUrl: 'form-comprehensive.html'
-		})
-
-		.state('form.summative', {
-			url: '/summative',
-			templateUrl: 'form-summative.html'
-		})
-
-		.state('form.periodic', {
-			url: '/periodic',
-			templateUrl: 'form-periodic.html'
-		})
-
-		.state('form.implementation', {
-			url: '/implementation',
-			templateUrl: 'form-implementation.html'
-		})	
-		
-		.state('form.billing', {
-			url: '/billing',
-			templateUrl: 'form-billing.html'
-		})	
-		
-      
         
     // catch all route
     // send users to the form page 
