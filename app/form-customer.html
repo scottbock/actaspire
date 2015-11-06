@@ -362,7 +362,7 @@
 		</thead>
 		<tbody>
 			<tr ng-repeat="order in formData.summative.orders">
-				<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Order</td>
+				<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Order Online</td>
 				<td>{{order.onlineTotal}}</td>
 				<td>{{cost.pricing.summative.online | currency}}</td>
 				<td>{{order.onlineTotal * cost.pricing.summative.online | currency}}</td>
@@ -373,10 +373,28 @@
 					<div>{{formData.summary.discount.special.summativeOnline.discountPer | currency}} (Special)</div>
 					<hr />
 					<div>{{formData.summary.discount.volume.summativeOnline + formData.summary.discount.multiGrade.summativeOnline + formData.summary.discount.periodic.summativeOnline + formData.summary.discount.special.summativeOnline.discountPer | currency}}</div>
+				</td>	
 				<td>{{(formData.summary.discount.volume.summativeOnline + formData.summary.discount.multiGrade.summativeOnline + formData.summary.discount.periodic.summativeOnline + formData.summary.discount.special.summativeOnline) * order.onlineTotal | currency}}</td>
 				</td>
 				<td>{{(formData.summary.summativeOnlinePrice - (formData.summary.discount.volume.summativeOnline + formData.summary.discount.multiGrade.summativeOnline + formData.summary.discount.periodic.summativeOnline + formData.summary.discount.special.summativeOnline)) * order.onlineTotal | currency}}</td>				
 			</tr>
+			<tr ng-repeat="order in formData.summative.orders">
+				<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Order Paper</td>
+				<td>{{order.paperTotal}}</td>
+				<td>{{cost.pricing.summative.paper | currency}}</td>
+				<td>{{order.paperTotal * cost.pricing.summative.paper | currency}}</td>
+				<td>
+					<div>{{formData.summary.discount.volume.summativePaper | currency}} (Volume)</div>
+					<div>{{formData.summary.discount.multiGrade.summativePaper | currency}} (Multi-Grade)</div>
+					<div>{{formData.summary.discount.periodic.summativePaper | currency}} (Periodic)</div>
+					<div>{{formData.summary.discount.special.summativePaper.discountPer | currency}} (Special)</div>
+					<hr />
+					<div>{{formData.summary.discount.volume.summativePaper + formData.summary.discount.multiGrade.summativePaper + formData.summary.discount.periodic.summativePaper + formData.summary.discount.special.summativePaper.discountPer | currency}}</div>
+				</td>
+				<td>{{(formData.summary.discount.volume.summativePaper + formData.summary.discount.multiGrade.summativePaper + formData.summary.discount.periodic.summativePaper + formData.summary.discount.special.summativePaper) * order.paperTotal | currency}}</td>
+				</td>
+				<td>{{(formData.summary.summativePaperPrice - (formData.summary.discount.volume.summativePaper + formData.summary.discount.multiGrade.summativePaper + formData.summary.discount.periodic.summativePaper + formData.summary.discount.special.summativePaper)) * order.paperTotal | currency}}</td>				
+			</tr>			
 		</tbody>
 	</table>
 </div>

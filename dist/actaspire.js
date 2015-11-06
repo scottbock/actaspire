@@ -44856,13 +44856,13 @@ angular.module('myApp', [
         // route to show our basic form (/form)
         .state('form', {
             url: '/form',
-            templateUrl: '/app/form.html',
+            templateUrl: 'app/form.html',
             controller: 'formController'
         })
 		
 		.state('form.customer', {
 			url: '/customer',
-			templateUrl: '/app/form-customer.html'
+			templateUrl: 'app/form-customer.html'
 		})
         
     // catch all route
@@ -45139,7 +45139,7 @@ angular.module('myApp', [
 }]);
 
 
-;angular.module('app').run(['$templateCache', function($templateCache) {
+;angular.module('myApp').run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('app/form-customer.html',
@@ -45507,7 +45507,7 @@ angular.module('myApp', [
     "\t\t</thead>\n" +
     "\t\t<tbody>\n" +
     "\t\t\t<tr ng-repeat=\"order in formData.summative.orders\">\n" +
-    "\t\t\t\t<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Order</td>\n" +
+    "\t\t\t\t<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Order Online</td>\n" +
     "\t\t\t\t<td>{{order.onlineTotal}}</td>\n" +
     "\t\t\t\t<td>{{cost.pricing.summative.online | currency}}</td>\n" +
     "\t\t\t\t<td>{{order.onlineTotal * cost.pricing.summative.online | currency}}</td>\n" +
@@ -45518,10 +45518,28 @@ angular.module('myApp', [
     "\t\t\t\t\t<div>{{formData.summary.discount.special.summativeOnline.discountPer | currency}} (Special)</div>\n" +
     "\t\t\t\t\t<hr />\n" +
     "\t\t\t\t\t<div>{{formData.summary.discount.volume.summativeOnline + formData.summary.discount.multiGrade.summativeOnline + formData.summary.discount.periodic.summativeOnline + formData.summary.discount.special.summativeOnline.discountPer | currency}}</div>\n" +
+    "\t\t\t\t</td>\t\n" +
     "\t\t\t\t<td>{{(formData.summary.discount.volume.summativeOnline + formData.summary.discount.multiGrade.summativeOnline + formData.summary.discount.periodic.summativeOnline + formData.summary.discount.special.summativeOnline) * order.onlineTotal | currency}}</td>\n" +
     "\t\t\t\t</td>\n" +
     "\t\t\t\t<td>{{(formData.summary.summativeOnlinePrice - (formData.summary.discount.volume.summativeOnline + formData.summary.discount.multiGrade.summativeOnline + formData.summary.discount.periodic.summativeOnline + formData.summary.discount.special.summativeOnline)) * order.onlineTotal | currency}}</td>\t\t\t\t\n" +
     "\t\t\t</tr>\n" +
+    "\t\t\t<tr ng-repeat=\"order in formData.summative.orders\">\n" +
+    "\t\t\t\t<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Order Paper</td>\n" +
+    "\t\t\t\t<td>{{order.paperTotal}}</td>\n" +
+    "\t\t\t\t<td>{{cost.pricing.summative.paper | currency}}</td>\n" +
+    "\t\t\t\t<td>{{order.paperTotal * cost.pricing.summative.paper | currency}}</td>\n" +
+    "\t\t\t\t<td>\n" +
+    "\t\t\t\t\t<div>{{formData.summary.discount.volume.summativePaper | currency}} (Volume)</div>\n" +
+    "\t\t\t\t\t<div>{{formData.summary.discount.multiGrade.summativePaper | currency}} (Multi-Grade)</div>\n" +
+    "\t\t\t\t\t<div>{{formData.summary.discount.periodic.summativePaper | currency}} (Periodic)</div>\n" +
+    "\t\t\t\t\t<div>{{formData.summary.discount.special.summativePaper.discountPer | currency}} (Special)</div>\n" +
+    "\t\t\t\t\t<hr />\n" +
+    "\t\t\t\t\t<div>{{formData.summary.discount.volume.summativePaper + formData.summary.discount.multiGrade.summativePaper + formData.summary.discount.periodic.summativePaper + formData.summary.discount.special.summativePaper.discountPer | currency}}</div>\n" +
+    "\t\t\t\t</td>\n" +
+    "\t\t\t\t<td>{{(formData.summary.discount.volume.summativePaper + formData.summary.discount.multiGrade.summativePaper + formData.summary.discount.periodic.summativePaper + formData.summary.discount.special.summativePaper) * order.paperTotal | currency}}</td>\n" +
+    "\t\t\t\t</td>\n" +
+    "\t\t\t\t<td>{{(formData.summary.summativePaperPrice - (formData.summary.discount.volume.summativePaper + formData.summary.discount.multiGrade.summativePaper + formData.summary.discount.periodic.summativePaper + formData.summary.discount.special.summativePaper)) * order.paperTotal | currency}}</td>\t\t\t\t\n" +
+    "\t\t\t</tr>\t\t\t\n" +
     "\t\t</tbody>\n" +
     "\t</table>\n" +
     "</div>\n" +

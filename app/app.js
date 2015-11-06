@@ -11,13 +11,13 @@ angular.module('myApp', [
         // route to show our basic form (/form)
         .state('form', {
             url: '/form',
-            templateUrl: '/app/form.html',
+            templateUrl: 'app/form.html',
             controller: 'formController'
         })
 		
 		.state('form.customer', {
 			url: '/customer',
-			templateUrl: '/app/form-customer.html'
+			templateUrl: 'app/form-customer.html'
 		})
         
     // catch all route

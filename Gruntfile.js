@@ -43,7 +43,7 @@ module.exports = function(grunt) {
       }
     },
     ngtemplates:  {
-      app:        {
+      myApp:        {
         src:      'app/**.html',
         dest:     'app/templates.js'
       }
