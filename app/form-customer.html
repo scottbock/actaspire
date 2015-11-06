@@ -344,3 +344,40 @@
 	</table>
 </div>
 
+<div class="panel panel-default">
+	<div class="panel-heading">
+		Order Summary
+	</div>
+	<div class="panel-body">
+	</div>
+	<table class="table table-striped">
+		<thead>
+			<th>Order</th>
+			<th>Total Student</th>
+			<th>Price</th>
+			<th>Extended Price</th>
+			<th>Discounts</th>
+			<th>Total Discount</th>
+			<th>Order Balance</th>
+		</thead>
+		<tbody>
+			<tr ng-repeat="order in formData.summative.orders">
+				<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Order</td>
+				<td>{{order.onlineTotal}}</td>
+				<td>{{cost.pricing.summative.online | currency}}</td>
+				<td>{{order.onlineTotal * cost.pricing.summative.online | currency}}</td>
+				<td>
+					<div>{{formData.summary.discount.volume.summativeOnline | currency}} (Volume)</div>
+					<div>{{formData.summary.discount.multiGrade.summativeOnline | currency}} (Multi-Grade)</div>
+					<div>{{formData.summary.discount.periodic.summativeOnline | currency}} (Periodic)</div>
+					<div>{{formData.summary.discount.special.summativeOnline.discountPer | currency}} (Special)</div>
+					<hr />
+					<div>{{formData.summary.discount.volume.summativeOnline + formData.summary.discount.multiGrade.summativeOnline + formData.summary.discount.periodic.summativeOnline + formData.summary.discount.special.summativeOnline.discountPer | currency}}</div>
+				<td>{{(formData.summary.discount.volume.summativeOnline + formData.summary.discount.multiGrade.summativeOnline + formData.summary.discount.periodic.summativeOnline + formData.summary.discount.special.summativeOnline) * order.onlineTotal | currency}}</td>
+				</td>
+				<td>{{(formData.summary.summativeOnlinePrice - (formData.summary.discount.volume.summativeOnline + formData.summary.discount.multiGrade.summativeOnline + formData.summary.discount.periodic.summativeOnline + formData.summary.discount.special.summativeOnline)) * order.onlineTotal | currency}}</td>				
+			</tr>
+		</tbody>
+	</table>
+</div>
+
