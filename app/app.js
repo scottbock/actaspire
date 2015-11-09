@@ -138,7 +138,7 @@ angular.module('myApp', [
 				summativeOnline: costService.getMultigradeDiscount(summativeOnlineTotalGrades),
 				periodic: costService.getMultigradeDiscount(periodicTotalGrades)
 			},
-			special: $scope.formData.summary.discount
+			special: $scope.formData.summary.discount ? $scope.formData.summary.discount.special : undefined
 		};
 		$scope.formData.summary.discount = discount;
 	};
@@ -230,10 +230,23 @@ angular.module('myApp', [
 
 .factory('CostService', ['$http', function ($http) {
 	var cost = {};
-	$http.get('json/cost.json').success(function(data) { 
+	// var url = 'json/cost.json';
+	var url = 'http://localhost:8888/wordpress/wp-json/wp/v2/actaspire_cost_json/';
+	$http.get(url).then(function(data) { 
+		//remove wp styling garbage
+        var raw = data.data[0].content.rendered;
+        var pricingData = raw.replace(/<\/?p>/g,'').replace(/<br \/>/g,'').replace(/&#8220;/g,'"').replace(/&#8221;/g,'"');
+        data = JSON.parse(pricingData);
+
     	cost.pricing = data.pricing;
     	cost.discounts = data.discounts;
     	cost.coupons = data.coupons;
+	}, function(error){
+		$http.get('json/cost.json').then(function(data) { 
+	    	cost.pricing = data.pricing;
+    		cost.discounts = data.discounts;
+	    	cost.coupons = data.coupons;
+		});
 	});
 
 	var getVolumeDiscount = function(amount){
