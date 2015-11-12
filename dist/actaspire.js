@@ -44954,11 +44954,6 @@ angular.module('myApp', [
 		$scope.formData.summary.periodicTotal = periodicTotal;
 		
 		$scope.formData.summary.grade = gradeTotals;
-		
-		//TODO Retrieve based on amounts and subjects
-		$scope.formData.summary.summativeOnlinePrice = 28.50;
-		$scope.formData.summary.summativePaperPrice = 30.50;
-		$scope.formData.summary.periodicPrice = 32.00;
 
 		var summativeOnlineTotalGrades = 0, summativePaperTotalGrades = 0, periodicTotalGrades = 0;
 		angular.forEach(gradeTotals, function(grade, key) {
@@ -45204,33 +45199,17 @@ angular.module('myApp', [
     "    <div class=\"panel-body\">\n" +
     "        <div class=\"row\">\n" +
     "            <div class=\"form-group col-sm-4\">\n" +
-    "                <label for=\"billingName\" class=\"control-label\">Billing Contact Name</label>\n" +
-    "                <input type=\"text\" class=\"form-control\" name=\"billingName\" ng-model=\"formData.billingContact.name\">\n" +
-    "            </div>\n" +
-    "\n" +
-    "            <div class=\"form-group col-sm-4\">\n" +
-    "                <label for=\"billingEmail\" class=\"control-label\">Billing Contact Email</label>\n" +
-    "                <input type=\"email\" class=\"form-control\" name=\"billingEmail\" ng-model=\"formData.billingContact.email\">\n" +
-    "            </div>\n" +
-    "\n" +
-    "            <div class=\"form-group col-sm-4\">\n" +
-    "                <label for=\"billingPhone\" class=\"control-label\">Billing Contact Phone</label>\n" +
-    "                <input type=\"tel\" class=\"form-control\" name=\"billingPhone\" ng-model=\"formData.billingContact.phone\">\n" +
-    "            </div>\n" +
-    "        </div>\n" +
-    "        <div class=\"row\">\n" +
-    "            <div class=\"form-group col-sm-4\">\n" +
-    "                <label for=\"implementationName\" class=\"control-label\">Implementation Contact Name</label>\n" +
+    "                <label for=\"implementationName\" class=\"control-label\">Test Coordinator Contact Name</label>\n" +
     "                <input type=\"text\" class=\"form-control\" name=\"implementationName\" ng-model=\"formData.implementationContact.name\">\n" +
     "            </div>\n" +
     "\n" +
     "            <div class=\"form-group col-sm-4\">\n" +
-    "                <label for=\"implementationEmail\" class=\"control-label\">Implementation Contact Email</label>\n" +
+    "                <label for=\"implementationEmail\" class=\"control-label\">Test Coordinator Contact Email</label>\n" +
     "                <input type=\"email\" class=\"form-control\" name=\"implementationEmail\" ng-model=\"formData.implementationContact.email\">\n" +
     "            </div>\n" +
     "\n" +
     "            <div class=\"form-group col-sm-4\">\n" +
-    "                <label for=\"implementationPhone\" class=\"control-label\">Implementation Contact Phone</label>\n" +
+    "                <label for=\"implementationPhone\" class=\"control-label\">Test Coordinator Contact Phone</label>\n" +
     "                <input type=\"tel\" class=\"form-control\" name=\"implementationPhone\" ng-model=\"formData.implementationContact.phone\">\n" +
     "            </div>\n" +
     "        </div>\n" +
@@ -45256,6 +45235,22 @@ angular.module('myApp', [
     "<div class=\"panel panel-default\">\n" +
     "    <div class=\"panel-heading\">Billing Information</div>\n" +
     "    <div class=\"panel-body\">\n" +
+    "        <div class=\"row\">\n" +
+    "            <div class=\"form-group col-sm-4\">\n" +
+    "                <label for=\"billingName\" class=\"control-label\">Billing Contact Name</label>\n" +
+    "                <input type=\"text\" class=\"form-control\" name=\"billingName\" ng-model=\"formData.billingContact.name\">\n" +
+    "            </div>\n" +
+    "\n" +
+    "            <div class=\"form-group col-sm-4\">\n" +
+    "                <label for=\"billingEmail\" class=\"control-label\">Billing Contact Email</label>\n" +
+    "                <input type=\"email\" class=\"form-control\" name=\"billingEmail\" ng-model=\"formData.billingContact.email\">\n" +
+    "            </div>\n" +
+    "\n" +
+    "            <div class=\"form-group col-sm-4\">\n" +
+    "                <label for=\"billingPhone\" class=\"control-label\">Billing Contact Phone</label>\n" +
+    "                <input type=\"tel\" class=\"form-control\" name=\"billingPhone\" ng-model=\"formData.billingContact.phone\">\n" +
+    "            </div>\n" +
+    "        </div>    \n" +
     "        <div class=\"row\">\n" +
     "            <div class=\"form-group col-sm-12\">\n" +
     "                <label for=\"billingAddress\" class=\"control-label\">Billing Address Line 1</label>\n" +
@@ -45398,7 +45393,6 @@ angular.module('myApp', [
     "\t</div>\n" +
     "</div> \t\n" +
     "\n" +
-    "<h2>Order Summary</h2>\n" +
     "<div class=\"panel panel-default\">\n" +
     "\t<div class=\"panel-heading\">\n" +
     "\t\tOrder Summary\n" +
@@ -45420,93 +45414,6 @@ angular.module('myApp', [
     "\t\t\t\t{{formData.summary.discount.special.error}}\n" +
     "\t\t\t</div>\n" +
     "\t\t</div> \t\n" +
-    "\t</div>\n" +
-    "\t<table class=\"table table-striped\">\n" +
-    "\t\t<thead>\n" +
-    "\t\t\t<th></th>\n" +
-    "\t\t\t<th>Summative Online</th>\n" +
-    "\t\t\t<th>Summative Paper</th>\n" +
-    "\t\t\t<th>Periodic</th>\n" +
-    "\t\t</thead>\n" +
-    "\t\t<tr ng-repeat=\"grade in [3,4,5,6,7,8,9,10]\">\n" +
-    "\t\t\t<td>Grade {{grade}}</td>\n" +
-    "\t\t\t<td>{{formData.summary.grade[grade].summativeOnline}}</td>\n" +
-    "\t\t\t<td>{{formData.summary.grade[grade].summativePaper}}</td>\n" +
-    "\t\t\t<td>{{formData.summary.grade[grade].periodic}}</td>\n" +
-    "\t\t</tr>\n" +
-    "\t\t<tr>\n" +
-    "\t\t\t<td>Total</td>\n" +
-    "\t\t\t<td>{{formData.summary.summativeOnlineTotal}}</td>\n" +
-    "\t\t\t<td>{{formData.summary.summativePaperTotal}}</td>\n" +
-    "\t\t\t<td>{{formData.summary.periodicTotal}}</td>\n" +
-    "\t\t</tr>\n" +
-    "\t\t<tr><td colspan=\"4\"></td></tr>\n" +
-    "\t\t<tr>\n" +
-    "\t\t\t<td>Price</td>\n" +
-    "\t\t\t<td>{{cost.pricing.summative.online | currency}}</td>\n" +
-    "\t\t\t<td>{{cost.pricing.summative.paper | currency}}</td>\n" +
-    "\t\t\t<td>{{cost.pricing.periodic | currency}}</td>\n" +
-    "\t\t</tr>\t\t\n" +
-    "\t\t<tr><td colspan=\"4\"></td></tr>\n" +
-    "\t\t<tr>\n" +
-    "\t\t\t<td>Extended Price</td>\n" +
-    "\t\t\t<td>{{formData.summary.summativeOnlineTotal * formData.summary.summativeOnlinePrice | currency}}</td>\n" +
-    "\t\t\t<td>{{formData.summary.summativePaperTotal * formData.summary.summativePaperPrice | currency}}</td>\n" +
-    "\t\t\t<td>{{formData.summary.periodicTotal * formData.summary.periodicPrice | currency}}</td>\n" +
-    "\t\t</tr>\n" +
-    "\t\t<tr><td colspan=\"4\"></td></tr>\t\t\n" +
-    "\t\t<tr><td>Discounts</td><td colspan=\"3\"></td></tr>\n" +
-    "\t\t<tr>\n" +
-    "\t\t\t<td>Volume Discount (per student)</td>\n" +
-    "\t\t\t<td>{{formData.summary.discount.volume.summativeOnline | currency}}</td>\n" +
-    "\t\t\t<td>{{formData.summary.discount.volume.summativePaper | currency}}</td>\n" +
-    "\t\t\t<td></td>\n" +
-    "\t\t</tr>\t\t\t\n" +
-    "\t\t<tr>\n" +
-    "\t\t\t<td>Multi-grade Discount (per student)</td>\n" +
-    "\t\t\t<td>{{formData.summary.discount.multiGrade.summativeOnline | currency}}</td>\n" +
-    "\t\t\t<td>{{formData.summary.discount.multiGrade.summativePaper | currency}}</td>\n" +
-    "\t\t\t<td></td>\n" +
-    "\t\t</tr>\t\t\t\n" +
-    "\t\t<tr>\n" +
-    "\t\t\t<td>Periodic Discount (per student)</td>\n" +
-    "\t\t\t<td>{{formData.summary.discount.periodic.summativeOnline | currency}}</td>\n" +
-    "\t\t\t<td>{{formData.summary.discount.periodic.summativePaper | currency}}</td>\n" +
-    "\t\t\t<td></td>\n" +
-    "\t\t</tr>\t\t\t\n" +
-    "\t\t<tr>\n" +
-    "\t\t\t<td>Special Discount (per student)<br>{{formData.summary.discount.special.code}}</td>\n" +
-    "\t\t\t<td>{{formData.summary.discount.special.summativeOnline.discountPer | currency}}</td>\n" +
-    "\t\t\t<td>{{formData.summary.discount.special.summativePaper.discountPer | currency}}</td>\n" +
-    "\t\t\t<td>{{formData.summary.discount.special.periodic.discountPer | currency}}</td>\n" +
-    "\t\t</tr>\n" +
-    "\t\t<tr>\n" +
-    "\t\t\t<td>Total (per student)</td>\n" +
-    "\t\t\t<td>{{formData.summary.discount.volume.summativeOnline + formData.summary.discount.multiGrade.summativeOnline + formData.summary.discount.periodic.summativeOnline + formData.summary.discount.special.summativeOnline | currency}}</td>\n" +
-    "\t\t\t<td>{{formData.summary.discount.volume.summativePaper + formData.summary.discount.multiGrade.summativePaper + formData.summary.discount.periodic.summativePaper + formData.summary.discount.special.summativePaper | currency}}</td>\n" +
-    "\t\t\t<td>{{formData.summary.discount.special.summativeOnline | currency}}</td>\n" +
-    "\t\t</tr>\t\t\n" +
-    "\t\t<tr>\n" +
-    "\t\t\t<td>Total Discount Applied</td>\n" +
-    "\t\t\t<td>{{(formData.summary.discount.volume.summativeOnline + formData.summary.discount.multiGrade.summativeOnline + formData.summary.discount.periodic.summativeOnline + formData.summary.discount.special.summativeOnline) * formData.summary.summativeOnlineTotal | currency}}</td>\n" +
-    "\t\t\t<td>{{(formData.summary.discount.volume.summativePaper + formData.summary.discount.multiGrade.summativePaper + formData.summary.discount.periodic.summativePaper + formData.summary.discount.special.summativePaper) * formData.summary.summativePaperTotal | currency}}</td>\n" +
-    "\t\t\t<td>{{formData.summary.discount.special.summativeOnline * formData.summary.periodicTotal | currency}}</td>\n" +
-    "\t\t</tr>\n" +
-    "\t\t<tr><td colspan=\"4\"></td></tr>\n" +
-    "\t\t<tr>\n" +
-    "\t\t\t<td>Total Order Balance</td>\n" +
-    "\t\t\t<td>{{(formData.summary.summativeOnlinePrice - (formData.summary.discount.volume.summativeOnline + formData.summary.discount.multiGrade.summativeOnline + formData.summary.discount.periodic.summativeOnline + formData.summary.discount.special.summativeOnline)) * formData.summary.summativeOnlineTotal | currency}}</td>\n" +
-    "\t\t\t<td>{{(formData.summary.summativePaperPrice - (formData.summary.discount.volume.summativePaper + formData.summary.discount.multiGrade.summativePaper + formData.summary.discount.periodic.summativePaper + formData.summary.discount.special.summativePaper)) * formData.summary.summativePaperTotal | currency}}</td>\n" +
-    "\t\t\t<td>{{(formData.summary.periodicPrice - formData.summary.discount.special.summativeOnline) * formData.summary.periodicTotal | currency}}</td>\n" +
-    "\t\t</tr>\t\t\n" +
-    "\t</table>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div class=\"panel panel-default\">\n" +
-    "\t<div class=\"panel-heading\">\n" +
-    "\t\tOrder Summary\n" +
-    "\t</div>\n" +
-    "\t<div class=\"panel-body\">\n" +
     "\t</div>\n" +
     "\t<table class=\"table table-striped\">\n" +
     "\t\t<thead>\n" +
@@ -45534,7 +45441,7 @@ angular.module('myApp', [
     "\t\t\t\t</td>\t\n" +
     "\t\t\t\t<td>{{(formData.summary.discount.volume.summativeOnline + formData.summary.discount.multiGrade.summativeOnline + formData.summary.discount.periodic.summativeOnline + formData.summary.discount.special.summativeOnline) * order.onlineTotal | currency}}</td>\n" +
     "\t\t\t\t</td>\n" +
-    "\t\t\t\t<td>{{(formData.summary.summativeOnlinePrice - (formData.summary.discount.volume.summativeOnline + formData.summary.discount.multiGrade.summativeOnline + formData.summary.discount.periodic.summativeOnline + formData.summary.discount.special.summativeOnline)) * order.onlineTotal | currency}}</td>\t\t\t\t\n" +
+    "\t\t\t\t<td>{{(cost.pricing.summative.online - (formData.summary.discount.volume.summativeOnline + formData.summary.discount.multiGrade.summativeOnline + formData.summary.discount.periodic.summativeOnline + formData.summary.discount.special.summativeOnline)) * order.onlineTotal | currency}}</td>\t\t\t\t\n" +
     "\t\t\t</tr>\n" +
     "\t\t\t<tr ng-repeat=\"order in formData.summative.orders\">\n" +
     "\t\t\t\t<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Order Paper</td>\n" +
@@ -45551,11 +45458,41 @@ angular.module('myApp', [
     "\t\t\t\t</td>\n" +
     "\t\t\t\t<td>{{(formData.summary.discount.volume.summativePaper + formData.summary.discount.multiGrade.summativePaper + formData.summary.discount.periodic.summativePaper + formData.summary.discount.special.summativePaper) * order.paperTotal | currency}}</td>\n" +
     "\t\t\t\t</td>\n" +
-    "\t\t\t\t<td>{{(formData.summary.summativePaperPrice - (formData.summary.discount.volume.summativePaper + formData.summary.discount.multiGrade.summativePaper + formData.summary.discount.periodic.summativePaper + formData.summary.discount.special.summativePaper)) * order.paperTotal | currency}}</td>\t\t\t\t\n" +
-    "\t\t\t</tr>\t\t\t\n" +
+    "\t\t\t\t<td>{{(cost.pricing.summative.paper- (formData.summary.discount.volume.summativePaper + formData.summary.discount.multiGrade.summativePaper + formData.summary.discount.periodic.summativePaper + formData.summary.discount.special.summativePaper)) * order.paperTotal | currency}}</td>\t\t\t\t\n" +
+    "\t\t\t</tr>\t\n" +
+    "\t\t\t<tr ng-repeat=\"order in formData.periodic.orders\">\n" +
+    "\t\t\t\t<td>{{order.administrationWindow}} {{order.calendarYear}} Periodic Order Online</td>\n" +
+    "\t\t\t\t<td>{{order.onlineTotal}}</td>\n" +
+    "\t\t\t\t<td>{{cost.pricing.periodic | currency}}</td>\n" +
+    "\t\t\t\t<td>{{order.onlineTotal * cost.pricing.periodic | currency}}</td>\n" +
+    "\t\t\t\t<td>\n" +
+    "\t\t\t\t\t<div>{{formData.summary.discount.special.periodic.discountPer | currency}} (Special)</div>\n" +
+    "\t\t\t\t\t<hr />\n" +
+    "\t\t\t\t\t<div>{{formData.summary.discount.special.periodic.discountPer | currency}}</div>\n" +
+    "\t\t\t\t</td>\t\n" +
+    "\t\t\t\t<td>{{(formData.summary.discount.special.periodic.discountPer) * order.onlineTotal | currency}}</td>\n" +
+    "\t\t\t\t</td>\n" +
+    "\t\t\t\t<td>{{(cost.pricing.periodic - formData.summary.discount.special.periodic.discountPer) * order.onlineTotal | currency}}</td>\t\t\t\t\t\t\n" +
+    "\t\t\t</tr>\t\t\n" +
     "\t\t</tbody>\n" +
     "\t</table>\n" +
     "</div>\n" +
+    "\n" +
+    "<div class=\"row\">\n" +
+    "\t<div class=\"col-sm-4 form-group\">\n" +
+    "\t    <label class=\"checkbox-inline\">\n" +
+    "\t    \t<input type=\"checkbox\" ng-model=\"formData.acceptTerms\">\n" +
+    "\t    \tI agree to ACT Aspire's Term's and Condition's\n" +
+    "\t    </label>\n" +
+    "\t</div>\n" +
+    "\t<div class=\"col-sm-4\">\n" +
+    "\t\t<a href=\"\">Terms and Conditions</a>\n" +
+    "\t</div>\n" +
+    "    <div class=\"col-sm-4\">\n" +
+    "  \t\t<button class=\"btn btn-default\">Submit Order</button>\n" +
+    "    </div>\n" +
+    "</div>\n" +
+    "\n" +
     "\n"
   );
 

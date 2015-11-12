@@ -109,11 +109,6 @@ angular.module('myApp', [
 		$scope.formData.summary.periodicTotal = periodicTotal;
 		
 		$scope.formData.summary.grade = gradeTotals;
-		
-		//TODO Retrieve based on amounts and subjects
-		$scope.formData.summary.summativeOnlinePrice = 28.50;
-		$scope.formData.summary.summativePaperPrice = 30.50;
-		$scope.formData.summary.periodicPrice = 32.00;
 
 		var summativeOnlineTotalGrades = 0, summativePaperTotalGrades = 0, periodicTotalGrades = 0;
 		angular.forEach(gradeTotals, function(grade, key) {
