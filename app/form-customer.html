@@ -1,27 +1,27 @@
 <div class="row">
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-3 required">
         <label for="firstName" class="control-label">First Name</label>
         <input type="text" class="form-control" name="firstName" ng-model="formData.customer.firstName" required="required">
     </div>
 
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-3 required">
         <label for="lastName" class="control-label">Last Name</label>
         <input type="text" class="form-control" name="lastName" ng-model="formData.customer.lastName" required="required">
     </div>
 
-    <div class="form-group col-sm-6">
+    <div class="form-group col-sm-6 required">
         <label for="organization" class="control-label">School / District / Organization</label>
         <input type="text" class="form-control" name="organization" ng-model="formData.customer.organization" required="required">
     </div>
 </div>
 
 <div class="row">
-    <div class="form-group col-sm-6">
+    <div class="form-group col-sm-6 required">
         <label for="jobTitle" class="control-label">Job Title</label>
         <input type="text" class="form-control" name="jobTitle" ng-model="formData.customer.jobTitle" required="required">
     </div>
 
-    <div class="form-group col-sm-4">
+    <div class="form-group col-sm-4 required">
         <label for="email" class="control-label">Email</label>
         <input type="email" class="form-control" name="email" ng-model="formData.customer.email" required="required">
     </div>
@@ -35,7 +35,7 @@
 	    </label>
 	</div>
 
-    <div class="form-group col-sm-6" ng-show="formData.customer.groupOrder">
+    <div class="form-group col-sm-6 required" ng-show="formData.customer.groupOrder">
         <label for="groupContact" class="control-label">Group Contact Name</label>
         <input type="text" class="form-control" name="groupContact" ng-model="formData.customer.groupContact" ng-required="formData.customer.groupOrder">
     </div>
@@ -45,35 +45,35 @@
     <div class="panel-heading">Contact Information</div>
     <div class="panel-body">
         <div class="row">
-            <div class="form-group col-sm-4">
+            <div class="form-group col-sm-4 required">
                 <label for="implementationName" class="control-label">Test Coordinator Contact Name</label>
-                <input type="text" class="form-control" name="implementationName" ng-model="formData.implementationContact.name">
+                <input type="text" class="form-control" name="implementationName" ng-model="formData.implementationContact.name" required="required">
             </div>
 
-            <div class="form-group col-sm-4">
+            <div class="form-group col-sm-4 required">
                 <label for="implementationEmail" class="control-label">Test Coordinator Contact Email</label>
-                <input type="email" class="form-control" name="implementationEmail" ng-model="formData.implementationContact.email">
+                <input type="email" class="form-control" name="implementationEmail" ng-model="formData.implementationContact.email" required="required">
             </div>
 
-            <div class="form-group col-sm-4">
+            <div class="form-group col-sm-4 required">
                 <label for="implementationPhone" class="control-label">Test Coordinator Contact Phone</label>
-                <input type="tel" class="form-control" name="implementationPhone" ng-model="formData.implementationContact.phone">
+                <input type="tel" class="form-control" name="implementationPhone" ng-model="formData.implementationContact.phone" required="required">
             </div>
         </div>
         <div class="row">
-            <div class="form-group col-sm-4">
+            <div class="form-group col-sm-4 required">
                 <label for="backupName" class="control-label">Backup Contact Name</label>
-                <input type="text" class="form-control" name="backupName" ng-model="formData.backupContact.name">
+                <input type="text" class="form-control" name="backupName" ng-model="formData.backupContact.name" required="required">
             </div>
 
-            <div class="form-group col-sm-4">
+            <div class="form-group col-sm-4 required">
                 <label for="backupEmail" class="control-label">Backup Contact Email</label>
-                <input type="email" class="form-control" name="backupEmail" ng-model="formData.backupContact.email">
+                <input type="email" class="form-control" name="backupEmail" ng-model="formData.backupContact.email" required="required">
             </div>
 
-            <div class="form-group col-sm-4">
+            <div class="form-group col-sm-4 required">
                 <label for="backupPhone" class="control-label">Backup Contact Phone</label>
-                <input type="tel" class="form-control" name="backupPhone" ng-model="formData.backupContact.phone">
+                <input type="tel" class="form-control" name="backupPhone" ng-model="formData.backupContact.phone" required="required">
             </div>
         </div>        
     </div>
@@ -83,23 +83,23 @@
     <div class="panel-heading">Billing Information</div>
     <div class="panel-body">
         <div class="row">
-            <div class="form-group col-sm-4">
+            <div class="form-group col-sm-4 required">
                 <label for="billingName" class="control-label">Billing Contact Name</label>
-                <input type="text" class="form-control" name="billingName" ng-model="formData.billingContact.name">
+                <input type="text" class="form-control" name="billingName" ng-model="formData.billingContact.name" required="required">
             </div>
 
-            <div class="form-group col-sm-4">
+            <div class="form-group col-sm-4 required">
                 <label for="billingEmail" class="control-label">Billing Contact Email</label>
-                <input type="email" class="form-control" name="billingEmail" ng-model="formData.billingContact.email">
+                <input type="email" class="form-control" name="billingEmail" ng-model="formData.billingContact.email" required="required">
             </div>
 
-            <div class="form-group col-sm-4">
+            <div class="form-group col-sm-4 required">
                 <label for="billingPhone" class="control-label">Billing Contact Phone</label>
-                <input type="tel" class="form-control" name="billingPhone" ng-model="formData.billingContact.phone">
+                <input type="tel" class="form-control" name="billingPhone" ng-model="formData.billingContact.phone" required="required">
             </div>
         </div>    
         <div class="row">
-            <div class="form-group col-sm-12">
+            <div class="form-group col-sm-12 required">
                 <label for="billingAddress" class="control-label">Billing Address Line 1</label>
                 <input type="text" class="form-control" name="billingAddress" ng-model="formData.billing.address.line1" required="required">
             </div>
@@ -111,21 +111,33 @@
             </div>
         </div>        
         <div class="row">
-            <div class="form-group col-sm-4">
+            <div class="form-group col-sm-4 required">
                 <label for="city" class="control-label">City</label>
                 <input type="text" class="form-control" name="city" ng-model="formData.billing.address.city" required="required">
             </div>
 
-            <div class="form-group col-sm-4">
+            <div class="form-group col-sm-4 required">
                 <label for="state" class="control-label">State</label>
         		<select class="form-control" name="state" ng-model="formData.billing.address.state" ng-options="key as value for (key , value) in states" required="required"></select>
             </div>
 
-            <div class="form-group col-sm-4">
+            <div class="form-group col-sm-4 required">
                 <label for="zip" class="control-label">Zip</label>
                 <input type="text" class="form-control" name="zip" ng-model="formData.billing.address.zip" required="required">
             </div>
-        </div>      
+        </div>
+		<div class="row">
+			<div class="col-sm-3 form-group">
+			    <label class="checkbox-inline">
+			    	<input type="checkbox" ng-model="formData.billing.taxExempt">
+			    	Tax Exempt
+			    </label>
+			</div>
+
+		    <div class="col-sm-9" ng-show="formData.billing.taxExempt">
+		    Please email a copy of your exemption certificate to <a href="mailto:Orders@ActAspire.org">Orders@ActAspire.org</a>
+		    </div>
+		</div>      
     </div>
 </div>
 
@@ -306,7 +318,7 @@
 				<td>{{(formData.summary.discount.volume.summativePaper + formData.summary.discount.multiGrade.summativePaper + formData.summary.discount.periodic.summativePaper + formData.summary.discount.special.summativePaper) * order.paperTotal | currency}}</td>
 				</td>
 				<td>{{(cost.pricing.summative.paper- (formData.summary.discount.volume.summativePaper + formData.summary.discount.multiGrade.summativePaper + formData.summary.discount.periodic.summativePaper + formData.summary.discount.special.summativePaper)) * order.paperTotal | currency}}</td>				
-			</tr>	
+			</tr>
 			<tr ng-repeat="order in formData.periodic.orders">
 				<td>{{order.administrationWindow}} {{order.calendarYear}} Periodic Order Online</td>
 				<td>{{order.onlineTotal}}</td>
@@ -320,7 +332,7 @@
 				<td>{{(formData.summary.discount.special.periodic.discountPer) * order.onlineTotal | currency}}</td>
 				</td>
 				<td>{{(cost.pricing.periodic - formData.summary.discount.special.periodic.discountPer) * order.onlineTotal | currency}}</td>						
-			</tr>		
+			</tr>
 		</tbody>
 	</table>
 </div>
@@ -336,7 +348,7 @@
 		<a href="">Terms and Conditions</a>
 	</div>
     <div class="col-sm-4">
-  		<button class="btn btn-default">Submit Order</button>
+  		<button class="btn btn-default" ng-disabled="customerForm.$invalid || customerForm.$pending || !formData.acceptTerms">Submit Order</button>
     </div>
 </div>
 

@@ -144,8 +144,11 @@ angular.module('myApp', [
 			alreadyInList = alreadyInList || (order.administrationWindow == administrationWindow && order.calendarYear == calendarYear);
 		});
 		if(!alreadyInList){
-			var order = {'subjects':{}};
-			angular.copy($scope.subjects, order.subjects);
+			var order = {};
+			if(administrationWindow){
+				order.subjects = {};
+				angular.copy($scope.subjects, order.subjects);	
+			}			
 			
 			if(orders.length > 0){ //copy in the last order
 				var lastOrder = orders[orders.length - 1];

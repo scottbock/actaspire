@@ -44989,8 +44989,11 @@ angular.module('myApp', [
 			alreadyInList = alreadyInList || (order.administrationWindow == administrationWindow && order.calendarYear == calendarYear);
 		});
 		if(!alreadyInList){
-			var order = {'subjects':{}};
-			angular.copy($scope.subjects, order.subjects);
+			var order = {};
+			if(administrationWindow){
+				order.subjects = {};
+				angular.copy($scope.subjects, order.subjects);	
+			}			
 			
 			if(orders.length > 0){ //copy in the last order
 				var lastOrder = orders[orders.length - 1];
@@ -45152,29 +45155,29 @@ angular.module('myApp', [
 
   $templateCache.put('app/form-customer.html',
     "<div class=\"row\">\n" +
-    "    <div class=\"form-group col-sm-3\">\n" +
+    "    <div class=\"form-group col-sm-3 required\">\n" +
     "        <label for=\"firstName\" class=\"control-label\">First Name</label>\n" +
     "        <input type=\"text\" class=\"form-control\" name=\"firstName\" ng-model=\"formData.customer.firstName\" required=\"required\">\n" +
     "    </div>\n" +
     "\n" +
-    "    <div class=\"form-group col-sm-3\">\n" +
+    "    <div class=\"form-group col-sm-3 required\">\n" +
     "        <label for=\"lastName\" class=\"control-label\">Last Name</label>\n" +
     "        <input type=\"text\" class=\"form-control\" name=\"lastName\" ng-model=\"formData.customer.lastName\" required=\"required\">\n" +
     "    </div>\n" +
     "\n" +
-    "    <div class=\"form-group col-sm-6\">\n" +
+    "    <div class=\"form-group col-sm-6 required\">\n" +
     "        <label for=\"organization\" class=\"control-label\">School / District / Organization</label>\n" +
     "        <input type=\"text\" class=\"form-control\" name=\"organization\" ng-model=\"formData.customer.organization\" required=\"required\">\n" +
     "    </div>\n" +
     "</div>\n" +
     "\n" +
     "<div class=\"row\">\n" +
-    "    <div class=\"form-group col-sm-6\">\n" +
+    "    <div class=\"form-group col-sm-6 required\">\n" +
     "        <label for=\"jobTitle\" class=\"control-label\">Job Title</label>\n" +
     "        <input type=\"text\" class=\"form-control\" name=\"jobTitle\" ng-model=\"formData.customer.jobTitle\" required=\"required\">\n" +
     "    </div>\n" +
     "\n" +
-    "    <div class=\"form-group col-sm-4\">\n" +
+    "    <div class=\"form-group col-sm-4 required\">\n" +
     "        <label for=\"email\" class=\"control-label\">Email</label>\n" +
     "        <input type=\"email\" class=\"form-control\" name=\"email\" ng-model=\"formData.customer.email\" required=\"required\">\n" +
     "    </div>\n" +
@@ -45188,7 +45191,7 @@ angular.module('myApp', [
     "\t    </label>\n" +
     "\t</div>\n" +
     "\n" +
-    "    <div class=\"form-group col-sm-6\" ng-show=\"formData.customer.groupOrder\">\n" +
+    "    <div class=\"form-group col-sm-6 required\" ng-show=\"formData.customer.groupOrder\">\n" +
     "        <label for=\"groupContact\" class=\"control-label\">Group Contact Name</label>\n" +
     "        <input type=\"text\" class=\"form-control\" name=\"groupContact\" ng-model=\"formData.customer.groupContact\" ng-required=\"formData.customer.groupOrder\">\n" +
     "    </div>\n" +
@@ -45198,35 +45201,35 @@ angular.module('myApp', [
     "    <div class=\"panel-heading\">Contact Information</div>\n" +
     "    <div class=\"panel-body\">\n" +
     "        <div class=\"row\">\n" +
-    "            <div class=\"form-group col-sm-4\">\n" +
+    "            <div class=\"form-group col-sm-4 required\">\n" +
     "                <label for=\"implementationName\" class=\"control-label\">Test Coordinator Contact Name</label>\n" +
-    "                <input type=\"text\" class=\"form-control\" name=\"implementationName\" ng-model=\"formData.implementationContact.name\">\n" +
+    "                <input type=\"text\" class=\"form-control\" name=\"implementationName\" ng-model=\"formData.implementationContact.name\" required=\"required\">\n" +
     "            </div>\n" +
     "\n" +
-    "            <div class=\"form-group col-sm-4\">\n" +
+    "            <div class=\"form-group col-sm-4 required\">\n" +
     "                <label for=\"implementationEmail\" class=\"control-label\">Test Coordinator Contact Email</label>\n" +
-    "                <input type=\"email\" class=\"form-control\" name=\"implementationEmail\" ng-model=\"formData.implementationContact.email\">\n" +
+    "                <input type=\"email\" class=\"form-control\" name=\"implementationEmail\" ng-model=\"formData.implementationContact.email\" required=\"required\">\n" +
     "            </div>\n" +
     "\n" +
-    "            <div class=\"form-group col-sm-4\">\n" +
+    "            <div class=\"form-group col-sm-4 required\">\n" +
     "                <label for=\"implementationPhone\" class=\"control-label\">Test Coordinator Contact Phone</label>\n" +
-    "                <input type=\"tel\" class=\"form-control\" name=\"implementationPhone\" ng-model=\"formData.implementationContact.phone\">\n" +
+    "                <input type=\"tel\" class=\"form-control\" name=\"implementationPhone\" ng-model=\"formData.implementationContact.phone\" required=\"required\">\n" +
     "            </div>\n" +
     "        </div>\n" +
     "        <div class=\"row\">\n" +
-    "            <div class=\"form-group col-sm-4\">\n" +
+    "            <div class=\"form-group col-sm-4 required\">\n" +
     "                <label for=\"backupName\" class=\"control-label\">Backup Contact Name</label>\n" +
-    "                <input type=\"text\" class=\"form-control\" name=\"backupName\" ng-model=\"formData.backupContact.name\">\n" +
+    "                <input type=\"text\" class=\"form-control\" name=\"backupName\" ng-model=\"formData.backupContact.name\" required=\"required\">\n" +
     "            </div>\n" +
     "\n" +
-    "            <div class=\"form-group col-sm-4\">\n" +
+    "            <div class=\"form-group col-sm-4 required\">\n" +
     "                <label for=\"backupEmail\" class=\"control-label\">Backup Contact Email</label>\n" +
-    "                <input type=\"email\" class=\"form-control\" name=\"backupEmail\" ng-model=\"formData.backupContact.email\">\n" +
+    "                <input type=\"email\" class=\"form-control\" name=\"backupEmail\" ng-model=\"formData.backupContact.email\" required=\"required\">\n" +
     "            </div>\n" +
     "\n" +
-    "            <div class=\"form-group col-sm-4\">\n" +
+    "            <div class=\"form-group col-sm-4 required\">\n" +
     "                <label for=\"backupPhone\" class=\"control-label\">Backup Contact Phone</label>\n" +
-    "                <input type=\"tel\" class=\"form-control\" name=\"backupPhone\" ng-model=\"formData.backupContact.phone\">\n" +
+    "                <input type=\"tel\" class=\"form-control\" name=\"backupPhone\" ng-model=\"formData.backupContact.phone\" required=\"required\">\n" +
     "            </div>\n" +
     "        </div>        \n" +
     "    </div>\n" +
@@ -45236,23 +45239,23 @@ angular.module('myApp', [
     "    <div class=\"panel-heading\">Billing Information</div>\n" +
     "    <div class=\"panel-body\">\n" +
     "        <div class=\"row\">\n" +
-    "            <div class=\"form-group col-sm-4\">\n" +
+    "            <div class=\"form-group col-sm-4 required\">\n" +
     "                <label for=\"billingName\" class=\"control-label\">Billing Contact Name</label>\n" +
-    "                <input type=\"text\" class=\"form-control\" name=\"billingName\" ng-model=\"formData.billingContact.name\">\n" +
+    "                <input type=\"text\" class=\"form-control\" name=\"billingName\" ng-model=\"formData.billingContact.name\" required=\"required\">\n" +
     "            </div>\n" +
     "\n" +
-    "            <div class=\"form-group col-sm-4\">\n" +
+    "            <div class=\"form-group col-sm-4 required\">\n" +
     "                <label for=\"billingEmail\" class=\"control-label\">Billing Contact Email</label>\n" +
-    "                <input type=\"email\" class=\"form-control\" name=\"billingEmail\" ng-model=\"formData.billingContact.email\">\n" +
+    "                <input type=\"email\" class=\"form-control\" name=\"billingEmail\" ng-model=\"formData.billingContact.email\" required=\"required\">\n" +
     "            </div>\n" +
     "\n" +
-    "            <div class=\"form-group col-sm-4\">\n" +
+    "            <div class=\"form-group col-sm-4 required\">\n" +
     "                <label for=\"billingPhone\" class=\"control-label\">Billing Contact Phone</label>\n" +
-    "                <input type=\"tel\" class=\"form-control\" name=\"billingPhone\" ng-model=\"formData.billingContact.phone\">\n" +
+    "                <input type=\"tel\" class=\"form-control\" name=\"billingPhone\" ng-model=\"formData.billingContact.phone\" required=\"required\">\n" +
     "            </div>\n" +
     "        </div>    \n" +
     "        <div class=\"row\">\n" +
-    "            <div class=\"form-group col-sm-12\">\n" +
+    "            <div class=\"form-group col-sm-12 required\">\n" +
     "                <label for=\"billingAddress\" class=\"control-label\">Billing Address Line 1</label>\n" +
     "                <input type=\"text\" class=\"form-control\" name=\"billingAddress\" ng-model=\"formData.billing.address.line1\" required=\"required\">\n" +
     "            </div>\n" +
@@ -45264,21 +45267,33 @@ angular.module('myApp', [
     "            </div>\n" +
     "        </div>        \n" +
     "        <div class=\"row\">\n" +
-    "            <div class=\"form-group col-sm-4\">\n" +
+    "            <div class=\"form-group col-sm-4 required\">\n" +
     "                <label for=\"city\" class=\"control-label\">City</label>\n" +
     "                <input type=\"text\" class=\"form-control\" name=\"city\" ng-model=\"formData.billing.address.city\" required=\"required\">\n" +
     "            </div>\n" +
     "\n" +
-    "            <div class=\"form-group col-sm-4\">\n" +
+    "            <div class=\"form-group col-sm-4 required\">\n" +
     "                <label for=\"state\" class=\"control-label\">State</label>\n" +
     "        \t\t<select class=\"form-control\" name=\"state\" ng-model=\"formData.billing.address.state\" ng-options=\"key as value for (key , value) in states\" required=\"required\"></select>\n" +
     "            </div>\n" +
     "\n" +
-    "            <div class=\"form-group col-sm-4\">\n" +
+    "            <div class=\"form-group col-sm-4 required\">\n" +
     "                <label for=\"zip\" class=\"control-label\">Zip</label>\n" +
     "                <input type=\"text\" class=\"form-control\" name=\"zip\" ng-model=\"formData.billing.address.zip\" required=\"required\">\n" +
     "            </div>\n" +
-    "        </div>      \n" +
+    "        </div>\n" +
+    "\t\t<div class=\"row\">\n" +
+    "\t\t\t<div class=\"col-sm-3 form-group\">\n" +
+    "\t\t\t    <label class=\"checkbox-inline\">\n" +
+    "\t\t\t    \t<input type=\"checkbox\" ng-model=\"formData.billing.taxExempt\">\n" +
+    "\t\t\t    \tTax Exempt\n" +
+    "\t\t\t    </label>\n" +
+    "\t\t\t</div>\n" +
+    "\n" +
+    "\t\t    <div class=\"col-sm-9\" ng-show=\"formData.billing.taxExempt\">\n" +
+    "\t\t    Please email a copy of your exemption certificate to <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a>\n" +
+    "\t\t    </div>\n" +
+    "\t\t</div>      \n" +
     "    </div>\n" +
     "</div>\n" +
     "\n" +
@@ -45459,7 +45474,7 @@ angular.module('myApp', [
     "\t\t\t\t<td>{{(formData.summary.discount.volume.summativePaper + formData.summary.discount.multiGrade.summativePaper + formData.summary.discount.periodic.summativePaper + formData.summary.discount.special.summativePaper) * order.paperTotal | currency}}</td>\n" +
     "\t\t\t\t</td>\n" +
     "\t\t\t\t<td>{{(cost.pricing.summative.paper- (formData.summary.discount.volume.summativePaper + formData.summary.discount.multiGrade.summativePaper + formData.summary.discount.periodic.summativePaper + formData.summary.discount.special.summativePaper)) * order.paperTotal | currency}}</td>\t\t\t\t\n" +
-    "\t\t\t</tr>\t\n" +
+    "\t\t\t</tr>\n" +
     "\t\t\t<tr ng-repeat=\"order in formData.periodic.orders\">\n" +
     "\t\t\t\t<td>{{order.administrationWindow}} {{order.calendarYear}} Periodic Order Online</td>\n" +
     "\t\t\t\t<td>{{order.onlineTotal}}</td>\n" +
@@ -45473,7 +45488,7 @@ angular.module('myApp', [
     "\t\t\t\t<td>{{(formData.summary.discount.special.periodic.discountPer) * order.onlineTotal | currency}}</td>\n" +
     "\t\t\t\t</td>\n" +
     "\t\t\t\t<td>{{(cost.pricing.periodic - formData.summary.discount.special.periodic.discountPer) * order.onlineTotal | currency}}</td>\t\t\t\t\t\t\n" +
-    "\t\t\t</tr>\t\t\n" +
+    "\t\t\t</tr>\n" +
     "\t\t</tbody>\n" +
     "\t</table>\n" +
     "</div>\n" +
@@ -45489,7 +45504,7 @@ angular.module('myApp', [
     "\t\t<a href=\"\">Terms and Conditions</a>\n" +
     "\t</div>\n" +
     "    <div class=\"col-sm-4\">\n" +
-    "  \t\t<button class=\"btn btn-default\">Submit Order</button>\n" +
+    "  \t\t<button class=\"btn btn-default\" ng-disabled=\"customerForm.$invalid || customerForm.$pending || !formData.acceptTerms\">Submit Order</button>\n" +
     "    </div>\n" +
     "</div>\n" +
     "\n" +
@@ -45507,7 +45522,7 @@ angular.module('myApp', [
     "\n" +
     "      \n" +
     "      <!-- use ng-submit to catch the form submission and use our Angular function -->\n" +
-    "      <form id=\"signup-form\" ng-submit=\"processForm()\">\n" +
+    "      <form id=\"customerForm\" name=\"customerForm\" ng-submit=\"processForm()\">\n" +
     "\n" +
     "          <!-- our nested state views will be injected here -->\n" +
     "          <div id=\"form-views\" ui-view></div>\n" +
