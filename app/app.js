@@ -35,7 +35,8 @@ angular.module('myApp', [
 
 	$scope.cost = costService.cost;
 
-	$scope.currentYear = new Date().getFullYear();
+	$scope.date = new Date();
+	$scope.currentYear = $scope.date.getFullYear();
 	$scope.administrationWindows = ['Fall', 'Spring'];		
 	$scope.calendarYears = [$scope.currentYear, $scope.currentYear + 1, $scope.currentYear + 2, $scope.currentYear + 3, $scope.currentYear + 4];
 	$scope.subjects = {'Math' :true, 'Science':true, 'Reading':true, 'English':true, 'Writing':true};

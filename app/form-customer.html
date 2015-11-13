@@ -195,7 +195,7 @@
 		<select class="form-control" name="calendarYear" ng-model="summative.calendarYear" ng-options="item for item in calendarYears"></select>
 	</div>
 	<div class="form-group col-sm-2">
-		<span ng-click="addOrder(formData.summative.orders, summative.calendarYear, summative.administrationWindow, summative.error)" class="btn btn-default">Add Order</span>
+		<span ng-click="addOrder(formData.summative.orders, summative.calendarYear, summative.administrationWindow, summative.error)" class="btn btn-default">Add to Order</span>
 	</div>
 </div>
 <div class="row">
@@ -241,7 +241,7 @@
 		<select class="form-control" name="schoolYear" ng-model="periodic.schoolYear" ng-options="item for item in calendarYears"></select>
 	</div>
 	<div class="form-group col-sm-2">
-		<span ng-click="addOrder(formData.periodic.orders, periodic.schoolYear)"  class="btn btn-default">Add Order</span>
+		<span ng-click="addOrder(formData.periodic.orders, periodic.schoolYear)"  class="btn btn-default">Add to Order</span>
 	</div>
 </div>
 <div class="row">
@@ -337,16 +337,22 @@
 	</table>
 </div>
 
+<div class="panel panel-default">
+	<div class="panel-heading">Additional Comments</div>
+	<div class="panel-body">
+		<textarea class="form-control" rows="3" ng-model="formData.comments"></textarea>
+	</div>
+</div>
+
 <div class="row">
 	<div class="col-sm-4 form-group">
 	    <label class="checkbox-inline">
 	    	<input type="checkbox" ng-model="formData.acceptTerms">
-	    	I agree to ACT Aspire's Term's and Condition's
+	    	I agree to ACT Aspire's <a href="">Terms and Conditions</a>
 	    </label>
 	</div>
-	<div class="col-sm-4">
-		<a href="">Terms and Conditions</a>
-	</div>
+</div>
+<div class="row">
     <div class="col-sm-4">
   		<button class="btn btn-default" ng-disabled="customerForm.$invalid || customerForm.$pending || !formData.acceptTerms">Submit Order</button>
     </div>

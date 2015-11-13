@@ -199,7 +199,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t<select class=\"form-control\" name=\"calendarYear\" ng-model=\"summative.calendarYear\" ng-options=\"item for item in calendarYears\"></select>\n" +
     "\t</div>\n" +
     "\t<div class=\"form-group col-sm-2\">\n" +
-    "\t\t<span ng-click=\"addOrder(formData.summative.orders, summative.calendarYear, summative.administrationWindow, summative.error)\" class=\"btn btn-default\">Add Order</span>\n" +
+    "\t\t<span ng-click=\"addOrder(formData.summative.orders, summative.calendarYear, summative.administrationWindow, summative.error)\" class=\"btn btn-default\">Add to Order</span>\n" +
     "\t</div>\n" +
     "</div>\n" +
     "<div class=\"row\">\n" +
@@ -245,7 +245,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t<select class=\"form-control\" name=\"schoolYear\" ng-model=\"periodic.schoolYear\" ng-options=\"item for item in calendarYears\"></select>\n" +
     "\t</div>\n" +
     "\t<div class=\"form-group col-sm-2\">\n" +
-    "\t\t<span ng-click=\"addOrder(formData.periodic.orders, periodic.schoolYear)\"  class=\"btn btn-default\">Add Order</span>\n" +
+    "\t\t<span ng-click=\"addOrder(formData.periodic.orders, periodic.schoolYear)\"  class=\"btn btn-default\">Add to Order</span>\n" +
     "\t</div>\n" +
     "</div>\n" +
     "<div class=\"row\">\n" +
@@ -341,16 +341,22 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t</table>\n" +
     "</div>\n" +
     "\n" +
+    "<div class=\"panel panel-default\">\n" +
+    "\t<div class=\"panel-heading\">Additional Comments</div>\n" +
+    "\t<div class=\"panel-body\">\n" +
+    "\t\t<textarea class=\"form-control\" rows=\"3\" ng-model=\"formData.comments\"></textarea>\n" +
+    "\t</div>\n" +
+    "</div>\n" +
+    "\n" +
     "<div class=\"row\">\n" +
     "\t<div class=\"col-sm-4 form-group\">\n" +
     "\t    <label class=\"checkbox-inline\">\n" +
     "\t    \t<input type=\"checkbox\" ng-model=\"formData.acceptTerms\">\n" +
-    "\t    \tI agree to ACT Aspire's Term's and Condition's\n" +
+    "\t    \tI agree to ACT Aspire's <a href=\"\">Terms and Conditions</a>\n" +
     "\t    </label>\n" +
     "\t</div>\n" +
-    "\t<div class=\"col-sm-4\">\n" +
-    "\t\t<a href=\"\">Terms and Conditions</a>\n" +
-    "\t</div>\n" +
+    "</div>\n" +
+    "<div class=\"row\">\n" +
     "    <div class=\"col-sm-4\">\n" +
     "  \t\t<button class=\"btn btn-default\" ng-disabled=\"customerForm.$invalid || customerForm.$pending || !formData.acceptTerms\">Submit Order</button>\n" +
     "    </div>\n" +
@@ -365,24 +371,25 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "  \n" +
     "  <div id=\"form-container\">\n" +
     "    <h2>ACT Aspire Order Form</h2>\n" +
-    "    <div class=\"col-sm-12\">Congratulations on your decision to order ACT Aspire! To help ensure your order is accurate please fill in all applicable boxes, average customer order takes 20-30 minutes to fill out. This will ensure accurate order.\n" +
+    "    <div class=\"col-sm-12\">\n" +
+    "      <p>\n" +
+    "        Congratulations on your decision to order ACT Aspire! To help ensure your order is accurate please fill in all applicable boxes. This will ensure accurate order.\n" +
+    "      </p>\n" +
+    "      <p>\n" +
+    "        Pricing valid through {{cost.pricing.validThrough}}\n" +
+    "      </p>\n" +
     "    </div>\n" +
+    "\n" +
+    "    <div class=\"row\"><div class=\"col-sm-12\">Date: {{date | date:'yyyy-MM-dd'}}</div></div>\n" +
     "\n" +
     "      \n" +
     "      <!-- use ng-submit to catch the form submission and use our Angular function -->\n" +
-    "      <form id=\"customerForm\" name=\"customerForm\" ng-submit=\"processForm()\">\n" +
-    "\n" +
-    "          <!-- our nested state views will be injected here -->\n" +
-    "          <div id=\"form-views\" ui-view></div>\n" +
+    "      <form id=\"customerForm\" name=\"customerForm\" ng-submit=\"processForm()\">        \n" +
+    "        <!-- our nested state views will be injected here -->\n" +
+    "        <div id=\"form-views\" ui-view></div>\n" +
     "      </form>\n" +
     "  \n" +
     "  </div>\n" +
-    "  \n" +
-    "  <!-- show our formData as it is being typed -->\n" +
-    "  <pre>\n" +
-    "    {{ formData }}\n" +
-    "  </pre>\n" +
-    "\n" +
     "\n"
   );
 
