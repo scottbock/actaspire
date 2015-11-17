@@ -27,7 +27,7 @@ angular.module('myApp', [
 
 // our controller for the form
 // =============================================================================
-.controller('formController', ['$scope', '$http', 'CostService', function($scope, $http, costService) {
+.controller('formController', ['$scope', '$http', 'CostService', 'schoolYearFilter', function($scope, $http, costService, schoolYearFilter) {
 
 	$http.get('json/states.json').success(function(data) { 
     	$scope.states = data;
@@ -41,11 +41,11 @@ angular.module('myApp', [
 	$scope.calendarYears = [$scope.currentYear, $scope.currentYear + 1, $scope.currentYear + 2, $scope.currentYear + 3, $scope.currentYear + 4];
 	$scope.subjects = {'Math' :true, 'Science':true, 'Reading':true, 'English':true, 'Writing':true};
 	$scope.summative = {
-		'administrationWindow' : $scope.administrationWindows[0],
-		'calendarYear' : $scope.calendarYears[0]
+		'administrationWindow' : '',
+		'calendarYear' : ''
 	};
 	$scope.periodic = {		
-		'schoolYear' : $scope.calendarYears[0]
+		'schoolYear' : ''
 	};
 
 	// we will store all of our form data in this object
@@ -234,7 +234,7 @@ angular.module('myApp', [
 	$http.get(url).then(function(data) { 
 		//remove wp styling garbage
         var raw = data.data[0].content.rendered;
-        var pricingData = raw.replace(/<\/?p>/g,'').replace(/<br \/>/g,'').replace(/&#8220;/g,'"').replace(/&#8221;/g,'"');
+        var pricingData = raw.replace(/<\/?p>/g,'').replace(/<br \/>/g,'').replace(/&#8220;/g,'"').replace(/&#8221;/g,'"').replace(/&#8243;/g,'"');
         data = JSON.parse(pricingData);
 
     	cost.pricing = data.pricing;
@@ -303,6 +303,21 @@ angular.module('myApp', [
 		'getPeriodicDiscount':getPeriodicDiscount,
 		'getSpecialDiscount':getSpecialDiscount
 	}
-}]);
+}])
+
+.filter('schoolYear', function() {
+
+  return function(year) {
+
+    // Ensure that the passed in data is a number
+    if(isNaN(year) || year < 1) {
+      return number;
+
+    } else {
+      var schoolYearStart = parseInt(year);
+      return schoolYearStart + ' - ' + (schoolYearStart + 1)
+    }
+  }
+});
 
 

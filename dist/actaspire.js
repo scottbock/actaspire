@@ -44872,7 +44872,7 @@ angular.module('myApp', [
 
 // our controller for the form
 // =============================================================================
-.controller('formController', ['$scope', '$http', 'CostService', function($scope, $http, costService) {
+.controller('formController', ['$scope', '$http', 'CostService', 'schoolYearFilter', function($scope, $http, costService, schoolYearFilter) {
 
 	$http.get('json/states.json').success(function(data) { 
     	$scope.states = data;
@@ -44886,11 +44886,11 @@ angular.module('myApp', [
 	$scope.calendarYears = [$scope.currentYear, $scope.currentYear + 1, $scope.currentYear + 2, $scope.currentYear + 3, $scope.currentYear + 4];
 	$scope.subjects = {'Math' :true, 'Science':true, 'Reading':true, 'English':true, 'Writing':true};
 	$scope.summative = {
-		'administrationWindow' : $scope.administrationWindows[0],
-		'calendarYear' : $scope.calendarYears[0]
+		'administrationWindow' : '',
+		'calendarYear' : ''
 	};
 	$scope.periodic = {		
-		'schoolYear' : $scope.calendarYears[0]
+		'schoolYear' : ''
 	};
 
 	// we will store all of our form data in this object
@@ -45079,7 +45079,7 @@ angular.module('myApp', [
 	$http.get(url).then(function(data) { 
 		//remove wp styling garbage
         var raw = data.data[0].content.rendered;
-        var pricingData = raw.replace(/<\/?p>/g,'').replace(/<br \/>/g,'').replace(/&#8220;/g,'"').replace(/&#8221;/g,'"');
+        var pricingData = raw.replace(/<\/?p>/g,'').replace(/<br \/>/g,'').replace(/&#8220;/g,'"').replace(/&#8221;/g,'"').replace(/&#8243;/g,'"');
         data = JSON.parse(pricingData);
 
     	cost.pricing = data.pricing;
@@ -45148,13 +45148,32 @@ angular.module('myApp', [
 		'getPeriodicDiscount':getPeriodicDiscount,
 		'getSpecialDiscount':getSpecialDiscount
 	}
-}]);
+}])
+
+.filter('schoolYear', function() {
+
+  return function(year) {
+
+    // Ensure that the passed in data is a number
+    if(isNaN(year) || year < 1) {
+      return number;
+
+    } else {
+      var schoolYearStart = parseInt(year);
+      return schoolYearStart + ' - ' + (schoolYearStart + 1)
+    }
+  }
+});
 
 
 ;angular.module('myApp').run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('app/form-customer.html',
+    "<h3>1. Contact Information</h3>\n" +
+    "\n" +
+    "<div class=\"row\"><div class=\"col-sm-12\"><h4>Date: {{date | date:'yyyy-MM-dd'}}</h4></div></div>\n" +
+    "\n" +
     "<div class=\"row\">\n" +
     "    <div class=\"form-group col-sm-3 required\">\n" +
     "        <label for=\"firstName\" class=\"control-label\">First Name</label>\n" +
@@ -45298,15 +45317,26 @@ angular.module('myApp', [
     "    </div>\n" +
     "</div>\n" +
     "\n" +
-    "<h2>Summative Order Data</h2>\n" +
-    "<p>Blah Blah Blah summative order stuff</p>\n" +
+    "<h3>2. Summative Order Data</h3>\n" +
+    "<div class=\"row\">\n" +
+    "\t<div class=\"col-sm-12\">\n" +
+    "  \t\t<h5>ACT Aspire Summative Test</h5>\n" +
+    "  \t\t<ul>\n" +
+    "\t\t    <li>Is a vertically scaled, standards-based battery of achievement test that are linked to the College and Career Readiness Standard in the subject areas of: English, mathmatics, reading, science and writing.</li>\t\t\t\t\n" +
+    "\t\t    <li>Designed for Grades 3 - 10 and can be taken Online or in Paper form (paper administration requires an additional fee).</li>\n" +
+    "\t\t    <li>Can be administered in a Spring test administration window or a Fall test administration window.</li>\n" +
+    "\t\t    <li>If you know your intended or preferred test dates, subjects to be taken and estimated student counts, please include where applicable below.</li>\n" +
+    "\t\t    <li>Prices are good till XX/XX/XX. If you have any questions regarding the product or placing an order please contact order@actaspire.org or 888-XXX-XXXX</li>\n" +
+    "\t\t</ul>\n" +
+    "\t</div>\t\t\n" +
+    "</div>\n" +
     "\t\n" +
     "<div class=\"panel panel-default\" ng-repeat=\"order in formData.summative.orders\">\n" +
     "\t<div class=\"panel-heading\">\n" +
     "\t\t{{order.administrationWindow}} {{order.calendarYear}} Summative Order\n" +
-    "\t\t<span type=\"button\" class=\"pull-right btn btn-default btn-xs\" aria-label=\"Remove\" ng-click=\"removeOrder(formData.summative.orders, order)\">\n" +
+    "\t\t<button type=\"button\" class=\"pull-right btn btn-default btn-xs\" aria-label=\"Remove\" ng-click=\"removeOrder(formData.summative.orders, order)\">\n" +
     "\t\t\t<span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>\n" +
-    "\t\t</span>\n" +
+    "\t\t</button>\n" +
     "\t</div>\n" +
     "\t<div class=\"panel-body\">\n" +
     "\t<div class=\"row\">\n" +
@@ -45345,14 +45375,23 @@ angular.module('myApp', [
     "<div class=\"row\">\n" +
     "\t<div class=\"form-group col-sm-5\">\n" +
     "\t\t<label for=\"administrationWindow\" class=\"control-label\">Test Administration Window</label>\n" +
-    "\t\t<select class=\"form-control\" name=\"administrationWindow\" ng-model=\"summative.administrationWindow\" ng-options=\"item for item in administrationWindows\"></select>\n" +
+    "\t\t<select class=\"form-control\" name=\"administrationWindow\" ng-model=\"summative.administrationWindow\">\n" +
+    "\t\t\t<option value=\"\">---Please select---</option>\n" +
+    "      \t\t<option ng-repeat=\"item in administrationWindows\" value=\"{{item}}\">{{item}}</option>\n" +
+    "\t\t </select>\n" +
     "\t</div>\n" +
     "\t<div class=\"form-group col-sm-5\">\n" +
     "\t\t<label for=\"calendarYear\" class=\"control-label\">Calendar Year</label>\n" +
-    "\t\t<select class=\"form-control\" name=\"calendarYear\" ng-model=\"summative.calendarYear\" ng-options=\"item for item in calendarYears\"></select>\n" +
+    "\t\t<select class=\"form-control\" name=\"calendarYear\" ng-model=\"summative.calendarYear\">\n" +
+    "\t\t\t<option value=\"\">---Please select---</option>\n" +
+    "      \t\t<option ng-repeat=\"item in calendarYears\" value=\"{{item}}\">{{item}}</option>\n" +
+    "\t\t </select>\n" +
     "\t</div>\n" +
     "\t<div class=\"form-group col-sm-2\">\n" +
-    "\t\t<span ng-click=\"addOrder(formData.summative.orders, summative.calendarYear, summative.administrationWindow, summative.error)\" class=\"btn btn-default\">Add to Order</span>\n" +
+    "\t\t<label class=\"control-label\">&nbsp;</label>\n" +
+    "\t\t<div>\n" +
+    "\t\t\t<button type=\"button\" ng-model=\"addSummativeOrderButton\" ng-click=\"addOrder(formData.summative.orders, summative.calendarYear, summative.administrationWindow, summative.error)\" class=\"btn btn-default\" ng-disabled=\"!summative.calendarYear || !summative.administrationWindow\">Add to Order</button>\n" +
+    "\t\t</div>\n" +
     "\t</div>\n" +
     "</div>\n" +
     "<div class=\"row\">\n" +
@@ -45363,15 +45402,26 @@ angular.module('myApp', [
     "\t</div>\n" +
     "</div> \t\n" +
     "\n" +
-    "<h2>Periodic Order Data</h2>\n" +
-    "<p>Blah Blah Blah periodic order stuff</p>\n" +
-    "\t\n" +
+    "<h3>3. Periodic Order Data</h3>\n" +
+    "<div class=\"row\">\n" +
+    "\t<div class=\"col-sm-12\">\n" +
+    "  \t\t<h5>ACT Aspire Periodic</h5>\n" +
+    "  \t\t<ul>\n" +
+    "\t\t    <li>Is a complement to the ACT Aspire Summative test, this is a school year long subscription to access a series of interim tests and classroom quizzes in the subject areas of: English, mathmatics, reading, science and writing.</li>\n" +
+    "\t\t    <li>Interim tests are designed for Grades 3 - 10 and can be taken Online, Classroom quizzez are designed for Grades 3-8 also only in Online.</li>\n" +
+    "\t\t    <li>Can be administered throughout the year to students and provide immediate analysis and reporting.</li>\n" +
+    "\t\t    <li>Bundle with ACT Aspire Summative test and receive a per student discount off of the Summative test (see discount below).</li>\n" +
+    "\t\t    <li>Prices are good till XX/XX/XX. If you have any questions regarding the product or placing an order please contact order@actaspire.org or 888-XXX-XXXX</li>\n" +
+    "\t\t</ul>\n" +
+    "\t</div>\t\t\n" +
+    "</div>\n" +
+    "\n" +
     "<div class=\"panel panel-default\" ng-repeat=\"order in formData.periodic.orders\">\n" +
     "\t<div class=\"panel-heading\">\n" +
-    "\t\t{{order.calendarYear + ' - ' + (order.calendarYear + 1)}} Periodic Order\n" +
-    "\t\t<span type=\"button\" class=\"pull-right btn btn-default btn-xs\" aria-label=\"Remove\" ng-click=\"removeOrder(formData.periodic.orders, order)\">\n" +
+    "\t\t{{order.calendarYear}} Periodic Order\n" +
+    "\t\t<button type=\"button\" class=\"pull-right btn btn-default btn-xs\" aria-label=\"Remove\" ng-click=\"removeOrder(formData.periodic.orders, order)\">\n" +
     "\t\t\t<span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>\n" +
-    "\t\t</span>\n" +
+    "\t\t</button>\n" +
     "\t</div>\n" +
     "\t<div class=\"panel-body\">\n" +
     "\t\tStudent Estimate\n" +
@@ -45395,10 +45445,16 @@ angular.module('myApp', [
     "<div class=\"row\">\n" +
     "\t<div class=\"form-group col-sm-5\">\n" +
     "\t\t<label for=\"schoolYear\" class=\"control-label\">School Year</label>\n" +
-    "\t\t<select class=\"form-control\" name=\"schoolYear\" ng-model=\"periodic.schoolYear\" ng-options=\"item for item in calendarYears\"></select>\n" +
+    "\t\t<select class=\"form-control\" name=\"schoolYear\" ng-model=\"periodic.schoolYear\">\n" +
+    "\t\t\t<option value=\"\">---Please select---</option>\n" +
+    "      \t\t<option ng-repeat=\"item in calendarYears\" value=\"{{item | schoolYear}}\">{{item | schoolYear}}</option>\n" +
+    "\t\t </select>\n" +
     "\t</div>\n" +
     "\t<div class=\"form-group col-sm-2\">\n" +
-    "\t\t<span ng-click=\"addOrder(formData.periodic.orders, periodic.schoolYear)\"  class=\"btn btn-default\">Add to Order</span>\n" +
+    "\t\t<label class=\"control-label\">&nbsp;</label>\n" +
+    "\t\t<div>\n" +
+    "\t\t\t<button type=\"button\" ng-model=\"addPeriodicOrderButton\" ng-click=\"addOrder(formData.periodic.orders, periodic.schoolYear)\"  class=\"btn btn-default\" ng-disabled=\"!periodic.schoolYear\">Add to Order</button>\n" +
+    "\t\t</div>\n" +
     "\t</div>\n" +
     "</div>\n" +
     "<div class=\"row\">\n" +
@@ -45409,6 +45465,7 @@ angular.module('myApp', [
     "\t</div>\n" +
     "</div> \t\n" +
     "\n" +
+    "<h3>4. Order Summary</h3>\n" +
     "<div class=\"panel panel-default\">\n" +
     "\t<div class=\"panel-heading\">\n" +
     "\t\tOrder Summary\n" +
@@ -45416,11 +45473,14 @@ angular.module('myApp', [
     "\t<div class=\"panel-body\">\n" +
     "\t\t<div class=\"row\">\n" +
     "\t\t\t<div class=\"form-group col-sm-4\">\n" +
-    "\t\t\t\t\t<label for=\"discountCode\" class=\"control-label\">Discount Code</label>\n" +
-    "\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"discountCode\" ng-model=\"discountCode\">\n" +
+    "\t\t\t\t<label for=\"discountCode\" class=\"control-label\">Discount Code</label>\n" +
+    "\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"discountCode\" ng-model=\"discountCode\">\n" +
     "\t\t\t</div>\n" +
     "\t\t\t<div class=\"col-sm-2\">\n" +
-    "\t\t\t\t<span ng-click=\"addDiscountCode(discountCode); discountCode = '';\" class=\"btn btn-default\">Add</span>\n" +
+    "\t\t\t\t<label class=\"control-label\">&nbsp;</label>\n" +
+    "\t\t\t\t<div>\n" +
+    "\t\t\t\t\t<button type=\"button\" ng-click=\"addDiscountCode(discountCode); discountCode = '';\" class=\"btn btn-default\">Add</button>\n" +
+    "\t\t\t\t</div>\n" +
     "\t\t\t</div>\n" +
     "\t\t</div>\n" +
     "\t\t<div class=\"row\">\n" +
@@ -45511,7 +45571,7 @@ angular.module('myApp', [
     "</div>\n" +
     "<div class=\"row\">\n" +
     "    <div class=\"col-sm-4\">\n" +
-    "  \t\t<button class=\"btn btn-default\" ng-disabled=\"customerForm.$invalid || customerForm.$pending || !formData.acceptTerms\">Submit Order</button>\n" +
+    "  \t\t<button type=\"submit\" class=\"btn btn-default\" ng-disabled=\"customerForm.$invalid || customerForm.$pending || !formData.acceptTerms\">Submit Order</button>\n" +
     "    </div>\n" +
     "</div>\n" +
     "\n" +
@@ -45532,10 +45592,6 @@ angular.module('myApp', [
     "        Pricing valid through {{cost.pricing.validThrough}}\n" +
     "      </p>\n" +
     "    </div>\n" +
-    "\n" +
-    "    <div class=\"row\"><div class=\"col-sm-12\">Date: {{date | date:'yyyy-MM-dd'}}</div></div>\n" +
-    "\n" +
-    "      \n" +
     "      <!-- use ng-submit to catch the form submission and use our Angular function -->\n" +
     "      <form id=\"customerForm\" name=\"customerForm\" ng-submit=\"processForm()\">        \n" +
     "        <!-- our nested state views will be injected here -->\n" +
