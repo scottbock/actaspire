@@ -2,7 +2,8 @@
 
 // Declare app level module which depends on views, and components
 angular.module('myApp', [
-  'ui.router'
+  'ui.router',
+  'ngCookies'
 ])
 .config(function($stateProvider, $urlRouterProvider) {
     
@@ -27,7 +28,7 @@ angular.module('myApp', [
 
 // our controller for the form
 // =============================================================================
-.controller('formController', ['$scope', '$http', 'CostService', 'schoolYearFilter', function($scope, $http, costService, schoolYearFilter) {
+.controller('formController', ['$scope', '$http', '$cookies', 'CostService', 'EmailService', 'schoolYearFilter', function($scope, $http, $cookies, costService, emailService, schoolYearFilter) {
 
 	$http.get('json/states.json').success(function(data) { 
     	$scope.states = data;
@@ -46,6 +47,10 @@ angular.module('myApp', [
 	};
 	$scope.periodic = {		
 		'schoolYear' : ''
+	};
+
+	$scope.saveDraft = function(){
+		$cookies.putObject('formData', $scope.formData);
 	};
 
 	// we will store all of our form data in this object
@@ -67,6 +72,11 @@ angular.module('myApp', [
 			periodicPrice:0
 		}
 	};
+
+	var cookieFormData = $cookies.getObject('formData');
+	if(cookieFormData){
+		$scope.formData = cookieFormData;
+	}
 	
 	$scope.updateTotals = function(){
 		var summativeOnlineTotal = 0;
@@ -223,29 +233,16 @@ angular.module('myApp', [
     
 	// function to process the form
 	$scope.processForm = function() {
-
+		emailService.sendConfirmationEmail($scope.formData);
 	};    
 }])
 
 .factory('CostService', ['$http', function ($http) {
 	var cost = {};
-	// var url = 'json/cost.json';
-	var url = 'http://localhost:8888/wordpress/wp-json/wp/v2/actaspire_cost_json/';
-	$http.get(url).then(function(data) { 
-		//remove wp styling garbage
-        var raw = data.data[0].content.rendered;
-        var pricingData = raw.replace(/<\/?p>/g,'').replace(/<br \/>/g,'').replace(/&#8220;/g,'"').replace(/&#8221;/g,'"').replace(/&#8243;/g,'"');
-        data = JSON.parse(pricingData);
-
-    	cost.pricing = data.pricing;
-    	cost.discounts = data.discounts;
-    	cost.coupons = data.coupons;
-	}, function(error){
-		$http.get('json/cost.json').then(function(data) { 
-	    	cost.pricing = data.pricing;
-    		cost.discounts = data.discounts;
-	    	cost.coupons = data.coupons;
-		});
+	$http.get('json/cost.json').then(function(response) { 
+    	cost.pricing = response.data.pricing;
+		cost.discounts = response.data.discounts;
+    	cost.coupons = response.data.coupons;
 	});
 
 	var getVolumeDiscount = function(amount){
@@ -294,7 +291,7 @@ angular.module('myApp', [
 			discountAmount.error = "No matching coupon for code " + couponCode.toUpperCase();
 		}
 		return discountAmount;
-	}
+	};
 
 	return {
 		'cost':cost,
@@ -302,6 +299,24 @@ angular.module('myApp', [
 		'getMultigradeDiscount':getMultigradeDiscount,
 		'getPeriodicDiscount':getPeriodicDiscount,
 		'getSpecialDiscount':getSpecialDiscount
+	}
+}])
+
+.factory('EmailService', ['$http', function ($http) {
+	var url = 'http://localhost:8888/wordpress/wp-json/wp/v2/sendEmail/';
+	var sendConfirmationEmail = function(formData){
+		$http.post(url, {}, {}).then(
+			function(){
+				alert('success');
+			}, 
+			function(){
+				alert('failure');
+			}
+		);
+	};
+
+	return {
+		'sendConfirmationEmail':sendConfirmationEmail
 	}
 }])
 

@@ -12,6 +12,7 @@ module.exports = function(grunt) {
         'app/bower_components/bootstrap/dist/js/bootstrap.js',
         'app/bower_components/angular/angular.js',
         'app/bower_components/angular-ui-router/release/angular-ui-router.js',
+        'app/bower_components/angular-cookies/angular-cookies.js',
         'app/*.js'
         ],
         dest: 'dist/<%= pkg.name %>.js'

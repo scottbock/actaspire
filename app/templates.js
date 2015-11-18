@@ -405,6 +405,9 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "    <div class=\"col-sm-4\">\n" +
     "  \t\t<button type=\"submit\" class=\"btn btn-default\" ng-disabled=\"customerForm.$invalid || customerForm.$pending || !formData.acceptTerms\">Submit Order</button>\n" +
     "    </div>\n" +
+    "\t<div class=\"col-sm-4\">\n" +
+    "  \t\t<button type=\"button\" class=\"btn btn-default\" ng-click=\"saveDraft()\">Save Draft</button>\n" +
+    "    </div>\n" +
     "</div>\n" +
     "\n" +
     "\n"
