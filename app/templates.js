@@ -315,7 +315,10 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t</div>\n" +
     "\t\t\t</div>\n" +
     "\t\t</div>\n" +
-    "\t\t<div class=\"row\">\n" +
+    "\t\t<div class=\"row\">\t\n" +
+    "\t\t\t<div class=\"col-sm-6\" ng-show=\"!formData.summary.discount.special.error\">\n" +
+    "\t\t\t\t<p class=\"coupon-code\">{{formData.summary.discount.special.code}}</p>\n" +
+    "\t\t\t</div>\n" +
     "\t\t\t<div class=\"alert alert-danger\" role=\"alert\" ng-show=\"formData.summary.discount.special.error\">\n" +
     "\t\t\t\t<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
     "\t\t\t\t<span class=\"sr-only\">Error:</span>\n" +
@@ -397,9 +400,15 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t<div class=\"col-sm-4 form-group\">\n" +
     "\t    <label class=\"checkbox-inline\">\n" +
     "\t    \t<input type=\"checkbox\" ng-model=\"formData.acceptTerms\">\n" +
-    "\t    \tI agree to ACT Aspire's <a href=\"\">Terms and Conditions</a>\n" +
+    "\t    \tI agree to ACT Aspire's <a href=\"./json/ActAspireTermsAndConditions.pdf\" target=\"_blank\">Terms and Conditions</a>\n" +
     "\t    </label>\n" +
     "\t</div>\n" +
+    "</div>\n" +
+    "<div class=\"row\" ng-show=\"formData.acceptTerms\">\n" +
+    "    <div class=\"form-group col-sm-12 required\">\n" +
+    "        <label for=\"firstName\" class=\"control-label\">Signature:</label>\n" +
+    "        <input type=\"text\" class=\"form-control\" name=\"firstName\" ng-model=\"formData.customer.signature\" required=\"required\" placeholder=\"Enter your name as a signature\">\n" +
+    "    </div>\n" +
     "</div>\n" +
     "<div class=\"row\">\n" +
     "    <div class=\"col-sm-4\">\n" +

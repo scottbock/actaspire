@@ -311,7 +311,10 @@
 				</div>
 			</div>
 		</div>
-		<div class="row">
+		<div class="row">	
+			<div class="col-sm-6" ng-show="!formData.summary.discount.special.error">
+				<p class="coupon-code">{{formData.summary.discount.special.code}}</p>
+			</div>
 			<div class="alert alert-danger" role="alert" ng-show="formData.summary.discount.special.error">
 				<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 				<span class="sr-only">Error:</span>
@@ -393,9 +396,15 @@
 	<div class="col-sm-4 form-group">
 	    <label class="checkbox-inline">
 	    	<input type="checkbox" ng-model="formData.acceptTerms">
-	    	I agree to ACT Aspire's <a href="">Terms and Conditions</a>
+	    	I agree to ACT Aspire's <a href="./json/ActAspireTermsAndConditions.pdf" target="_blank">Terms and Conditions</a>
 	    </label>
 	</div>
+</div>
+<div class="row" ng-show="formData.acceptTerms">
+    <div class="form-group col-sm-12 required">
+        <label for="firstName" class="control-label">Signature:</label>
+        <input type="text" class="form-control" name="firstName" ng-model="formData.customer.signature" required="required" placeholder="Enter your name as a signature">
+    </div>
 </div>
 <div class="row">
     <div class="col-sm-4">

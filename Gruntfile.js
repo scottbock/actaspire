@@ -51,18 +51,24 @@ module.exports = function(grunt) {
     },
     watch: {
       files: ['<%= jshint.files %>', 'app/*.js', 'app/*.html', 'app/json/*.json'],
-      tasks: ['ngtemplates', 'concat', 'uglify', 'copy']
+      tasks: ['ngtemplates', 'concat', 'uglify', 'copy:main', 'copy:toWordPress']
     },
     copy: {
       main: {
         files: [
           // includes files within path
           {expand: true, flatten: true, src: ['app/index.html', 'app/bower_components/bootstrap/dist/css/bootstrap.min.css', 'app/app.css'], dest: 'dist/', filter: 'isFile'},
-          {expand: true, flatten: true, src: ['app/json/*.json'], dest: 'dist/json/', filter: 'isFile'},
+          {expand: true, flatten: true, src: ['app/json/*.*'], dest: 'dist/json/', filter: 'isFile'},
           {expand: true, flatten: true, src: ['app/bower_components/bootstrap/dist/fonts/*.*'], dest: 'dist/fonts/', filter: 'isFile'},
           {expand: true, flatten: true, src: ['app/bower_components/bootstrap/dist/css/bootstrap.min.css'], dest: 'dist/css/', filter: 'isFile'}
         ],
       },
+      toWordPress: {
+        files: [
+          // includes files within path
+          {expand: true, flatten: false, src: ['dist/**'], dest: '/Applications/MAMP/htdocs/wordpress/orderForm/', filter: 'isFile'}
+        ],
+      }
     }
   });
 
@@ -76,6 +82,6 @@ module.exports = function(grunt) {
 
   grunt.registerTask('test', ['jshint', 'qunit']);
 
-  grunt.registerTask('default', ['ngtemplates', 'concat', 'uglify', 'copy']);
+  grunt.registerTask('default', ['ngtemplates', 'concat', 'uglify', 'copy:main', 'copy:toWordPress']);
 
 };

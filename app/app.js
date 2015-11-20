@@ -144,6 +144,10 @@ angular.module('myApp', [
 				summativeOnline: costService.getMultigradeDiscount(summativeOnlineTotalGrades),
 				periodic: costService.getMultigradeDiscount(periodicTotalGrades)
 			},
+			periodic: {
+				summativePaper: costService.getPeriodicDiscount(summativePaperTotalGrades, periodicTotalGrades),
+				summativeOnline: costService.getPeriodicDiscount(summativeOnlineTotalGrades, periodicTotalGrades)
+			},
 			special: $scope.formData.summary.discount ? $scope.formData.summary.discount.special : undefined
 		};
 		$scope.formData.summary.discount = discount;
@@ -269,10 +273,10 @@ angular.module('myApp', [
 		return discountAmount;
 	};
 
-	var getPeriodicDiscount = function(periodicIncluded){
+	var getPeriodicDiscount = function(summativeAmount, periodicAmount){
 		var discountAmount = 0;
-		if(periodicIncluded && cost.disounts){
-			discountAmount = cost.discounts.periodic;
+		if(periodicAmount > 0 && cost.discounts){
+			discountAmount = cost.discounts.periodic.discountPer;
 		}
 		return discountAmount;
 	};
@@ -303,9 +307,19 @@ angular.module('myApp', [
 }])
 
 .factory('EmailService', ['$http', function ($http) {
+	var buildEmail = function(formData){
+		return 'Dear ' + formData.customer.firstName + ' ' + formData.customer.lastName + 
+			',\n\nThank you for your ACT Aspire Order' + 
+			'\n\nSincerely,\nYour ACT Aspire Team\nemail@email.email\nXXX-XXX-XXXX';
+	};
+
 	var url = 'http://localhost:8888/wordpress/wp-json/wp/v2/sendEmail/';
 	var sendConfirmationEmail = function(formData){
-		$http.post(url, {}, {}).then(
+		var postData = {};
+		postData.clientEmail = formData.customer.email;
+		postData.orderInbox = 'scottbock@yahoo.com';
+		postData.message = buildEmail(formData);
+		$http.post(url, postData, {}).then(
 			function(){
 				alert('success');
 			}, 

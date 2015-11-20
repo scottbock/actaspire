@@ -7,9 +7,7 @@ field type validation - zip, phone?, etc.
 Rules about which years they can order (e.g. when can they not order for 2015 anymore)
 projected test dates
 pricing for summative based on number of subjects
-Fix weird discount data in $scope
-Coupon codes manage as plugin
-Prices manage as plugin
+save when coupon code used
 grunt-angular-templates to load html templates as js
 order form as angular app
 order form generate emails

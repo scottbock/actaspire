@@ -50,3 +50,8 @@
 input.ng-invalid.ng-touched {
     border-color: #FF0000;
 }
+
+.coupon-code{
+  color: #FF0000;
+  font-style:italic;
+}
