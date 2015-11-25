@@ -167,6 +167,7 @@
 		</button>
 	</div>
 	<div class="panel-body">
+	<h5>Subjects</h5>
 	<div class="row">
     	<div class="col-sm-2 form-group" ng-repeat="(subject,enabled) in order.subjects">
             <label class="checkbox-inline">
@@ -175,9 +176,38 @@
             </label>
         </div>
     </div>
-  </label>
-		Student Estimate
+    <h5>Printed Student Reports</h5>
+    <div class="row">
+    	<div class="col-sm-12 form-group">
+		    <label class="checkbox-inline">
+		    	<input type="checkbox" ng-model="order.individualReports">
+		    	Add Printed Individual Student Reports
+		    </label>
+	    </div>
 	</div>
+	<div class="row" ng-show="order.individualReports">
+    	<div class="col-sm-6 form-group">
+			<label>
+				<input type="radio" ng-model="order.reportsPerStudent" value="1">
+				1 Report Per Student
+			</label>
+			<label>
+				<input type="radio" ng-model="order.reportsPerStudent" value="2">
+				2 Reports Per Student
+			</label>			
+	    </div>
+     	<div class="col-sm-6 form-group">
+		    <label class="checkbox-inline">
+		    	<input type="checkbox" ng-model="order.scoreLabels">
+		    	Add Printed Score Labels
+		    </label>
+	    </div>
+
+    </div>
+
+    <h5>
+		Student Estimate
+	</h5>
 	<table class="table table-striped">
 		<thead>
 			<th></th>
@@ -198,6 +228,7 @@
 			<td>{{order.paperTotal + order.onlineTotal}}</td>
 		</tr>
 	</table>
+</div>
 </div>
 
 <div class="row">
@@ -336,8 +367,8 @@
 			<tr ng-repeat="order in formData.summative.orders">
 				<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Order Online</td>
 				<td>{{order.onlineTotal}}</td>
-				<td>{{cost.pricing.summative.online | currency}}</td>
-				<td>{{order.onlineTotal * cost.pricing.summative.online | currency}}</td>
+				<td>{{cost.pricing.summative.online + ((order.individualReports ? (order.reportsPerStudent * cost.pricing.summative.isr + (order.scoreLabels ? cost.pricing.summative.labels : 0.0)) : 0.0)) | currency}}</td>
+				<td>{{order.onlineTotal * (cost.pricing.summative.online + ((order.individualReports ? (order.reportsPerStudent * cost.pricing.summative.isr + (order.scoreLabels ? cost.pricing.summative.labels : 0.0)) : 0.0))) | currency}}</td>
 				<td>
 					<div>{{formData.summary.discount.volume.summativeOnline | currency}} (Volume)</div>
 					<div>{{formData.summary.discount.multiGrade.summativeOnline | currency}} (Multi-Grade)</div>
@@ -348,13 +379,13 @@
 				</td>	
 				<td>{{(formData.summary.discount.volume.summativeOnline + formData.summary.discount.multiGrade.summativeOnline + formData.summary.discount.periodic.summativeOnline + formData.summary.discount.special.summativeOnline) * order.onlineTotal | currency}}</td>
 				</td>
-				<td>{{(cost.pricing.summative.online - (formData.summary.discount.volume.summativeOnline + formData.summary.discount.multiGrade.summativeOnline + formData.summary.discount.periodic.summativeOnline + formData.summary.discount.special.summativeOnline)) * order.onlineTotal | currency}}</td>				
+				<td>{{((cost.pricing.summative.online + ((order.individualReports ? (order.reportsPerStudent * cost.pricing.summative.isr + (order.scoreLabels ? cost.pricing.summative.labels : 0.0)) : 0.0))) - (formData.summary.discount.volume.summativeOnline + formData.summary.discount.multiGrade.summativeOnline + formData.summary.discount.periodic.summativeOnline + formData.summary.discount.special.summativeOnline.discountPer)) * order.onlineTotal | currency}}</td>				
 			</tr>
 			<tr ng-repeat="order in formData.summative.orders">
 				<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Order Paper</td>
 				<td>{{order.paperTotal}}</td>
-				<td>{{cost.pricing.summative.paper | currency}}</td>
-				<td>{{order.paperTotal * cost.pricing.summative.paper | currency}}</td>
+				<td>{{cost.pricing.summative.paper + ((order.individualReports ? (order.reportsPerStudent * cost.pricing.summative.isr + (order.scoreLabels ? cost.pricing.summative.labels : 0.0)) : 0.0)) | currency}}</td>
+				<td>{{order.paperTotal * (cost.pricing.summative.paper + ((order.individualReports ? (order.reportsPerStudent * cost.pricing.summative.isr + (order.scoreLabels ? cost.pricing.summative.labels : 0.0)) : 0.0))) | currency}}</td>
 				<td>
 					<div>{{formData.summary.discount.volume.summativePaper | currency}} (Volume)</div>
 					<div>{{formData.summary.discount.multiGrade.summativePaper | currency}} (Multi-Grade)</div>
@@ -365,7 +396,7 @@
 				</td>
 				<td>{{(formData.summary.discount.volume.summativePaper + formData.summary.discount.multiGrade.summativePaper + formData.summary.discount.periodic.summativePaper + formData.summary.discount.special.summativePaper) * order.paperTotal | currency}}</td>
 				</td>
-				<td>{{(cost.pricing.summative.paper- (formData.summary.discount.volume.summativePaper + formData.summary.discount.multiGrade.summativePaper + formData.summary.discount.periodic.summativePaper + formData.summary.discount.special.summativePaper)) * order.paperTotal | currency}}</td>				
+				<td>{{((cost.pricing.summative.paper + ((order.individualReports ? (order.reportsPerStudent * cost.pricing.summative.isr + (order.scoreLabels ? cost.pricing.summative.labels : 0.0)) : 0.0))) - (formData.summary.discount.volume.summativePaper + formData.summary.discount.multiGrade.summativePaper + formData.summary.discount.periodic.summativePaper + formData.summary.discount.special.summativePaper.discountPer)) * order.paperTotal | currency}}</td>					
 			</tr>
 			<tr ng-repeat="order in formData.periodic.orders">
 				<td>{{order.administrationWindow}} {{order.calendarYear}} Periodic Order Online</td>

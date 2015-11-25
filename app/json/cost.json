@@ -1,26 +1,25 @@
 {
 	"pricing":{
 		"summative":{
-			"online":28.50,
-			"paper":30.75
+			"online":24.0,
+			"paper":31.0,
+			"isr":1.5,
+			"labels":1.0
 		},
-		"periodic":32.20,
+		"periodic":9.0,
 		"validThrough":"May 16, 2016"
 	},
 	"discounts":{
 		"volume":[
-			{"min":0, "max":200, "discountPer":0},
-			{"min":201, "max":1000, "discountPer":1},
-			{"min":1001, "max":5000, "discountPer":2.5},
-			{"min":5001, "discountPer":3.75}
+			{"min":400, "max":999, "discountPer":1.0},
+			{"min":1000, "discountPer":2.0}
 		],
 		"multigrade":[
-			{"min":0, "max":4, "discountPer":0},
-			{"min":5, "max":6, "discountPer":2.25},
-			{"min":7, "discountPer":3.15}
+			{"min":0, "max":3, "discountPer":0},
+			{"min":4,  "discountPer":1.0}
 		],
 		"periodic":{
-			"discountPer":1.85
+			"discountPer":4.0
 		}
 	},
 	"coupons":{

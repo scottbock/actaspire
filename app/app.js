@@ -313,7 +313,7 @@ angular.module('myApp', [
 			'\n\nSincerely,\nYour ACT Aspire Team\nemail@email.email\nXXX-XXX-XXXX';
 	};
 
-	var url = 'http://localhost:8888/wordpress/wp-json/wp/v2/sendEmail/';
+	var url = '../../wp-json/wp/v2/sendEmail/';
 	var sendConfirmationEmail = function(formData){
 		var postData = {};
 		postData.clientEmail = formData.customer.email;
