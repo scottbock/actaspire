@@ -78,24 +78,9 @@ angular.module('myApp', [
 		$scope.formData = cookieFormData;
 	}
 	
-	$scope.updateTotals = function(){
-		var summativeOnlineTotal = 0;
-		var summativePaperTotal = 0;
-		var periodicTotal = 0;
-		var gradeTotals = {
-			'3':{'summativeOnline':0, 'summativePaper':0, 'periodic':0},
-			'4':{'summativeOnline':0, 'summativePaper':0, 'periodic':0},
-			'5':{'summativeOnline':0, 'summativePaper':0, 'periodic':0},
-			'6':{'summativeOnline':0, 'summativePaper':0, 'periodic':0},
-			'7':{'summativeOnline':0, 'summativePaper':0, 'periodic':0},
-			'8':{'summativeOnline':0, 'summativePaper':0, 'periodic':0},
-			'9':{'summativeOnline':0, 'summativePaper':0, 'periodic':0},
-			'10':{'summativeOnline':0, 'summativePaper':0, 'periodic':0}
-		};
-		
+	$scope.updateTotals = function(){	
 		angular.forEach($scope.formData.summative.orders, function(order, key) {
-			summativeOnlineTotal += order.onlineTotal;
-			summativePaperTotal += order.paperTotal;		
+			var total	
 			angular.forEach(order.grade, function(grade, key) {
 				if(!isNaN(grade.online)){
 					gradeTotals[key].summativeOnline += parseInt(grade.online);
@@ -104,6 +89,8 @@ angular.module('myApp', [
 					gradeTotals[key].summativePaper += parseInt(grade.paper);
 				}
 			});
+
+				// <td>{{order.onlineTotal * (cost.pricing.summative.online + ((order.individualReports ? (order.reportsPerStudent * cost.pricing.summative.isr + (order.scoreLabels ? cost.pricing.summative.labels : 0.0)) : 0.0))) | currency}}
 		});
 		
 		angular.forEach($scope.formData.periodic.orders, function(order, key) {
@@ -196,9 +183,8 @@ angular.module('myApp', [
 		}			
 	};	
 
-	$scope.$watch('formData.periodic.orders', function(newValue, oldValue){
-		var orders = newValue;
-		angular.forEach(orders, function(order, key) {
+	$scope.updatePeriodicOrders = function(){
+		angular.forEach($scope.formData.periodic.orders, function(order, key) {
 			var onlineTotal = 0;
 			var paperTotal = 0;
 			angular.forEach(order.grade, function(grade, key) {
@@ -207,27 +193,102 @@ angular.module('myApp', [
 				}
 			});
 			order.onlineTotal = onlineTotal;		
+
+			order.price = $scope.cost.pricing.periodic;
+			order.extendedPrice = order.price * order.onlineTotal;
+
+			//Discounts
+			order.discounts = {};
+			if($scope.formData.summary.discount.special && $scope.formData.summary.discount.special.periodic){
+				order.discounts.special = $scope.formData.summary.discount.special.periodic.discountPer;
+			}
+			order.totalDiscountPerStudent = 0.0;
+			for(discountType in order.discounts){
+				order.totalDiscountPerStudent += order.discounts[discountType];
+			}			
+
+			order.totalDiscount = order.totalDiscountPerStudent * order.onlineTotal;
+
+			order.finalPricePerStudent = order.price - order.totalDiscountPerStudent;
+			order.balance = order.finalPricePerStudent * order.onlineTotal;
 		});
-		$scope.updateTotals();
+
+		$scope.updateSummativeOrders();
+	};
+
+	$scope.$watch('formData.periodic.orders', function(newValue, oldValue){
+		$scope.updatePeriodicOrders();
 	}, true);	
 		
-	$scope.$watch('formData.summative.orders', function(newValue, oldValue){
-		var orders = newValue;
-		angular.forEach(orders, function(order, key) {
+	$scope.updateSummativeOrders = function(){
+		angular.forEach($scope.formData.summative.orders, function(order, key) {
 			var onlineTotal = 0;
+			var onlineGrades = 0;
 			var paperTotal = 0;
+			var paperGrades = 0;
 			angular.forEach(order.grade, function(grade, key) {
 				if(!isNaN(grade.online)){
 					onlineTotal += parseInt(grade.online);
+					onlineGrades ++;
 				}
 				if(!isNaN(grade.paper)){
 					paperTotal += parseInt(grade.paper);
+					paperGrades ++;
 				}
 			});
-			order.onlineTotal = onlineTotal;
-			order.paperTotal = paperTotal;			
+			order.online = {};
+			order.paper = {};
+			order.online.total = onlineTotal;
+			order.paper.total = paperTotal;	
+
+			//Online portion
+			order.online.price = $scope.cost.pricing.summative.online + ((order.individualReports ? (order.reportsPerStudent * $scope.cost.pricing.summative.isr + (order.scoreLabels ? $scope.cost.pricing.summative.labels : 0.0)) : 0.0));
+			order.online.extendedPrice = order.online.price * order.online.total;
+
+			order.online.discounts = {};
+			order.online.discounts.volume = costService.getVolumeDiscount(order.online.total);
+			order.online.discounts.multiGrade = costService.getMultigradeDiscount(onlineGrades);
+			order.online.discounts.periodic = 0.0;  //TODO: Figure this out
+			if($scope.formData.summary.discount.special && $scope.formData.summary.discount.special.summativeOnline){
+				order.onlline.discounts.special = $scope.formData.summary.discount.special.summativeOnline.discountPer;
+			}
+
+			order.online.totalDiscountPerStudent = 0.0;
+			for(discountType in order.online.discounts){
+				order.online.totalDiscountPerStudent += order.online.discounts[discountType];
+			}			
+
+			order.online.totalDiscount = order.online.totalDiscountPerStudent * order.online.total;
+
+			order.online.finalPricePerStudent = order.online.price - order.online.totalDiscountPerStudent;
+			order.online.balance = order.online.finalPricePerStudent * order.online.total;
+
+			//paper portion
+			order.paper.price = $scope.cost.pricing.summative.paper + ((order.individualReports ? (order.reportsPerStudent * $scope.cost.pricing.summative.isr + (order.scoreLabels ? $scope.cost.pricing.summative.labels : 0.0)) : 0.0));
+			order.paper.extendedPrice = order.paper.price * order.paper.total;
+
+			order.paper.discounts = {};
+			order.paper.discounts.volume = costService.getVolumeDiscount(order.paper.total);
+			order.paper.discounts.multiGrade = costService.getMultigradeDiscount(paperGrades);
+			order.paper.discounts.periodic = 0.0;  //TODO: Figure this out
+			if($scope.formData.summary.discount.special && $scope.formData.summary.discount.special.summativePaper){
+				order.onlline.discounts.special = $scope.formData.summary.discount.special.summativePaper.discountPer;
+			}
+
+			order.paper.totalDiscountPerStudent = 0.0;
+			for(discountType in order.paper.discounts){
+				order.paper.totalDiscountPerStudent += order.paper.discounts[discountType];
+			}			
+
+			order.paper.totalDiscount = order.paper.totalDiscountPerStudent * order.paper.total;
+
+			order.paper.finalPricePerStudent = order.paper.price - order.paper.totalDiscountPerStudent;
+			order.paper.balance = order.paper.finalPricePerStudent * order.paper.total;
 		});
-		$scope.updateTotals();
+	};
+
+	$scope.$watch('formData.summative.orders', function(newValue, oldValue){
+		$scope.updateSummativeOrders();		
 	}, true);
 	
 	$scope.addDiscountCode = function(code){
@@ -308,9 +369,33 @@ angular.module('myApp', [
 
 .factory('EmailService', ['$http', function ($http) {
 	var buildEmail = function(formData){
-		return 'Dear ' + formData.customer.firstName + ' ' + formData.customer.lastName + 
-			',\n\nThank you for your ACT Aspire Order' + 
-			'\n\nSincerely,\nYour ACT Aspire Team\nemail@email.email\nXXX-XXX-XXXX';
+		var emailBody = 'Dear ' + formData.customer.firstName + ' ' + formData.customer.lastName + 
+			',\n\nThank you for your ACT Aspire Order\n\n';
+
+
+			angular.forEach($scope.formData.summative.orders, function(order, key) {
+				emailBody += order.administrationWindow + ' ' + order.calendarYear + ' Summative Order Online\n';
+
+				// costPerStudent = $scope.cost.pricing.summative.online + ((order.individualReports ? (order.reportsPerStudent * cost.pricing.summative.isr + (order.scoreLabels ? cost.pricing.summative.labels : 0.0)) : 0.0))) - ($scope.formData.summary.discount.volume.summativeOnline + $scope.formData.summary.discount.multiGrade.summativeOnline + $scope.formData.summary.discount.periodic.summativeOnline + $scope.formData.summary.discount.special.summativeOnline.discountPer))
+				// totatlCost;
+				var costPerStudent = $scope.cost.pricing.summative.online;
+				var totalCost = order.onlineTotal * costPerStudent;
+
+				emailBody += order.onlineTotal + ' students X ' + costPerStudent + ' per student = ' + totalCost;
+
+			});
+
+			angular.forEach($scope.formData.summative.orders, function(order, key) {
+
+			});
+
+			angular.forEach($scope.formData.periodic.orders, function(order, key) {
+
+			});
+
+			emailBody += '\n\nSincerely,\nYour ACT Aspire Team\nemail@email.email\nXXX-XXX-XXXX';
+
+		return emailBody;
 	};
 
 	var url = '../../wp-json/wp/v2/sendEmail/';

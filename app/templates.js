@@ -370,51 +370,51 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t<tbody>\n" +
     "\t\t\t<tr ng-repeat=\"order in formData.summative.orders\">\n" +
     "\t\t\t\t<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Order Online</td>\n" +
-    "\t\t\t\t<td>{{order.onlineTotal}}</td>\n" +
-    "\t\t\t\t<td>{{cost.pricing.summative.online + ((order.individualReports ? (order.reportsPerStudent * cost.pricing.summative.isr + (order.scoreLabels ? cost.pricing.summative.labels : 0.0)) : 0.0)) | currency}}</td>\n" +
-    "\t\t\t\t<td>{{order.onlineTotal * (cost.pricing.summative.online + ((order.individualReports ? (order.reportsPerStudent * cost.pricing.summative.isr + (order.scoreLabels ? cost.pricing.summative.labels : 0.0)) : 0.0))) | currency}}</td>\n" +
+    "\t\t\t\t<td>{{order.online.total}}</td>\n" +
+    "\t\t\t\t<td>{{order.online.price  | currency}}</td>\n" +
+    "\t\t\t\t<td>{{order.online.extendedPrice | currency}}</td>\n" +
     "\t\t\t\t<td>\n" +
-    "\t\t\t\t\t<div>{{formData.summary.discount.volume.summativeOnline | currency}} (Volume)</div>\n" +
-    "\t\t\t\t\t<div>{{formData.summary.discount.multiGrade.summativeOnline | currency}} (Multi-Grade)</div>\n" +
-    "\t\t\t\t\t<div>{{formData.summary.discount.periodic.summativeOnline | currency}} (Periodic)</div>\n" +
-    "\t\t\t\t\t<div>{{formData.summary.discount.special.summativeOnline.discountPer | currency}} (Special)</div>\n" +
+    "\t\t\t\t\t<div ng-show=\"order.online.discounts.volume\">{{order.online.discounts.volume | currency}} (Volume)</div>\n" +
+    "\t\t\t\t\t<div ng-show=\"order.online.discounts.multiGrade\">{{order.online.discounts.multiGrade | currency}} (Multi-Grade)</div>\n" +
+    "\t\t\t\t\t<div ng-show=\"order.online.discounts.periodic\">{{order.online.discounts.periodic | currency}} (Periodic)</div>\n" +
+    "\t\t\t\t\t<div ng-show=\"order.online.discounts.special\">{{order.online.discounts.special | currency}} (Special)</div>\n" +
     "\t\t\t\t\t<hr />\n" +
-    "\t\t\t\t\t<div>{{formData.summary.discount.volume.summativeOnline + formData.summary.discount.multiGrade.summativeOnline + formData.summary.discount.periodic.summativeOnline + formData.summary.discount.special.summativeOnline.discountPer | currency}}</div>\n" +
+    "\t\t\t\t\t<div>{{order.online.totalDiscountPerStudent | currency}}</div>\n" +
     "\t\t\t\t</td>\t\n" +
-    "\t\t\t\t<td>{{(formData.summary.discount.volume.summativeOnline + formData.summary.discount.multiGrade.summativeOnline + formData.summary.discount.periodic.summativeOnline + formData.summary.discount.special.summativeOnline) * order.onlineTotal | currency}}</td>\n" +
+    "\t\t\t\t<td>{{order.online.totalDiscount | currency}}</td>\n" +
     "\t\t\t\t</td>\n" +
-    "\t\t\t\t<td>{{((cost.pricing.summative.online + ((order.individualReports ? (order.reportsPerStudent * cost.pricing.summative.isr + (order.scoreLabels ? cost.pricing.summative.labels : 0.0)) : 0.0))) - (formData.summary.discount.volume.summativeOnline + formData.summary.discount.multiGrade.summativeOnline + formData.summary.discount.periodic.summativeOnline + formData.summary.discount.special.summativeOnline.discountPer)) * order.onlineTotal | currency}}</td>\t\t\t\t\n" +
+    "\t\t\t\t<td>{{order.online.balance | currency}}</td>\t\t\t\t\n" +
     "\t\t\t</tr>\n" +
     "\t\t\t<tr ng-repeat=\"order in formData.summative.orders\">\n" +
-    "\t\t\t\t<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Order Paper</td>\n" +
-    "\t\t\t\t<td>{{order.paperTotal}}</td>\n" +
-    "\t\t\t\t<td>{{cost.pricing.summative.paper + ((order.individualReports ? (order.reportsPerStudent * cost.pricing.summative.isr + (order.scoreLabels ? cost.pricing.summative.labels : 0.0)) : 0.0)) | currency}}</td>\n" +
-    "\t\t\t\t<td>{{order.paperTotal * (cost.pricing.summative.paper + ((order.individualReports ? (order.reportsPerStudent * cost.pricing.summative.isr + (order.scoreLabels ? cost.pricing.summative.labels : 0.0)) : 0.0))) | currency}}</td>\n" +
+    "\t\t\t\t<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Paper Online</td>\n" +
+    "\t\t\t\t<td>{{order.paper.total}}</td>\n" +
+    "\t\t\t\t<td>{{order.paper.price  | currency}}</td>\n" +
+    "\t\t\t\t<td>{{order.paper.extendedPrice | currency}}</td>\n" +
     "\t\t\t\t<td>\n" +
-    "\t\t\t\t\t<div>{{formData.summary.discount.volume.summativePaper | currency}} (Volume)</div>\n" +
-    "\t\t\t\t\t<div>{{formData.summary.discount.multiGrade.summativePaper | currency}} (Multi-Grade)</div>\n" +
-    "\t\t\t\t\t<div>{{formData.summary.discount.periodic.summativePaper | currency}} (Periodic)</div>\n" +
-    "\t\t\t\t\t<div>{{formData.summary.discount.special.summativePaper.discountPer | currency}} (Special)</div>\n" +
+    "\t\t\t\t\t<div ng-show=\"order.paper.discounts.volume\">{{order.paper.discounts.volume | currency}} (Volume)</div>\n" +
+    "\t\t\t\t\t<div ng-show=\"order.paper.discounts.multiGrade\">{{order.paper.discounts.multiGrade | currency}} (Multi-Grade)</div>\n" +
+    "\t\t\t\t\t<div ng-show=\"order.paper.discounts.periodic\">{{order.paper.discounts.periodic | currency}} (Periodic)</div>\n" +
+    "\t\t\t\t\t<div ng-show=\"order.paper.discounts.special\">{{order.paper.discounts.special | currency}} (Special)</div>\n" +
     "\t\t\t\t\t<hr />\n" +
-    "\t\t\t\t\t<div>{{formData.summary.discount.volume.summativePaper + formData.summary.discount.multiGrade.summativePaper + formData.summary.discount.periodic.summativePaper + formData.summary.discount.special.summativePaper.discountPer | currency}}</div>\n" +
+    "\t\t\t\t\t<div>{{order.paper.totalDiscountPerStudent | currency}}</div>\n" +
+    "\t\t\t\t</td>\t\n" +
+    "\t\t\t\t<td>{{order.paper.totalDiscount | currency}}</td>\n" +
     "\t\t\t\t</td>\n" +
-    "\t\t\t\t<td>{{(formData.summary.discount.volume.summativePaper + formData.summary.discount.multiGrade.summativePaper + formData.summary.discount.periodic.summativePaper + formData.summary.discount.special.summativePaper) * order.paperTotal | currency}}</td>\n" +
-    "\t\t\t\t</td>\n" +
-    "\t\t\t\t<td>{{((cost.pricing.summative.paper + ((order.individualReports ? (order.reportsPerStudent * cost.pricing.summative.isr + (order.scoreLabels ? cost.pricing.summative.labels : 0.0)) : 0.0))) - (formData.summary.discount.volume.summativePaper + formData.summary.discount.multiGrade.summativePaper + formData.summary.discount.periodic.summativePaper + formData.summary.discount.special.summativePaper.discountPer)) * order.paperTotal | currency}}</td>\t\t\t\t\t\n" +
+    "\t\t\t\t<td>{{order.paper.balance | currency}}</td>\t\t\t\t\n" +
     "\t\t\t</tr>\n" +
     "\t\t\t<tr ng-repeat=\"order in formData.periodic.orders\">\n" +
     "\t\t\t\t<td>{{order.administrationWindow}} {{order.calendarYear}} Periodic Order Online</td>\n" +
     "\t\t\t\t<td>{{order.onlineTotal}}</td>\n" +
-    "\t\t\t\t<td>{{cost.pricing.periodic | currency}}</td>\n" +
-    "\t\t\t\t<td>{{order.onlineTotal * cost.pricing.periodic | currency}}</td>\n" +
+    "\t\t\t\t<td>{{order.price  | currency}}</td>\n" +
+    "\t\t\t\t<td>{{order.extendedPrice | currency}}</td>\n" +
     "\t\t\t\t<td>\n" +
-    "\t\t\t\t\t<div>{{formData.summary.discount.special.periodic.discountPer | currency}} (Special)</div>\n" +
+    "\t\t\t\t\t<div ng-show=\"order.discounts.special\">{{order.discounts.special | currency}} (Special)</div>\n" +
     "\t\t\t\t\t<hr />\n" +
-    "\t\t\t\t\t<div>{{formData.summary.discount.special.periodic.discountPer | currency}}</div>\n" +
+    "\t\t\t\t\t<div>{{order.totalDiscountPerStudent | currency}}</div>\n" +
     "\t\t\t\t</td>\t\n" +
-    "\t\t\t\t<td>{{(formData.summary.discount.special.periodic.discountPer) * order.onlineTotal | currency}}</td>\n" +
+    "\t\t\t\t<td>{{order.totalDiscount | currency}}</td>\n" +
     "\t\t\t\t</td>\n" +
-    "\t\t\t\t<td>{{(cost.pricing.periodic - formData.summary.discount.special.periodic.discountPer) * order.onlineTotal | currency}}</td>\t\t\t\t\t\t\n" +
+    "\t\t\t\t<td>{{order.balance | currency}}</td>\t\t\t\t\t\t\n" +
     "\t\t\t</tr>\n" +
     "\t\t</tbody>\n" +
     "\t</table>\n" +

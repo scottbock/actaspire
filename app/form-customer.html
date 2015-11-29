@@ -366,51 +366,51 @@
 		<tbody>
 			<tr ng-repeat="order in formData.summative.orders">
 				<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Order Online</td>
-				<td>{{order.onlineTotal}}</td>
-				<td>{{cost.pricing.summative.online + ((order.individualReports ? (order.reportsPerStudent * cost.pricing.summative.isr + (order.scoreLabels ? cost.pricing.summative.labels : 0.0)) : 0.0)) | currency}}</td>
-				<td>{{order.onlineTotal * (cost.pricing.summative.online + ((order.individualReports ? (order.reportsPerStudent * cost.pricing.summative.isr + (order.scoreLabels ? cost.pricing.summative.labels : 0.0)) : 0.0))) | currency}}</td>
+				<td>{{order.online.total}}</td>
+				<td>{{order.online.price  | currency}}</td>
+				<td>{{order.online.extendedPrice | currency}}</td>
 				<td>
-					<div>{{formData.summary.discount.volume.summativeOnline | currency}} (Volume)</div>
-					<div>{{formData.summary.discount.multiGrade.summativeOnline | currency}} (Multi-Grade)</div>
-					<div>{{formData.summary.discount.periodic.summativeOnline | currency}} (Periodic)</div>
-					<div>{{formData.summary.discount.special.summativeOnline.discountPer | currency}} (Special)</div>
+					<div ng-show="order.online.discounts.volume">{{order.online.discounts.volume | currency}} (Volume)</div>
+					<div ng-show="order.online.discounts.multiGrade">{{order.online.discounts.multiGrade | currency}} (Multi-Grade)</div>
+					<div ng-show="order.online.discounts.periodic">{{order.online.discounts.periodic | currency}} (Periodic)</div>
+					<div ng-show="order.online.discounts.special">{{order.online.discounts.special | currency}} (Special)</div>
 					<hr />
-					<div>{{formData.summary.discount.volume.summativeOnline + formData.summary.discount.multiGrade.summativeOnline + formData.summary.discount.periodic.summativeOnline + formData.summary.discount.special.summativeOnline.discountPer | currency}}</div>
+					<div>{{order.online.totalDiscountPerStudent | currency}}</div>
 				</td>	
-				<td>{{(formData.summary.discount.volume.summativeOnline + formData.summary.discount.multiGrade.summativeOnline + formData.summary.discount.periodic.summativeOnline + formData.summary.discount.special.summativeOnline) * order.onlineTotal | currency}}</td>
+				<td>{{order.online.totalDiscount | currency}}</td>
 				</td>
-				<td>{{((cost.pricing.summative.online + ((order.individualReports ? (order.reportsPerStudent * cost.pricing.summative.isr + (order.scoreLabels ? cost.pricing.summative.labels : 0.0)) : 0.0))) - (formData.summary.discount.volume.summativeOnline + formData.summary.discount.multiGrade.summativeOnline + formData.summary.discount.periodic.summativeOnline + formData.summary.discount.special.summativeOnline.discountPer)) * order.onlineTotal | currency}}</td>				
+				<td>{{order.online.balance | currency}}</td>				
 			</tr>
 			<tr ng-repeat="order in formData.summative.orders">
-				<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Order Paper</td>
-				<td>{{order.paperTotal}}</td>
-				<td>{{cost.pricing.summative.paper + ((order.individualReports ? (order.reportsPerStudent * cost.pricing.summative.isr + (order.scoreLabels ? cost.pricing.summative.labels : 0.0)) : 0.0)) | currency}}</td>
-				<td>{{order.paperTotal * (cost.pricing.summative.paper + ((order.individualReports ? (order.reportsPerStudent * cost.pricing.summative.isr + (order.scoreLabels ? cost.pricing.summative.labels : 0.0)) : 0.0))) | currency}}</td>
+				<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Paper Online</td>
+				<td>{{order.paper.total}}</td>
+				<td>{{order.paper.price  | currency}}</td>
+				<td>{{order.paper.extendedPrice | currency}}</td>
 				<td>
-					<div>{{formData.summary.discount.volume.summativePaper | currency}} (Volume)</div>
-					<div>{{formData.summary.discount.multiGrade.summativePaper | currency}} (Multi-Grade)</div>
-					<div>{{formData.summary.discount.periodic.summativePaper | currency}} (Periodic)</div>
-					<div>{{formData.summary.discount.special.summativePaper.discountPer | currency}} (Special)</div>
+					<div ng-show="order.paper.discounts.volume">{{order.paper.discounts.volume | currency}} (Volume)</div>
+					<div ng-show="order.paper.discounts.multiGrade">{{order.paper.discounts.multiGrade | currency}} (Multi-Grade)</div>
+					<div ng-show="order.paper.discounts.periodic">{{order.paper.discounts.periodic | currency}} (Periodic)</div>
+					<div ng-show="order.paper.discounts.special">{{order.paper.discounts.special | currency}} (Special)</div>
 					<hr />
-					<div>{{formData.summary.discount.volume.summativePaper + formData.summary.discount.multiGrade.summativePaper + formData.summary.discount.periodic.summativePaper + formData.summary.discount.special.summativePaper.discountPer | currency}}</div>
+					<div>{{order.paper.totalDiscountPerStudent | currency}}</div>
+				</td>	
+				<td>{{order.paper.totalDiscount | currency}}</td>
 				</td>
-				<td>{{(formData.summary.discount.volume.summativePaper + formData.summary.discount.multiGrade.summativePaper + formData.summary.discount.periodic.summativePaper + formData.summary.discount.special.summativePaper) * order.paperTotal | currency}}</td>
-				</td>
-				<td>{{((cost.pricing.summative.paper + ((order.individualReports ? (order.reportsPerStudent * cost.pricing.summative.isr + (order.scoreLabels ? cost.pricing.summative.labels : 0.0)) : 0.0))) - (formData.summary.discount.volume.summativePaper + formData.summary.discount.multiGrade.summativePaper + formData.summary.discount.periodic.summativePaper + formData.summary.discount.special.summativePaper.discountPer)) * order.paperTotal | currency}}</td>					
+				<td>{{order.paper.balance | currency}}</td>				
 			</tr>
 			<tr ng-repeat="order in formData.periodic.orders">
 				<td>{{order.administrationWindow}} {{order.calendarYear}} Periodic Order Online</td>
 				<td>{{order.onlineTotal}}</td>
-				<td>{{cost.pricing.periodic | currency}}</td>
-				<td>{{order.onlineTotal * cost.pricing.periodic | currency}}</td>
+				<td>{{order.price  | currency}}</td>
+				<td>{{order.extendedPrice | currency}}</td>
 				<td>
-					<div>{{formData.summary.discount.special.periodic.discountPer | currency}} (Special)</div>
+					<div ng-show="order.discounts.special">{{order.discounts.special | currency}} (Special)</div>
 					<hr />
-					<div>{{formData.summary.discount.special.periodic.discountPer | currency}}</div>
+					<div>{{order.totalDiscountPerStudent | currency}}</div>
 				</td>	
-				<td>{{(formData.summary.discount.special.periodic.discountPer) * order.onlineTotal | currency}}</td>
+				<td>{{order.totalDiscount | currency}}</td>
 				</td>
-				<td>{{(cost.pricing.periodic - formData.summary.discount.special.periodic.discountPer) * order.onlineTotal | currency}}</td>						
+				<td>{{order.balance | currency}}</td>						
 			</tr>
 		</tbody>
 	</table>
