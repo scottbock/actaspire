@@ -382,11 +382,10 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t\t<div>{{order.online.totalDiscountPerStudent | currency}}</div>\n" +
     "\t\t\t\t</td>\t\n" +
     "\t\t\t\t<td>{{order.online.totalDiscount | currency}}</td>\n" +
-    "\t\t\t\t</td>\n" +
     "\t\t\t\t<td>{{order.online.balance | currency}}</td>\t\t\t\t\n" +
     "\t\t\t</tr>\n" +
     "\t\t\t<tr ng-repeat=\"order in formData.summative.orders\">\n" +
-    "\t\t\t\t<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Paper Online</td>\n" +
+    "\t\t\t\t<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Order Paper</td>\n" +
     "\t\t\t\t<td>{{order.paper.total}}</td>\n" +
     "\t\t\t\t<td>{{order.paper.price  | currency}}</td>\n" +
     "\t\t\t\t<td>{{order.paper.extendedPrice | currency}}</td>\n" +
@@ -399,7 +398,6 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t\t<div>{{order.paper.totalDiscountPerStudent | currency}}</div>\n" +
     "\t\t\t\t</td>\t\n" +
     "\t\t\t\t<td>{{order.paper.totalDiscount | currency}}</td>\n" +
-    "\t\t\t\t</td>\n" +
     "\t\t\t\t<td>{{order.paper.balance | currency}}</td>\t\t\t\t\n" +
     "\t\t\t</tr>\n" +
     "\t\t\t<tr ng-repeat=\"order in formData.periodic.orders\">\n" +
@@ -413,8 +411,12 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t\t<div>{{order.totalDiscountPerStudent | currency}}</div>\n" +
     "\t\t\t\t</td>\t\n" +
     "\t\t\t\t<td>{{order.totalDiscount | currency}}</td>\n" +
-    "\t\t\t\t</td>\n" +
     "\t\t\t\t<td>{{order.balance | currency}}</td>\t\t\t\t\t\t\n" +
+    "\t\t\t</tr>\n" +
+    "\t\t\t<tr>\n" +
+    "\t\t\t\t<td colspan=\"7\">\n" +
+    "\t\t\t\t\t<h4>Total: {{formData.summary.total | currency}} <span ng-show=\"formData.summary.tax\"> + {{formData.summary.tax | currency}} ({{formData.summary.taxRate}} Sales Tax) = {{formData.summary.totalWithTax | currency}}</span></h4>\n" +
+    "\t\t\t\t</td>\n" +
     "\t\t\t</tr>\n" +
     "\t\t</tbody>\n" +
     "\t</table>\n" +

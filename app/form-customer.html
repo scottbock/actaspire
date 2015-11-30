@@ -378,11 +378,10 @@
 					<div>{{order.online.totalDiscountPerStudent | currency}}</div>
 				</td>	
 				<td>{{order.online.totalDiscount | currency}}</td>
-				</td>
 				<td>{{order.online.balance | currency}}</td>				
 			</tr>
 			<tr ng-repeat="order in formData.summative.orders">
-				<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Paper Online</td>
+				<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Order Paper</td>
 				<td>{{order.paper.total}}</td>
 				<td>{{order.paper.price  | currency}}</td>
 				<td>{{order.paper.extendedPrice | currency}}</td>
@@ -395,7 +394,6 @@
 					<div>{{order.paper.totalDiscountPerStudent | currency}}</div>
 				</td>	
 				<td>{{order.paper.totalDiscount | currency}}</td>
-				</td>
 				<td>{{order.paper.balance | currency}}</td>				
 			</tr>
 			<tr ng-repeat="order in formData.periodic.orders">
@@ -409,8 +407,12 @@
 					<div>{{order.totalDiscountPerStudent | currency}}</div>
 				</td>	
 				<td>{{order.totalDiscount | currency}}</td>
-				</td>
 				<td>{{order.balance | currency}}</td>						
+			</tr>
+			<tr>
+				<td colspan="7">
+					<h4>Total: {{formData.summary.total | currency}} <span ng-show="formData.summary.tax"> + {{formData.summary.tax | currency}} ({{formData.summary.taxRate}} Sales Tax) = {{formData.summary.totalWithTax | currency}}</span></h4>
+				</td>
 			</tr>
 		</tbody>
 	</table>
