@@ -26,7 +26,8 @@
 		"NOVEMBER5":{
 			"summativeOnline":{"discountPer":5},
 			"summativePaper":{"discountPer":5},
-			"periodic":{"discountPer":5}
+			"periodic":{"discountPer":5},
+			"maxUses":1
 		},
 		"FIRSTORDER":{
 			"summativeOnline":{"discountPer":6},

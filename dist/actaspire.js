@@ -45202,11 +45202,6 @@ angular.module('myApp', [
 
 	$scope.cost = costService.cost;
 
-	//update the orders once the cost resolves
-	$scope.$watch('cost', function(newValue, oldValue){
-		$scope.updatePeriodicOrders();
-	}, true);
-
 	$scope.date = new Date();
 	$scope.currentYear = $scope.date.getFullYear();
 	$scope.administrationWindows = ['Fall', 'Spring'];		
@@ -45242,8 +45237,6 @@ angular.module('myApp', [
 		$scope.formData = angular.fromJson(cookieFormData);
 	}
 
-	//todo watch taxexempt and billing zip to update totals
-	
 	$scope.updateTotals = function(){	
 		$scope.formData.summary.total = 0.0;
 		angular.forEach($scope.formData.summative.orders, function(order, key) {
@@ -45341,10 +45334,6 @@ angular.module('myApp', [
 			$scope.updateSummativeOrders();
 		}
 	};
-
-	$scope.$watch('formData.periodic.orders', function(newValue, oldValue){
-		$scope.updatePeriodicOrders();
-	}, true);	
 		
 	$scope.updateSummativeOrders = function(){
 		if($scope.cost.pricing){
@@ -45415,10 +45404,6 @@ angular.module('myApp', [
 			$scope.updateTotals();
 		}
 	};
-
-	$scope.$watch('formData.summative.orders', function(newValue, oldValue){
-		$scope.updateSummativeOrders();		
-	}, true);
 	
 	$scope.addDiscountCode = function(code){
 		$scope.formData.summary.discount = {
@@ -45429,8 +45414,26 @@ angular.module('myApp', [
     
 	// function to process the form
 	$scope.processForm = function() {
-		emailService.sendConfirmationEmail($scope.formData);
-	};    
+		emailService.sendConfirmationEmail($scope.formData, $scope.cost);
+	};   
+
+
+	$scope.$watch('formData.summative.orders', function(newValue, oldValue){
+		$scope.updateSummativeOrders();		
+	}, true);
+
+	$scope.$watch('formData.periodic.orders', function(newValue, oldValue){
+		$scope.updatePeriodicOrders();
+	}, true);	
+	//update the orders once the cost resolves
+	$scope.$watch('cost', function(newValue, oldValue){
+		$scope.updatePeriodicOrders();
+	}, true);
+
+	//Update sales tax when billing zip or taxExempt status changes
+	$scope.$watchCollection('[formData.billing.taxExempt, formData.billing.address.zip]', function(newValue, oldValue){
+		$scope.updateTotals();
+	}, true); 
 }])
 
 .factory('CostService', ['$http', function ($http) {
@@ -45503,43 +45506,78 @@ angular.module('myApp', [
 	}
 }])
 
-.factory('EmailService', ['$http', function ($http) {
+.factory('EmailService', ['$http', 'currencyFilter', function ($http, currencyFilter) {
 	var buildEmail = function(formData){
 		var emailBody = 'Dear ' + formData.customer.firstName + ' ' + formData.customer.lastName + 
-			',\n\nThank you for your ACT Aspire Order\n\n';
+			',\n\nThank you for your ACT Aspire Order' +
+			'\n\nContact: ' + formData.customer.firstName + ' ' + formData.customer.lastName + ', ' + formData.customer.jobTitle + ', ' + formData.customer.organization +
+			'\nEmail: ' + formData.customer.email;
+		if(formData.customer.groupOrder){
+			emailBody += '\n\nGroup Order: Y' + '\nGroup Contact Name: ' + formData.customer.groupContact;
+		}
+			
+		emailBody += '\n\nTest Coordinator: ' + formData.implementationContact.name + ', ' + formData.implementationContact.email + ', ' + formData.implementationContact.phone;
+		emailBody += '\n\nBackup Contact: ' + formData.backupContact.name + ', ' + formData.backupContact.email + ', ' + formData.backupContact.phone;
 
+		emailBody += '\n\nBilling Contact: ' + formData.billingContact.name + ', ' + formData.billingContact.email + ', ' + formData.billingContact.phone;
+		emailBody += '\n' + formData.billing.address.line1;
+		if(formData.billing.address.line2){
+			emailBody += '\n' + formData.billing.address.line2;
+		}
+		emailBody += '\n' + formData.billing.address.city + ', ' + formData.billing.address.state + ' ' + formData.billing.address.zip;
+	
+		if(formData.billing.taxExempt){
+			emailBody += '\n\nTax Exempt: Y';
+		}	
 
-			angular.forEach($scope.formData.summative.orders, function(order, key) {
-				emailBody += order.administrationWindow + ' ' + order.calendarYear + ' Summative Order Online\n';
+		angular.forEach(formData.summative.orders, function(order, key) {
+			if(order.online.total){
+				emailBody += '\n\n' + order.administrationWindow + ' ' + order.calendarYear + ' Summative Order Online';
+				emailBody += '\n' + order.online.total + ' Students X ' + currencyFilter(order.online.finalPricePerStudent) + ' = ' + currencyFilter(order.online.balance);
+			}
+		});
 
-				// costPerStudent = $scope.cost.pricing.summative.online + ((order.individualReports ? (order.reportsPerStudent * cost.pricing.summative.isr + (order.scoreLabels ? cost.pricing.summative.labels : 0.0)) : 0.0))) - ($scope.formData.summary.discount.volume.summativeOnline + $scope.formData.summary.discount.multiGrade.summativeOnline + $scope.formData.summary.discount.periodic.summativeOnline + $scope.formData.summary.discount.special.summativeOnline.discountPer))
-				// totatlCost;
-				var costPerStudent = $scope.cost.pricing.summative.online;
-				var totalCost = order.onlineTotal * costPerStudent;
+		angular.forEach(formData.summative.orders, function(order, key) {
+			if(order.paper.total){
+				emailBody += '\n\n' + order.administrationWindow + ' ' + order.calendarYear + ' Summative Order Paper';
+				emailBody += '\n' + order.paper.total + ' Students X ' + currencyFilter(order.paper.finalPricePerStudent) + ' = ' + currencyFilter(order.paper.balance);
+			}
+		});
 
-				emailBody += order.onlineTotal + ' students X ' + costPerStudent + ' per student = ' + totalCost;
+		angular.forEach(formData.periodic.orders, function(order, key) {
+			if(order.onlineTotal){
+				emailBody += '\n\n' + order.calendarYear + ' Periodic Order Online';
+				emailBody += '\n' + order.onlineTotal + ' Students X ' + currencyFilter(order.finalPricePerStudent) + ' = ' + currencyFilter(order.balance);
+			}
+		});
+		
+		emailBody += '\n\nTotal: ' + currencyFilter(formData.summary.total);
+		if(formData.summary.tax){
+			emailBody += ' + ' + currencyFilter(formData.summary.tax) + ' (' + formData.summary.taxRate + ' Sales Tax) = ' + currencyFilter(formData.summary.totalWithTax);
+		}
 
-			});
+		if(formData.comments){
+			emailBody += '\n\nAdditional Comments:\n' + formData.comments;
+		}
 
-			angular.forEach($scope.formData.summative.orders, function(order, key) {
+		emailBody += '\n\nI agree to ACT Aspire\'s Terms and Conditions: Y' + '\n\nSignature: ' + formData.customer.signature;
 
-			});
-
-			angular.forEach($scope.formData.periodic.orders, function(order, key) {
-
-			});
-
-			emailBody += '\n\nSincerely,\nYour ACT Aspire Team\nemail@email.email\nXXX-XXX-XXXX';
+		emailBody += '\n\nSincerely,\nYour ACT Aspire Team\nemail@email.email\nXXX-XXX-XXXX';
 
 		return emailBody;
 	};
 
 	var url = '../../wp-json/wp/v2/sendEmail/';
-	var sendConfirmationEmail = function(formData){
+	var sendConfirmationEmail = function(formData, cost){
 		var postData = {};
 		postData.clientEmail = formData.customer.email;
 		postData.orderInbox = 'scottbock@yahoo.com';
 		postData.message = buildEmail(formData);
+		cost.usedCodes = {
+			code:formData.summary.discount.special.code,
+			usedBy:formData.customer.organization
+		};
+		postData.costJson = angular.toJson(cost, true);
 		$http.post(url, postData, {}).then(
 			function(){
 				alert('success');
