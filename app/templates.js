@@ -158,7 +158,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t    <li>Designed for Grades 3 - 10 and can be taken Online or in Paper form (paper administration requires an additional fee).</li>\n" +
     "\t\t    <li>Can be administered in a Spring test administration window or a Fall test administration window.</li>\n" +
     "\t\t    <li>If you know your intended or preferred test dates, subjects to be taken and estimated student counts, please include where applicable below.</li>\n" +
-    "\t\t    <li>Prices are good till XX/XX/XX. If you have any questions regarding the product or placing an order please contact order@actaspire.org or 888-XXX-XXXX</li>\n" +
+    "\t\t    <li>Prices are good till {{cost.pricing.validThrough}}. If you have any questions regarding the product or placing an order please contact order@actaspire.org or 1-855-730-0400</li>\n" +
     "\t\t</ul>\n" +
     "\t</div>\t\t\n" +
     "</div>\n" +
@@ -274,7 +274,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t    <li>Interim tests are designed for Grades 3 - 10 and can be taken Online, Classroom quizzez are designed for Grades 3-8 also only in Online.</li>\n" +
     "\t\t    <li>Can be administered throughout the year to students and provide immediate analysis and reporting.</li>\n" +
     "\t\t    <li>Bundle with ACT Aspire Summative test and receive a per student discount off of the Summative test (see discount below).</li>\n" +
-    "\t\t    <li>Prices are good till XX/XX/XX. If you have any questions regarding the product or placing an order please contact order@actaspire.org or 888-XXX-XXXX</li>\n" +
+    "\t\t    <li>Prices are good till {{cost.pricing.validThrough}}. If you have any questions regarding the product or placing an order please contact order@actaspire.org or 1-855-730-0400</li>\n" +
     "\t\t</ul>\n" +
     "\t</div>\t\t\n" +
     "</div>\n" +
@@ -376,7 +376,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t<td>\n" +
     "\t\t\t\t\t<div ng-show=\"order.online.discounts.volume\">{{order.online.discounts.volume | currency}} (Volume)</div>\n" +
     "\t\t\t\t\t<div ng-show=\"order.online.discounts.multiGrade\">{{order.online.discounts.multiGrade | currency}} (Multi-Grade)</div>\n" +
-    "\t\t\t\t\t<div ng-show=\"order.online.discounts.periodic\">{{order.online.discounts.periodic | currency}} (Periodic)</div>\n" +
+    "\t\t\t\t\t<div ng-show=\"order.online.discounts.periodic\">{{order.online.discounts.periodic | currency}} ({{order.online.periodicNumberApplied }} Periodic @ {{cost.discounts.periodic.discountPer | currency}})</div>\n" +
     "\t\t\t\t\t<div ng-show=\"order.online.discounts.special\">{{order.online.discounts.special | currency}} (Special)</div>\n" +
     "\t\t\t\t\t<hr />\n" +
     "\t\t\t\t\t<div>{{order.online.totalDiscountPerStudent | currency}}</div>\n" +
@@ -392,7 +392,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t<td>\n" +
     "\t\t\t\t\t<div ng-show=\"order.paper.discounts.volume\">{{order.paper.discounts.volume | currency}} (Volume)</div>\n" +
     "\t\t\t\t\t<div ng-show=\"order.paper.discounts.multiGrade\">{{order.paper.discounts.multiGrade | currency}} (Multi-Grade)</div>\n" +
-    "\t\t\t\t\t<div ng-show=\"order.paper.discounts.periodic\">{{order.paper.discounts.periodic | currency}} (Periodic)</div>\n" +
+    "\t\t\t\t\t<div ng-show=\"order.paper.discounts.periodic\">{{order.paper.discounts.periodic | currency}} ({{order.paper.periodicNumberApplied }} Periodic @ {{cost.discounts.periodic.discountPer | currency}})</div>\n" +
     "\t\t\t\t\t<div ng-show=\"order.paper.discounts.special\">{{order.paper.discounts.special | currency}} (Special)</div>\n" +
     "\t\t\t\t\t<hr />\n" +
     "\t\t\t\t\t<div>{{order.paper.totalDiscountPerStudent | currency}}</div>\n" +

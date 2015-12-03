@@ -191,6 +191,13 @@ angular.module('myApp', [
 				order.online.total = onlineTotal;
 				order.paper.total = paperTotal;	
 
+				var periodicOrder;
+				angular.forEach($scope.formData.periodic.orders, function(periodic, periodicKey) {
+					if((order.administrationWindow == 'Fall' && periodic.calendarYear.indexOf(order.calendarYear) == 0) ||  (order.administrationWindow == 'Spring' && periodic.calendarYear.indexOf(order.calendarYear) == 7)){
+						periodicOrder = periodic;
+					}
+				});
+
 				//Online portion
 				order.online.price = $scope.cost.pricing.summative.online + ((order.individualReports ? (order.reportsPerStudent * $scope.cost.pricing.summative.isr + (order.scoreLabels ? $scope.cost.pricing.summative.labels : 0.0)) : 0.0));
 				order.online.extendedPrice = order.online.price * order.online.total;
@@ -198,7 +205,10 @@ angular.module('myApp', [
 				order.online.discounts = {};
 				order.online.discounts.volume = costService.getVolumeDiscount(order.online.total);
 				order.online.discounts.multiGrade = costService.getMultigradeDiscount(onlineGrades);
-				order.online.discounts.periodic = 0.0;  //TODO: Figure this out
+				if(periodicOrder && periodicOrder.onlineTotal > 0){
+					order.online.discounts.periodic = costService.getPeriodicDiscount(order.online.total, periodicOrder.onlineTotal);
+					order.online.periodicNumberApplied = Math.min(order.online.total, periodicOrder.onlineTotal);
+				}
 				if($scope.formData.summary.discount.special && $scope.formData.summary.discount.special.summativeOnline){
 					order.online.discounts.special = $scope.formData.summary.discount.special.summativeOnline.discountPer;
 				}
@@ -220,7 +230,11 @@ angular.module('myApp', [
 				order.paper.discounts = {};
 				order.paper.discounts.volume = costService.getVolumeDiscount(order.paper.total);
 				order.paper.discounts.multiGrade = costService.getMultigradeDiscount(paperGrades);
-				order.paper.discounts.periodic = 0.0;  //TODO: Figure this out
+				if(periodicOrder && periodicOrder.onlineTotal > order.online.total){
+					//Only apply what's left after the online portion is disounted
+					order.paper.discounts.periodic = costService.getPeriodicDiscount(order.paper.total, periodicOrder.onlineTotal - order.online.total);
+					order.paper.periodicNumberApplied = Math.min(order.paper.total, periodicOrder.onlineTotal - order.online.total);
+				}
 				if($scope.formData.summary.discount.special && $scope.formData.summary.discount.special.summativePaper){
 					order.paper.discounts.special = $scope.formData.summary.discount.special.summativePaper.discountPer;
 				}
@@ -244,6 +258,8 @@ angular.module('myApp', [
 			special: costService.getSpecialDiscount(code)
 		};
 		$scope.formData.summary.discount.special.code = code.toUpperCase();
+
+		$scope.updatePeriodicOrders();
 	}
     
 	// function to process the form
@@ -275,11 +291,14 @@ angular.module('myApp', [
 	$http.get('json/cost.json').then(function(response) { 
     	cost.pricing = response.data.pricing;
 		cost.discounts = response.data.discounts;
-    	cost.coupons = response.data.coupons;
 	});
 
 	$http.get('json/salesTax.json').then(function(response) { 
     	cost.salesTax = response.data;
+	});
+
+	$http.get('json/coupons.json').then(function(response) { 
+	    cost.coupons = response.data.coupons;
 	});
 
 	var getVolumeDiscount = function(amount){
@@ -307,13 +326,26 @@ angular.module('myApp', [
 	};
 
 	var getPeriodicDiscount = function(summativeAmount, periodicAmount){
-		//TODO: Do this for only up to the number of periodic
 		var discountAmount = 0;
-		if(periodicAmount > 0 && cost.discounts){
+		if(cost.discounts){
 			discountAmount = cost.discounts.periodic.discountPer;
 		}
+
+		if(periodicAmount < summativeAmount){
+			discountAmount = discountAmount * periodicAmount / summativeAmount
+		}
+
 		return discountAmount;
 	};
+
+	var checkMaxUses = function(couponCode, discountAmount){
+		$http.get('json/couponUses.json', { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
+    		var couponUses = response.data;
+    		if(couponUses[couponCode] && couponUses[couponCode].length >= discountAmount.maxUses){
+				discountAmount.error = "Maximum uses exceeded for code " + couponCode.toUpperCase();
+    		}
+		});
+	}
 
 	var getSpecialDiscount = function(couponCode){
 		var discountAmount = {};
@@ -327,6 +359,11 @@ angular.module('myApp', [
 
 		if(jQuery.isEmptyObject(discountAmount)){
 			discountAmount.error = "No matching coupon for code " + couponCode.toUpperCase();
+		}
+		else{
+			if(discountAmount.maxUses != undefined){
+				checkMaxUses(couponCode, discountAmount);
+			}
 		}
 		return discountAmount;
 	};
@@ -366,14 +403,36 @@ angular.module('myApp', [
 
 		angular.forEach(formData.summative.orders, function(order, key) {
 			if(order.online.total){
-				emailBody += '\n\n' + order.administrationWindow + ' ' + order.calendarYear + ' Summative Order Online';
+				emailBody += '\n\n' + order.administrationWindow + ' ' + order.calendarYear + ' Summative Order Online:';
+				angular.forEach(order.subjects, function(checked, subject){
+					if(checked){
+						emailBody += ' ' + subject;
+					} 
+				});
+				if(order.individualReports){
+					emailBody += '\nPrinted Individual Reports: ' + order.reportsPerStudent + ' Per Student';
+					if(order.scoreLabels){
+						emailBody += '\nAdd Printed Score Labels: Y';
+					}
+				}
 				emailBody += '\n' + order.online.total + ' Students X ' + currencyFilter(order.online.finalPricePerStudent) + ' = ' + currencyFilter(order.online.balance);
 			}
 		});
 
 		angular.forEach(formData.summative.orders, function(order, key) {
 			if(order.paper.total){
-				emailBody += '\n\n' + order.administrationWindow + ' ' + order.calendarYear + ' Summative Order Paper';
+				emailBody += '\n\n' + order.administrationWindow + ' ' + order.calendarYear + ' Summative Order Paper:';
+				angular.forEach(order.subjects, function(checked, subject){
+					if(checked){
+						emailBody += ' ' + subject;
+					} 
+				});	
+				if(order.individualReports){
+					emailBody += '\nPrinted Individual Reports: ' + order.reportsPerStudent + ' Per Student';
+					if(order.scoreLabels){
+						emailBody += '\nAdd Printed Score Labels: Y';
+					}
+				}			
 				emailBody += '\n' + order.paper.total + ' Students X ' + currencyFilter(order.paper.finalPricePerStudent) + ' = ' + currencyFilter(order.paper.balance);
 			}
 		});
@@ -384,6 +443,10 @@ angular.module('myApp', [
 				emailBody += '\n' + order.onlineTotal + ' Students X ' + currencyFilter(order.finalPricePerStudent) + ' = ' + currencyFilter(order.balance);
 			}
 		});
+
+		if(formData.summary.discount.special && formData.summary.discount.special.code && !formData.summary.discount.special.error){
+			emailBody += '\n\nDiscount Code: ' + formData.summary.discount.special.code;
+		}
 		
 		emailBody += '\n\nTotal: ' + currencyFilter(formData.summary.total);
 		if(formData.summary.tax){
@@ -402,16 +465,8 @@ angular.module('myApp', [
 	};
 
 	var url = '../../wp-json/wp/v2/sendEmail/';
-	var sendConfirmationEmail = function(formData, cost){
-		var postData = {};
-		postData.clientEmail = formData.customer.email;
-		postData.orderInbox = 'scottbock@yahoo.com';
-		postData.message = buildEmail(formData);
-		cost.usedCodes = {
-			code:formData.summary.discount.special.code,
-			usedBy:formData.customer.organization
-		};
-		postData.costJson = angular.toJson(cost, true);
+
+	var postConfirmationEmail = function(postData){
 		$http.post(url, postData, {}).then(
 			function(){
 				alert('success');
@@ -420,6 +475,30 @@ angular.module('myApp', [
 				alert('failure');
 			}
 		);
+	}
+	var sendConfirmationEmail = function(formData, cost){
+		var postData = {};
+		postData.clientEmail = formData.customer.email;
+		postData.orderInbox = 'scottbock@yahoo.com';
+		postData.message = buildEmail(formData);
+
+		if(formData.summary.discount.special && formData.summary.discount.special.code && !formData.summary.discount.special.error){
+			$http.get('json/couponUses.json', { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
+	    		var couponUses = response.data;
+	    		if(!couponUses[formData.summary.discount.special.code]){
+					couponUses[formData.summary.discount.special.code] = new Array();
+	    		}
+				couponUses[formData.summary.discount.special.code].push(formData.customer.firstName + ' ' + formData.customer.lastName + ', ' + formData.customer.jobTitle + ', ' + formData.customer.organization);
+
+				postData.couponUses = angular.toJson(couponUses, true);
+				postConfirmationEmail(postData);
+			});
+		}
+		else{
+			postConfirmationEmail(postData);
+		}
+		
+		
 	};
 
 	return {
