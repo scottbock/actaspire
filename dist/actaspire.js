@@ -45543,7 +45543,7 @@ angular.module('myApp', [
 	}
 }])
 
-.factory('EmailService', ['$http', 'currencyFilter', function ($http, currencyFilter) {
+.factory('EmailService', ['$http', 'currencyFilter', 'dateFilter', function ($http, currencyFilter, dateFilter) {
 	var buildEmail = function(formData){
 		var emailBody = 'Dear ' + formData.customer.firstName + ' ' + formData.customer.lastName + 
 			',\n\nThank you for your ACT Aspire Order' +
@@ -45625,9 +45625,44 @@ angular.module('myApp', [
 
 		emailBody += '\n\nI agree to ACT Aspire\'s Terms and Conditions: Y' + '\n\nSignature: ' + formData.customer.signature;
 
-		emailBody += '\n\nSincerely,\nYour ACT Aspire Team\nemail@email.email\nXXX-XXX-XXXX';
+		emailBody += '\n\nSincerely,\nYour ACT Aspire Team\nOrders@actaspire.org\n1-855-730-0400';
 
 		return emailBody;
+	};
+
+	var yesNo = function(bool){
+		if(bool){
+			return 'Yes';
+		}
+		return 'No';
+	};
+
+	var buildCsvFile = function(formData, cost){
+		var colDelim = '","'
+        ,rowDelim = '"\r\n"'
+        ,today = dateFilter(new Date(), 'MM/dd/yy');
+
+        var fileContent = ',PID,Internal ID,Date,line ,School / Customer,Grade,Quantity,Item,Test Administration,Test Admin Year,Test Mode,Item Rate,Amount,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,Test Coordinator Name,Test Coordinator Email,Test Coordinator Phone,Backup Coordinator Name,Backup Coordinator Email,Backup Coordinator Phone,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Tax Exempt';
+
+        var index = 0;
+        angular.forEach(formData.summative.orders, function(order, key) {
+			angular.forEach(order.grade, function(grade, gradeKey) {
+				fileContent += ",,," + today + colDelim 
+					+ (index++) + colDelim
+					+ formData.customer.organization + colDelim
+					+ gradeKey + colDelim
+					+ grade.online + colDelim
+					+ 'Summative Test' + colDelim
+					+ order.online.administrationWindow + colDelim
+					+ order.online.calendarYear + colDelim
+					+ 'Online' + colDelim
+					+ (cost.pricing.summative.online - order.totalDiscountPerStudent) + colDelim
+					+ ((cost.pricing.summative.online - order.totalDiscountPerStudent) * grade.online) + colDelim
+					+ yesNo
+				+ 'Amount,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,Test Coordinator Name,Test Coordinator Email,Test Coordinator Phone,Backup Coordinator Name,Backup Coordinator Email,Backup Coordinator Phone,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Tax Exempt';
+			});
+		});
+		
 	};
 
 	var url = '../../wp-json/wp/v2/sendEmail/';
