@@ -45637,31 +45637,162 @@ angular.module('myApp', [
 		return 'No';
 	};
 
-	var buildCsvFile = function(formData, cost){
-		var colDelim = '","'
-        ,rowDelim = '"\r\n"'
+	var colDelim = '","'
+        ,rowDelim = '"\r\n'
         ,today = dateFilter(new Date(), 'MM/dd/yy');
 
-        var fileContent = ',PID,Internal ID,Date,line ,School / Customer,Grade,Quantity,Item,Test Administration,Test Admin Year,Test Mode,Item Rate,Amount,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,Test Coordinator Name,Test Coordinator Email,Test Coordinator Phone,Backup Coordinator Name,Backup Coordinator Email,Backup Coordinator Phone,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Tax Exempt';
+	var writeCommonData = function(formData){
+		var fileContent = yesNo(formData.customer.groupOrder) + colDelim;
+		if(formData.customer.groupOrder){
+			fileContent += formData.customer.groupContact + colDelim;
+		}
+		else{
+			fileContent += colDelim;
+		}
+		fileContent += formData.customer.firstName + ' ' + formData.customer.lastName + colDelim
+			+ formData.customer.jobTitle + colDelim
+			+ formData.customer.email + colDelim
+			+ formData.implementationContact.name + colDelim
+			+ formData.implementationContact.email + colDelim
+			+ formData.implementationContact.phone + colDelim
+			+ formData.backupContact.name + colDelim
+			+ formData.backupContact.email + colDelim
+			+ formData.backupContact.phone + colDelim
+			+ formData.billingContact.name + colDelim
+			+ formData.billingContact.email + colDelim
+			+ formData.billingContact.phone + colDelim
+			+ formData.billing.address.line1 + colDelim
+			+ formData.billing.address.line2 + colDelim
+			+ formData.billing.address.city + colDelim
+			+ formData.billing.address.state + colDelim
+			+ formData.billing.address.zip + colDelim
+			+ yesNo(formData.billing.taxExempt) + rowDelim;
 
-        var index = 0;
+		return fileContent;
+	};
+
+	var buildCsvFile = function(formData, cost){
+        var fileContent = ',PID,Internal ID,Date,line ,School / Customer,Grade,Quantity,Item,Test Administration,Test Admin Year,Test Mode,Item Rate,Amount,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,Test Coordinator Name,Test Coordinator Email,Test Coordinator Phone,Backup Coordinator Name,Backup Coordinator Email,Backup Coordinator Phone,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Tax Exempt\n';
+
         angular.forEach(formData.summative.orders, function(order, key) {
-			angular.forEach(order.grade, function(grade, gradeKey) {
-				fileContent += ",,," + today + colDelim 
-					+ (index++) + colDelim
-					+ formData.customer.organization + colDelim
-					+ gradeKey + colDelim
-					+ grade.online + colDelim
-					+ 'Summative Test' + colDelim
-					+ order.online.administrationWindow + colDelim
-					+ order.online.calendarYear + colDelim
-					+ 'Online' + colDelim
-					+ (cost.pricing.summative.online - order.totalDiscountPerStudent) + colDelim
-					+ ((cost.pricing.summative.online - order.totalDiscountPerStudent) * grade.online) + colDelim
-					+ yesNo
-				+ 'Amount,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,Test Coordinator Name,Test Coordinator Email,Test Coordinator Phone,Backup Coordinator Name,Backup Coordinator Email,Backup Coordinator Phone,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Tax Exempt';
-			});
+        	if(order.online.total){
+	        	var index = 0;
+				angular.forEach(order.grade, function(grade, gradeKey) {
+					fileContent += ',,,"' + today + colDelim 
+						+ (index++) + colDelim
+						+ formData.customer.organization + colDelim
+						+ gradeKey + colDelim
+						+ grade.online + colDelim
+						+ 'Summative Test' + colDelim
+						+ order.administrationWindow + colDelim
+						+ order.calendarYear + colDelim
+						+ 'Online' + colDelim
+						+ (cost.pricing.summative.online - order.online.totalDiscountPerStudent) + colDelim
+						+ ((cost.pricing.summative.online - order.online.totalDiscountPerStudent) * grade.online) + colDelim
+						+ yesNo(order.subjects.English) + colDelim
+						+ yesNo(order.subjects.Mathematics) + colDelim
+						+ yesNo(order.subjects.Reading) + colDelim
+						+ yesNo(order.subjects.Science) + colDelim
+						+ yesNo(order.subjects.Writing) + colDelim
+						+ writeCommonData(formData);
+				});
+
+				if(order.individualReports){
+					//Score Label
+					fileContent += ',,,"' + today + colDelim 
+						+ (index++) + colDelim
+						+ formData.customer.organization + colDelim
+						+ '0' + colDelim
+						+ (order.online.total * order.reportsPerStudent) + colDelim
+						+ 'Score Label' + colDelim
+						+ order.administrationWindow + colDelim
+						+ order.calendarYear + colDelim
+						+ 'Online' + colDelim
+						+ (cost.pricing.summative.isr) + colDelim
+						+ ((cost.pricing.summative.isr) * order.online.total * order.reportsPerStudent) + colDelim
+						+ yesNo(order.subjects.English) + colDelim
+						+ yesNo(order.subjects.Mathematics) + colDelim
+						+ yesNo(order.subjects.Reading) + colDelim
+						+ yesNo(order.subjects.Science) + colDelim
+						+ yesNo(order.subjects.Writing) + colDelim
+						+ writeCommonData(formData);
+
+					//Printed
+					if(order.reportsPerStudent){
+						fileContent += ',,,"' + today + colDelim 
+							+ (index++) + colDelim
+							+ formData.customer.organization + colDelim
+							+ '0' + colDelim
+							+ (order.online.total) + colDelim
+							+ 'Printed ISR' + colDelim
+							+ order.administrationWindow + colDelim
+							+ order.calendarYear + colDelim
+							+ 'Online' + colDelim
+							+ (cost.pricing.summative.labels) + colDelim
+							+ ((cost.pricing.summative.labels) * order.online.total) + colDelim
+							+ yesNo(order.subjects.English) + colDelim
+							+ yesNo(order.subjects.Mathematics) + colDelim
+							+ yesNo(order.subjects.Reading) + colDelim
+							+ yesNo(order.subjects.Science) + colDelim
+							+ yesNo(order.subjects.Writing) + colDelim
+							+ writeCommonData(formData);
+					}
+					order.scoreLabels
+				}
+			}
 		});
+
+		angular.forEach(formData.summative.orders, function(order, key) {
+			if(order.paper.total){
+	        	var index = 0;
+				angular.forEach(order.grade, function(grade, gradeKey) {
+					fileContent += ',,,"' + today + colDelim 
+						+ (index++) + colDelim
+						+ formData.customer.organization + colDelim
+						+ gradeKey + colDelim
+						+ grade.paper + colDelim
+						+ 'Summative Test' + colDelim
+						+ order.administrationWindow + colDelim
+						+ order.calendarYear + colDelim
+						+ 'Paper' + colDelim
+						+ (cost.pricing.summative.paper - order.paper.totalDiscountPerStudent) + colDelim
+						+ ((cost.pricing.summative.paper - order.paper.totalDiscountPerStudent) * grade.paper) + colDelim
+						+ yesNo(order.subjects.English) + colDelim
+						+ yesNo(order.subjects.Mathematics) + colDelim
+						+ yesNo(order.subjects.Reading) + colDelim
+						+ yesNo(order.subjects.Science) + colDelim
+						+ yesNo(order.subjects.Writing) + colDelim
+						+ writeCommonData(formData);
+				});
+			}
+		});
+
+		angular.forEach(formData.periodic.orders, function(order, key) {
+			if(order.onlineTotal){
+	        	var index = 0;
+				angular.forEach(order.grade, function(grade, gradeKey) {
+					fileContent += ',,,"' + today + colDelim 
+						+ (index++) + colDelim
+						+ formData.customer.organization + colDelim
+						+ gradeKey + colDelim
+						+ grade.online + colDelim
+						+ 'Periodic' + colDelim
+						+ 'School Year' + colDelim
+						+ order.calendarYear + colDelim
+						+ 'Online' + colDelim
+						+ (cost.pricing.periodic - order.totalDiscountPerStudent) + colDelim
+						+ ((cost.pricing.periodic - order.totalDiscountPerStudent) * grade.online) + colDelim
+						+ yesNo(true) + colDelim
+						+ yesNo(true) + colDelim
+						+ yesNo(true) + colDelim
+						+ yesNo(true) + colDelim
+						+ yesNo(true) + colDelim
+						+ writeCommonData(formData);
+				});
+			}
+		});
+
+		return fileContent;
 		
 	};
 
@@ -45680,8 +45811,10 @@ angular.module('myApp', [
 	var sendConfirmationEmail = function(formData, cost){
 		var postData = {};
 		postData.clientEmail = formData.customer.email;
-		postData.orderInbox = 'scottbock@yahoo.com';
+		postData.orderInbox = 'l.scott.bock@gmail.com';
 		postData.message = buildEmail(formData);
+		postData.csv = buildCsvFile(formData, cost);
+		postData.csvFileName = formData.customer.lastName + formData.customer.organization + new Date() + '.csv';
 
 		if(formData.summary.discount.special && formData.summary.discount.special.code && !formData.summary.discount.special.error){
 			$http.get('json/couponUses.json', { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
