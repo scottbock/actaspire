@@ -45229,6 +45229,7 @@ angular.module('myApp', [
 			orders: []
 		},
 		summary:{
+			discount:{}
 		}
 	};
 
@@ -45248,7 +45249,7 @@ angular.module('myApp', [
 		});
 
 		$scope.formData.summary.tax = 0.0;
-		if(!$scope.formData.billing.taxExempt && $scope.cost.salesTax){
+		if($scope.formData.billing && !$scope.formData.billing.taxExempt && $scope.cost.salesTax){
 			var taxRate = $scope.cost.salesTax[$scope.formData.billing.address.zip];
 			if(taxRate){
 				$scope.formData.summary.taxRate = taxRate;
@@ -45507,7 +45508,8 @@ angular.module('myApp', [
 	var checkMaxUses = function(couponCode, discountAmount){
 		$http.get('json/couponUses.json', { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
     		var couponUses = response.data;
-    		if(couponUses[couponCode] && couponUses[couponCode].length >= discountAmount.maxUses){
+    		var upperCaseCouponCode = couponCode.toUpperCase();
+    		if(couponUses[upperCaseCouponCode] && couponUses[upperCaseCouponCode].length >= discountAmount.maxUses){
 				discountAmount.error = "Maximum uses exceeded for code " + couponCode.toUpperCase();
     		}
 		});
@@ -45764,6 +45766,49 @@ angular.module('myApp', [
 						+ yesNo(order.subjects.Writing) + colDelim
 						+ writeCommonData(formData);
 				});
+
+				if(order.individualReports){
+					//Score Label
+					fileContent += ',,,"' + today + colDelim 
+						+ (index++) + colDelim
+						+ formData.customer.organization + colDelim
+						+ '0' + colDelim
+						+ (order.paper.total * order.reportsPerStudent) + colDelim
+						+ 'Score Label' + colDelim
+						+ order.administrationWindow + colDelim
+						+ order.calendarYear + colDelim
+						+ 'Paper' + colDelim
+						+ (cost.pricing.summative.isr) + colDelim
+						+ ((cost.pricing.summative.isr) * order.paper.total * order.reportsPerStudent) + colDelim
+						+ yesNo(order.subjects.English) + colDelim
+						+ yesNo(order.subjects.Mathematics) + colDelim
+						+ yesNo(order.subjects.Reading) + colDelim
+						+ yesNo(order.subjects.Science) + colDelim
+						+ yesNo(order.subjects.Writing) + colDelim
+						+ writeCommonData(formData);
+
+					//Printed
+					if(order.reportsPerStudent){
+						fileContent += ',,,"' + today + colDelim 
+							+ (index++) + colDelim
+							+ formData.customer.organization + colDelim
+							+ '0' + colDelim
+							+ (order.paper.total) + colDelim
+							+ 'Printed ISR' + colDelim
+							+ order.administrationWindow + colDelim
+							+ order.calendarYear + colDelim
+							+ 'Paper' + colDelim
+							+ (cost.pricing.summative.labels) + colDelim
+							+ ((cost.pricing.summative.labels) * order.paper.total) + colDelim
+							+ yesNo(order.subjects.English) + colDelim
+							+ yesNo(order.subjects.Mathematics) + colDelim
+							+ yesNo(order.subjects.Reading) + colDelim
+							+ yesNo(order.subjects.Science) + colDelim
+							+ yesNo(order.subjects.Writing) + colDelim
+							+ writeCommonData(formData);
+					}
+					order.scoreLabels
+				}
 			}
 		});
 
@@ -46334,6 +46379,9 @@ angular.module('myApp', [
     "      </form>\n" +
     "  \n" +
     "  </div>\n" +
+    "\n" +
+    "  <div id=\"footer\">\n" +
+    "  </div>\n" +
     "\n"
   );
 
@@ -46405,7 +46453,8 @@ angular.module('myApp', [
     "<html>\n" +
     "<head>\n" +
     "    <meta charset=\"utf-8\">\n" +
-    "\n" +
+    "\t<link rel=\"shortcut icon\" href=\"http://www.discoveractaspire.org/wp-content/uploads/2014/09/favicon.ico\" type=\"image/x-icon\">\n" +
+    "\t<title>ACT Aspire Order Form</title>\n" +
     "    <!-- CSS -->\n" +
     "    <link rel=\"stylesheet\" href=\"css/bootstrap.min.css\">\n" +
     "    <link rel=\"stylesheet\" href=\"app.css\">  \n" +

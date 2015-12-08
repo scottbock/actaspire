@@ -476,6 +476,9 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "      </form>\n" +
     "  \n" +
     "  </div>\n" +
+    "\n" +
+    "  <div id=\"footer\">\n" +
+    "  </div>\n" +
     "\n"
   );
 
@@ -547,7 +550,8 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "<html>\n" +
     "<head>\n" +
     "    <meta charset=\"utf-8\">\n" +
-    "\n" +
+    "\t<link rel=\"shortcut icon\" href=\"http://www.discoveractaspire.org/wp-content/uploads/2014/09/favicon.ico\" type=\"image/x-icon\">\n" +
+    "\t<title>ACT Aspire Order Form</title>\n" +
     "    <!-- CSS -->\n" +
     "    <link rel=\"stylesheet\" href=\"css/bootstrap.min.css\">\n" +
     "    <link rel=\"stylesheet\" href=\"app.css\">  \n" +
