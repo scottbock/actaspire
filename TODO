@@ -1,28 +1,13 @@
 TODO
 
-Multiple years with different numbers of subjects -- Summary show what???
+remove sales tax Sales Tax database to calculate sales tax if they do not click tax exempt (hide for now ) remove the toggle and put the send certificate to below the grey bar but above biling contact name
 
-previous test assessment
-field type validation - zip, phone?, etc.
-Rules about which years they can order (e.g. when can they not order for 2015 anymore)
-projected test dates
-pricing for summative based on number of subjects
-save when coupon code used
-grunt-angular-templates to load html templates as js
-order form as angular app
-order form generate emails
-order form create excel and attach
+Move up score labels so you can order either one but not click one for the other
 
---Extra things
--Sales Tax
--Save and Restore
+Add price in parathenses to ISR and score labels ($1.50 and $1.00)
 
+Fix or remove save draft
 
+javascript tutorial for Chris
 
-1 Plugin to do
-coupon code table creation
-coupon code management
-coupon code json retrieval
-include angular app
-rest call to send emails and generate/attach excel
-
+confirmation and forward

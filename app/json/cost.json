@@ -21,5 +21,6 @@
 		"periodic":{
 			"discountPer":4.0
 		}
-	}
+	},
+	"calendarYears":[2016,2017,2018]
 }

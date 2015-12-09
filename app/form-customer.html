@@ -35,7 +35,7 @@
 	<div class="col-sm-6 form-group">
 	    <label class="checkbox-inline">
 	    	<input type="checkbox" ng-model="formData.customer.groupOrder">
-	    	Part of a Group Order
+	    	Are you part of a group order?
 	    </label>
 	</div>
 
@@ -86,6 +86,11 @@
 <div class="panel panel-default">
     <div class="panel-heading">Billing Information</div>
     <div class="panel-body">
+    	<div class="row">
+		    <div class="col-sm-12">
+			    <p>If you are tax exampt, please email a copy of your exemption certificate to <a href="mailto:Orders@ActAspire.org">Orders@ActAspire.org</a></p>
+		    </div>
+		</div>
         <div class="row">
             <div class="form-group col-sm-4 required">
                 <label for="billingName" class="control-label">Billing Contact Name</label>
@@ -129,19 +134,7 @@
                 <label for="zip" class="control-label">Zip</label>
                 <input type="text" class="form-control" name="zip" ng-model="formData.billing.address.zip" required="required">
             </div>
-        </div>
-		<div class="row">
-			<div class="col-sm-3 form-group">
-			    <label class="checkbox-inline">
-			    	<input type="checkbox" ng-model="formData.billing.taxExempt">
-			    	Tax Exempt
-			    </label>
-			</div>
-
-		    <div class="col-sm-9" ng-show="formData.billing.taxExempt">
-		    Please email a copy of your exemption certificate to <a href="mailto:Orders@ActAspire.org">Orders@ActAspire.org</a>
-		    </div>
-		</div>      
+        </div>    
     </div>
 </div>
 
@@ -154,7 +147,7 @@
 		    <li>Designed for Grades 3 - 10 and can be taken Online or in Paper form (paper administration requires an additional fee).</li>
 		    <li>Can be administered in a Spring test administration window or a Fall test administration window.</li>
 		    <li>If you know your intended or preferred test dates, subjects to be taken and estimated student counts, please include where applicable below.</li>
-		    <li>Prices are good till {{cost.pricing.validThrough}}. If you have any questions regarding the product or placing an order please contact order@actaspire.org or 1-855-730-0400</li>
+		    <li>Prices are good till {{cost.pricing.validThrough}}. If you have any questions regarding the product or placing an order please contact <a href="mailto:Orders@ActAspire.org">Orders@ActAspire.org</a> or 1-855-730-0400</li>
 		</ul>
 	</div>		
 </div>
@@ -178,10 +171,16 @@
     </div>
     <h5>Printed Student Reports</h5>
     <div class="row">
-    	<div class="col-sm-12 form-group">
+    	<div class="col-sm-6 form-group">
 		    <label class="checkbox-inline">
 		    	<input type="checkbox" ng-model="order.individualReports">
 		    	Add Printed Individual Student Reports
+		    </label>
+	    </div>
+     	<div class="col-sm-6 form-group">
+		    <label class="checkbox-inline">
+		    	<input type="checkbox" ng-model="order.scoreLabels">
+		    	Add Printed Score Labels ({{cost.pricing.summative.labels | currency}})
 		    </label>
 	    </div>
 	</div>
@@ -189,25 +188,15 @@
     	<div class="col-sm-6 form-group">
 			<label>
 				<input type="radio" ng-model="order.reportsPerStudent" value="1">
-				1 Report Per Student
+				1 Report Per Student ({{cost.pricing.summative.isr | currency}})
 			</label>
 			<label>
 				<input type="radio" ng-model="order.reportsPerStudent" value="2">
-				2 Reports Per Student
+				2 Reports Per Student ({{cost.pricing.summative.isr * 2 | currency}})
 			</label>			
 	    </div>
-     	<div class="col-sm-6 form-group">
-		    <label class="checkbox-inline">
-		    	<input type="checkbox" ng-model="order.scoreLabels">
-		    	Add Printed Score Labels
-		    </label>
-	    </div>
-
     </div>
 
-    <h5>
-		Student Estimate
-	</h5>
 	<table class="table table-striped">
 		<thead>
 			<th></th>
@@ -233,17 +222,17 @@
 
 <div class="row">
 	<div class="form-group col-sm-5">
-		<label for="administrationWindow" class="control-label">Test Administration Window</label>
+		<label for="administrationWindow" class="control-label">What test administration window would you like to order?</label>
 		<select class="form-control" name="administrationWindow" ng-model="summative.administrationWindow">
 			<option value="">---Please select---</option>
       		<option ng-repeat="item in administrationWindows" value="{{item}}">{{item}}</option>
 		 </select>
 	</div>
 	<div class="form-group col-sm-5">
-		<label for="calendarYear" class="control-label">Calendar Year</label>
+		<label for="calendarYear" class="control-label">What calendar year would you like to order?</label>
 		<select class="form-control" name="calendarYear" ng-model="summative.calendarYear">
 			<option value="">---Please select---</option>
-      		<option ng-repeat="item in calendarYears" value="{{item}}">{{item}}</option>
+      		<option ng-repeat="item in cost.calendarYears" value="{{item}}">{{item}}</option>
 		 </select>
 	</div>
 	<div class="form-group col-sm-2">
@@ -270,7 +259,7 @@
 		    <li>Interim tests are designed for Grades 3 - 10 and can be taken Online, Classroom quizzez are designed for Grades 3-8 also only in Online.</li>
 		    <li>Can be administered throughout the year to students and provide immediate analysis and reporting.</li>
 		    <li>Bundle with ACT Aspire Summative test and receive a per student discount off of the Summative test (see discount below).</li>
-		    <li>Prices are good till {{cost.pricing.validThrough}}. If you have any questions regarding the product or placing an order please contact order@actaspire.org or 1-855-730-0400</li>
+		    <li>Prices are good till {{cost.pricing.validThrough}}. If you have any questions regarding the product or placing an order please contact <a href="mailto:Orders@ActAspire.org">Orders@ActAspire.org</a> or 1-855-730-0400</li>
 		</ul>
 	</div>		
 </div>
@@ -281,9 +270,6 @@
 		<button type="button" class="pull-right btn btn-default btn-xs" aria-label="Remove" ng-click="removeOrder(formData.periodic.orders, order)">
 			<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
 		</button>
-	</div>
-	<div class="panel-body">
-		Student Estimate
 	</div>
 	<table class="table table-striped">
 		<thead>
@@ -303,10 +289,10 @@
 
 <div class="row">
 	<div class="form-group col-sm-5">
-		<label for="schoolYear" class="control-label">School Year</label>
+		<label for="schoolYear" class="control-label">What school year would you like to order</label>
 		<select class="form-control" name="schoolYear" ng-model="periodic.schoolYear">
 			<option value="">---Please select---</option>
-      		<option ng-repeat="item in calendarYears" value="{{item | schoolYear}}">{{item | schoolYear}}</option>
+      		<option ng-repeat="item in cost.calendarYears" value="{{item | schoolYear}}">{{item | schoolYear}}</option>
 		 </select>
 	</div>
 	<div class="form-group col-sm-2">

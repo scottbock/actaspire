@@ -59,3 +59,7 @@ input.ng-invalid.ng-touched {
 #footer{
   padding-bottom:20px;
 }
+
+#body{
+  font-family:Telex;
+}

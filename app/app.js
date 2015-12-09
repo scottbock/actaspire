@@ -20,6 +20,11 @@ angular.module('myApp', [
 			url: '/customer',
 			templateUrl: 'app/form-customer.html'
 		})
+
+		.state('confirmation', {
+			url: '/confirmation',
+			templateUrl: 'app/confirmation.html'
+		})
         
     // catch all route
     // send users to the form page 
@@ -38,8 +43,7 @@ angular.module('myApp', [
 
 	$scope.date = new Date();
 	$scope.currentYear = $scope.date.getFullYear();
-	$scope.administrationWindows = ['Fall', 'Spring'];		
-	$scope.calendarYears = [$scope.currentYear, $scope.currentYear + 1, $scope.currentYear + 2, $scope.currentYear + 3, $scope.currentYear + 4];
+	$scope.administrationWindows = ['Fall', 'Spring'];
 	$scope.subjects = {'Math' :true, 'Science':true, 'Reading':true, 'English':true, 'Writing':true};
 	$scope.summative = {
 		'administrationWindow' : '',
@@ -83,14 +87,16 @@ angular.module('myApp', [
 		});
 
 		$scope.formData.summary.tax = 0.0;
-		if($scope.formData.billing && !$scope.formData.billing.taxExempt && $scope.cost.salesTax){
+
+		//TODO: Uncomment this code when ready to include sales tax
+		/*if($scope.formData.billing && !$scope.formData.billing.taxExempt && $scope.cost.salesTax){
 			var taxRate = $scope.cost.salesTax[$scope.formData.billing.address.zip];
 			if(taxRate){
 				$scope.formData.summary.taxRate = taxRate;
 				$scope.formData.summary.tax = taxRate * $scope.formData.summary.total;
 				$scope.formData.summary.totalWithTax = $scope.formData.summary.tax + $scope.formData.summary.total;
 			}
-		}
+		}*/
 	};
 	
 	$scope.addOrder = function(orders, calendarYear, administrationWindow){
@@ -99,7 +105,7 @@ angular.module('myApp', [
 			alreadyInList = alreadyInList || (order.administrationWindow == administrationWindow && order.calendarYear == calendarYear);
 		});
 		if(!alreadyInList){
-			var order = {};
+			var order = { reportsPerStudent:1 };
 			if(administrationWindow){
 				order.subjects = {};
 				angular.copy($scope.subjects, order.subjects);	
@@ -200,7 +206,7 @@ angular.module('myApp', [
 				});
 
 				//Online portion
-				order.online.price = $scope.cost.pricing.summative.online + ((order.individualReports ? (order.reportsPerStudent * $scope.cost.pricing.summative.isr + (order.scoreLabels ? $scope.cost.pricing.summative.labels : 0.0)) : 0.0));
+				order.online.price = $scope.cost.pricing.summative.online + (order.individualReports ? (order.reportsPerStudent * $scope.cost.pricing.summative.isr) : 0.0) + (order.scoreLabels ? $scope.cost.pricing.summative.labels : 0.0);
 				order.online.extendedPrice = order.online.price * order.online.total;
 
 				order.online.discounts = {};
@@ -225,7 +231,7 @@ angular.module('myApp', [
 				order.online.balance = order.online.finalPricePerStudent * order.online.total;
 
 				//paper portion
-				order.paper.price = $scope.cost.pricing.summative.paper + ((order.individualReports ? (order.reportsPerStudent * $scope.cost.pricing.summative.isr + (order.scoreLabels ? $scope.cost.pricing.summative.labels : 0.0)) : 0.0));
+				order.paper.price = $scope.cost.pricing.summative.paper + (order.individualReports ? (order.reportsPerStudent * $scope.cost.pricing.summative.isr) : 0.0) + (order.scoreLabels ? $scope.cost.pricing.summative.labels : 0.0);
 				order.paper.extendedPrice = order.paper.price * order.paper.total;
 
 				order.paper.discounts = {};
@@ -281,10 +287,11 @@ angular.module('myApp', [
 		$scope.updatePeriodicOrders();
 	}, true);
 
+	//TODO: uncomment when adding back sales tax
 	//Update sales tax when billing zip or taxExempt status changes
-	$scope.$watchCollection('[formData.billing.taxExempt, formData.billing.address.zip]', function(newValue, oldValue){
-		$scope.updateTotals();
-	}, true); 
+	// $scope.$watchCollection('[formData.billing.taxExempt, formData.billing.address.zip]', function(newValue, oldValue){
+	// 	$scope.updateTotals();
+	// }, true); 
 }])
 
 .factory('CostService', ['$http', function ($http) {
@@ -292,11 +299,13 @@ angular.module('myApp', [
 	$http.get('json/cost.json').then(function(response) { 
     	cost.pricing = response.data.pricing;
 		cost.discounts = response.data.discounts;
+		cost.calendarYears = response.data.calendarYears;
 	});
 
-	$http.get('json/salesTax.json').then(function(response) { 
+	//todo: uncomment this code when ready to include sales tax
+	/*$http.get('json/salesTax.json').then(function(response) { 
     	cost.salesTax = response.data;
-	});
+	});*/
 
 	$http.get('json/coupons.json').then(function(response) { 
 	    cost.coupons = response.data.coupons;
@@ -379,7 +388,7 @@ angular.module('myApp', [
 	}
 }])
 
-.factory('EmailService', ['$http', 'currencyFilter', 'dateFilter', function ($http, currencyFilter, dateFilter) {
+.factory('EmailService', ['$http', 'currencyFilter', 'dateFilter', '$state', function ($http, currencyFilter, dateFilter, $state) {
 	var buildEmail = function(formData){
 		var emailBody = 'Dear ' + formData.customer.firstName + ' ' + formData.customer.lastName + 
 			',\n\nThank you for your ACT Aspire Order' +
@@ -398,10 +407,11 @@ angular.module('myApp', [
 			emailBody += '\n' + formData.billing.address.line2;
 		}
 		emailBody += '\n' + formData.billing.address.city + ', ' + formData.billing.address.state + ' ' + formData.billing.address.zip;
-	
-		if(formData.billing.taxExempt){
-			emailBody += '\n\nTax Exempt: Y';
-		}	
+
+		//TODO: uncomment for tax exempt	
+		// if(formData.billing.taxExempt){
+		// 	emailBody += '\n\nTax Exempt: Y';
+		// }	
 
 		angular.forEach(formData.summative.orders, function(order, key) {
 			if(order.online.total){
@@ -413,9 +423,9 @@ angular.module('myApp', [
 				});
 				if(order.individualReports){
 					emailBody += '\nPrinted Individual Reports: ' + order.reportsPerStudent + ' Per Student';
-					if(order.scoreLabels){
-						emailBody += '\nAdd Printed Score Labels: Y';
-					}
+				}
+				if(order.scoreLabels){
+					emailBody += '\nAdd Printed Score Labels: Y';
 				}
 				emailBody += '\n' + order.online.total + ' Students X ' + currencyFilter(order.online.finalPricePerStudent) + ' = ' + currencyFilter(order.online.balance);
 			}
@@ -431,10 +441,10 @@ angular.module('myApp', [
 				});	
 				if(order.individualReports){
 					emailBody += '\nPrinted Individual Reports: ' + order.reportsPerStudent + ' Per Student';
-					if(order.scoreLabels){
-						emailBody += '\nAdd Printed Score Labels: Y';
-					}
 				}			
+				if(order.scoreLabels){
+					emailBody += '\nAdd Printed Score Labels: Y';
+				}
 				emailBody += '\n' + order.paper.total + ' Students X ' + currencyFilter(order.paper.finalPricePerStudent) + ' = ' + currencyFilter(order.paper.balance);
 			}
 		});
@@ -501,14 +511,14 @@ angular.module('myApp', [
 			+ formData.billing.address.line2 + colDelim
 			+ formData.billing.address.city + colDelim
 			+ formData.billing.address.state + colDelim
-			+ formData.billing.address.zip + colDelim
-			+ yesNo(formData.billing.taxExempt) + rowDelim;
+			+ formData.billing.address.zip + rowDelim;
+			// + yesNo(formData.billing.taxExempt) + rowDelim;
 
 		return fileContent;
 	};
 
 	var buildCsvFile = function(formData, cost){
-        var fileContent = ',PID,Internal ID,Date,line ,School / Customer,Grade,Quantity,Item,Test Administration,Test Admin Year,Test Mode,Item Rate,Amount,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,Test Coordinator Name,Test Coordinator Email,Test Coordinator Phone,Backup Coordinator Name,Backup Coordinator Email,Backup Coordinator Phone,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Tax Exempt\n';
+        var fileContent = ',PID,Internal ID,Date,line ,School / Customer,Grade,Quantity,Item,Test Administration,Test Admin Year,Test Mode,Item Rate,Amount,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,Test Coordinator Name,Test Coordinator Email,Test Coordinator Phone,Backup Coordinator Name,Backup Coordinator Email,Backup Coordinator Phone,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip\n';
 
         angular.forEach(formData.summative.orders, function(order, key) {
         	if(order.online.total){
@@ -533,14 +543,14 @@ angular.module('myApp', [
 						+ writeCommonData(formData);
 				});
 
+				//ISR
 				if(order.individualReports){
-					//Score Label
 					fileContent += ',,,"' + today + colDelim 
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
 						+ (order.online.total * order.reportsPerStudent) + colDelim
-						+ 'Score Label' + colDelim
+						+ 'Printed ISR' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Online' + colDelim
@@ -552,29 +562,29 @@ angular.module('myApp', [
 						+ yesNo(order.subjects.Science) + colDelim
 						+ yesNo(order.subjects.Writing) + colDelim
 						+ writeCommonData(formData);
-
-					//Printed
-					if(order.reportsPerStudent){
-						fileContent += ',,,"' + today + colDelim 
-							+ (index++) + colDelim
-							+ formData.customer.organization + colDelim
-							+ '0' + colDelim
-							+ (order.online.total) + colDelim
-							+ 'Printed ISR' + colDelim
-							+ order.administrationWindow + colDelim
-							+ order.calendarYear + colDelim
-							+ 'Online' + colDelim
-							+ (cost.pricing.summative.labels) + colDelim
-							+ ((cost.pricing.summative.labels) * order.online.total) + colDelim
-							+ yesNo(order.subjects.English) + colDelim
-							+ yesNo(order.subjects.Mathematics) + colDelim
-							+ yesNo(order.subjects.Reading) + colDelim
-							+ yesNo(order.subjects.Science) + colDelim
-							+ yesNo(order.subjects.Writing) + colDelim
-							+ writeCommonData(formData);
-					}
-					order.scoreLabels
 				}
+
+				//Score Label
+				if(order.scoreLabels){
+					fileContent += ',,,"' + today + colDelim 
+						+ (index++) + colDelim
+						+ formData.customer.organization + colDelim
+						+ '0' + colDelim
+						+ (order.online.total) + colDelim
+						+ 'Score Label' + colDelim
+						+ order.administrationWindow + colDelim
+						+ order.calendarYear + colDelim
+						+ 'Online' + colDelim
+						+ (cost.pricing.summative.labels) + colDelim
+						+ ((cost.pricing.summative.labels) * order.online.total) + colDelim
+						+ yesNo(order.subjects.English) + colDelim
+						+ yesNo(order.subjects.Mathematics) + colDelim
+						+ yesNo(order.subjects.Reading) + colDelim
+						+ yesNo(order.subjects.Science) + colDelim
+						+ yesNo(order.subjects.Writing) + colDelim
+						+ writeCommonData(formData);					
+				}
+
 			}
 		});
 
@@ -601,14 +611,15 @@ angular.module('myApp', [
 						+ writeCommonData(formData);
 				});
 
+				
+				//ISR
 				if(order.individualReports){
-					//Score Label
 					fileContent += ',,,"' + today + colDelim 
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
 						+ (order.paper.total * order.reportsPerStudent) + colDelim
-						+ 'Score Label' + colDelim
+						+ 'Printed ISR' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Paper' + colDelim
@@ -620,28 +631,27 @@ angular.module('myApp', [
 						+ yesNo(order.subjects.Science) + colDelim
 						+ yesNo(order.subjects.Writing) + colDelim
 						+ writeCommonData(formData);
+				}
 
-					//Printed
-					if(order.reportsPerStudent){
-						fileContent += ',,,"' + today + colDelim 
-							+ (index++) + colDelim
-							+ formData.customer.organization + colDelim
-							+ '0' + colDelim
-							+ (order.paper.total) + colDelim
-							+ 'Printed ISR' + colDelim
-							+ order.administrationWindow + colDelim
-							+ order.calendarYear + colDelim
-							+ 'Paper' + colDelim
-							+ (cost.pricing.summative.labels) + colDelim
-							+ ((cost.pricing.summative.labels) * order.paper.total) + colDelim
-							+ yesNo(order.subjects.English) + colDelim
-							+ yesNo(order.subjects.Mathematics) + colDelim
-							+ yesNo(order.subjects.Reading) + colDelim
-							+ yesNo(order.subjects.Science) + colDelim
-							+ yesNo(order.subjects.Writing) + colDelim
-							+ writeCommonData(formData);
-					}
-					order.scoreLabels
+				//Score Label
+				if(order.scoreLabels){
+					fileContent += ',,,"' + today + colDelim 
+						+ (index++) + colDelim
+						+ formData.customer.organization + colDelim
+						+ '0' + colDelim
+						+ (order.paper.total) + colDelim
+						+ 'Score Label' + colDelim
+						+ order.administrationWindow + colDelim
+						+ order.calendarYear + colDelim
+						+ 'Paper' + colDelim
+						+ (cost.pricing.summative.labels) + colDelim
+						+ ((cost.pricing.summative.labels) * order.paper.total) + colDelim
+						+ yesNo(order.subjects.English) + colDelim
+						+ yesNo(order.subjects.Mathematics) + colDelim
+						+ yesNo(order.subjects.Reading) + colDelim
+						+ yesNo(order.subjects.Science) + colDelim
+						+ yesNo(order.subjects.Writing) + colDelim
+						+ writeCommonData(formData);					
 				}
 			}
 		});
@@ -677,15 +687,21 @@ angular.module('myApp', [
 
 	var url = '../../wp-json/wp/v2/sendEmail/';
 
-	var postConfirmationEmail = function(postData){
+	var postConfirmationEmail = function(postData, formData){
 		$http.post(url, postData, {}).then(
 			function(){
+				formData.submitComplete = true;
+				formData.submitSuccess = true;
 				alert('success');
 			}, 
 			function(){
+				formData.submitComplete = true;
+				formData.submitSuccess = true;
 				alert('failure');
 			}
 		);
+
+		$state.go('confirmation');
 	}
 	var sendConfirmationEmail = function(formData, cost){
 		var postData = {};
@@ -704,11 +720,11 @@ angular.module('myApp', [
 				couponUses[formData.summary.discount.special.code].push(formData.customer.firstName + ' ' + formData.customer.lastName + ', ' + formData.customer.jobTitle + ', ' + formData.customer.organization);
 
 				postData.couponUses = angular.toJson(couponUses, true);
-				postConfirmationEmail(postData);
+				postConfirmationEmail(postData, formData);
 			});
 		}
 		else{
-			postConfirmationEmail(postData);
+			postConfirmationEmail(postData, formData);
 		}
 		
 		

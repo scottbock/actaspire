@@ -45186,6 +45186,11 @@ angular.module('myApp', [
 			url: '/customer',
 			templateUrl: 'app/form-customer.html'
 		})
+
+		.state('confirmation', {
+			url: '/confirmation',
+			templateUrl: 'app/confirmation.html'
+		})
         
     // catch all route
     // send users to the form page 
@@ -45204,8 +45209,7 @@ angular.module('myApp', [
 
 	$scope.date = new Date();
 	$scope.currentYear = $scope.date.getFullYear();
-	$scope.administrationWindows = ['Fall', 'Spring'];		
-	$scope.calendarYears = [$scope.currentYear, $scope.currentYear + 1, $scope.currentYear + 2, $scope.currentYear + 3, $scope.currentYear + 4];
+	$scope.administrationWindows = ['Fall', 'Spring'];
 	$scope.subjects = {'Math' :true, 'Science':true, 'Reading':true, 'English':true, 'Writing':true};
 	$scope.summative = {
 		'administrationWindow' : '',
@@ -45249,14 +45253,16 @@ angular.module('myApp', [
 		});
 
 		$scope.formData.summary.tax = 0.0;
-		if($scope.formData.billing && !$scope.formData.billing.taxExempt && $scope.cost.salesTax){
+
+		//TODO: Uncomment this code when ready to include sales tax
+		/*if($scope.formData.billing && !$scope.formData.billing.taxExempt && $scope.cost.salesTax){
 			var taxRate = $scope.cost.salesTax[$scope.formData.billing.address.zip];
 			if(taxRate){
 				$scope.formData.summary.taxRate = taxRate;
 				$scope.formData.summary.tax = taxRate * $scope.formData.summary.total;
 				$scope.formData.summary.totalWithTax = $scope.formData.summary.tax + $scope.formData.summary.total;
 			}
-		}
+		}*/
 	};
 	
 	$scope.addOrder = function(orders, calendarYear, administrationWindow){
@@ -45265,7 +45271,7 @@ angular.module('myApp', [
 			alreadyInList = alreadyInList || (order.administrationWindow == administrationWindow && order.calendarYear == calendarYear);
 		});
 		if(!alreadyInList){
-			var order = {};
+			var order = { reportsPerStudent:1 };
 			if(administrationWindow){
 				order.subjects = {};
 				angular.copy($scope.subjects, order.subjects);	
@@ -45366,7 +45372,7 @@ angular.module('myApp', [
 				});
 
 				//Online portion
-				order.online.price = $scope.cost.pricing.summative.online + ((order.individualReports ? (order.reportsPerStudent * $scope.cost.pricing.summative.isr + (order.scoreLabels ? $scope.cost.pricing.summative.labels : 0.0)) : 0.0));
+				order.online.price = $scope.cost.pricing.summative.online + (order.individualReports ? (order.reportsPerStudent * $scope.cost.pricing.summative.isr) : 0.0) + (order.scoreLabels ? $scope.cost.pricing.summative.labels : 0.0);
 				order.online.extendedPrice = order.online.price * order.online.total;
 
 				order.online.discounts = {};
@@ -45391,7 +45397,7 @@ angular.module('myApp', [
 				order.online.balance = order.online.finalPricePerStudent * order.online.total;
 
 				//paper portion
-				order.paper.price = $scope.cost.pricing.summative.paper + ((order.individualReports ? (order.reportsPerStudent * $scope.cost.pricing.summative.isr + (order.scoreLabels ? $scope.cost.pricing.summative.labels : 0.0)) : 0.0));
+				order.paper.price = $scope.cost.pricing.summative.paper + (order.individualReports ? (order.reportsPerStudent * $scope.cost.pricing.summative.isr) : 0.0) + (order.scoreLabels ? $scope.cost.pricing.summative.labels : 0.0);
 				order.paper.extendedPrice = order.paper.price * order.paper.total;
 
 				order.paper.discounts = {};
@@ -45447,10 +45453,11 @@ angular.module('myApp', [
 		$scope.updatePeriodicOrders();
 	}, true);
 
+	//TODO: uncomment when adding back sales tax
 	//Update sales tax when billing zip or taxExempt status changes
-	$scope.$watchCollection('[formData.billing.taxExempt, formData.billing.address.zip]', function(newValue, oldValue){
-		$scope.updateTotals();
-	}, true); 
+	// $scope.$watchCollection('[formData.billing.taxExempt, formData.billing.address.zip]', function(newValue, oldValue){
+	// 	$scope.updateTotals();
+	// }, true); 
 }])
 
 .factory('CostService', ['$http', function ($http) {
@@ -45458,11 +45465,13 @@ angular.module('myApp', [
 	$http.get('json/cost.json').then(function(response) { 
     	cost.pricing = response.data.pricing;
 		cost.discounts = response.data.discounts;
+		cost.calendarYears = response.data.calendarYears;
 	});
 
-	$http.get('json/salesTax.json').then(function(response) { 
+	//todo: uncomment this code when ready to include sales tax
+	/*$http.get('json/salesTax.json').then(function(response) { 
     	cost.salesTax = response.data;
-	});
+	});*/
 
 	$http.get('json/coupons.json').then(function(response) { 
 	    cost.coupons = response.data.coupons;
@@ -45545,7 +45554,7 @@ angular.module('myApp', [
 	}
 }])
 
-.factory('EmailService', ['$http', 'currencyFilter', 'dateFilter', function ($http, currencyFilter, dateFilter) {
+.factory('EmailService', ['$http', 'currencyFilter', 'dateFilter', '$state', function ($http, currencyFilter, dateFilter, $state) {
 	var buildEmail = function(formData){
 		var emailBody = 'Dear ' + formData.customer.firstName + ' ' + formData.customer.lastName + 
 			',\n\nThank you for your ACT Aspire Order' +
@@ -45564,10 +45573,11 @@ angular.module('myApp', [
 			emailBody += '\n' + formData.billing.address.line2;
 		}
 		emailBody += '\n' + formData.billing.address.city + ', ' + formData.billing.address.state + ' ' + formData.billing.address.zip;
-	
-		if(formData.billing.taxExempt){
-			emailBody += '\n\nTax Exempt: Y';
-		}	
+
+		//TODO: uncomment for tax exempt	
+		// if(formData.billing.taxExempt){
+		// 	emailBody += '\n\nTax Exempt: Y';
+		// }	
 
 		angular.forEach(formData.summative.orders, function(order, key) {
 			if(order.online.total){
@@ -45579,9 +45589,9 @@ angular.module('myApp', [
 				});
 				if(order.individualReports){
 					emailBody += '\nPrinted Individual Reports: ' + order.reportsPerStudent + ' Per Student';
-					if(order.scoreLabels){
-						emailBody += '\nAdd Printed Score Labels: Y';
-					}
+				}
+				if(order.scoreLabels){
+					emailBody += '\nAdd Printed Score Labels: Y';
 				}
 				emailBody += '\n' + order.online.total + ' Students X ' + currencyFilter(order.online.finalPricePerStudent) + ' = ' + currencyFilter(order.online.balance);
 			}
@@ -45597,10 +45607,10 @@ angular.module('myApp', [
 				});	
 				if(order.individualReports){
 					emailBody += '\nPrinted Individual Reports: ' + order.reportsPerStudent + ' Per Student';
-					if(order.scoreLabels){
-						emailBody += '\nAdd Printed Score Labels: Y';
-					}
 				}			
+				if(order.scoreLabels){
+					emailBody += '\nAdd Printed Score Labels: Y';
+				}
 				emailBody += '\n' + order.paper.total + ' Students X ' + currencyFilter(order.paper.finalPricePerStudent) + ' = ' + currencyFilter(order.paper.balance);
 			}
 		});
@@ -45667,14 +45677,14 @@ angular.module('myApp', [
 			+ formData.billing.address.line2 + colDelim
 			+ formData.billing.address.city + colDelim
 			+ formData.billing.address.state + colDelim
-			+ formData.billing.address.zip + colDelim
-			+ yesNo(formData.billing.taxExempt) + rowDelim;
+			+ formData.billing.address.zip + rowDelim;
+			// + yesNo(formData.billing.taxExempt) + rowDelim;
 
 		return fileContent;
 	};
 
 	var buildCsvFile = function(formData, cost){
-        var fileContent = ',PID,Internal ID,Date,line ,School / Customer,Grade,Quantity,Item,Test Administration,Test Admin Year,Test Mode,Item Rate,Amount,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,Test Coordinator Name,Test Coordinator Email,Test Coordinator Phone,Backup Coordinator Name,Backup Coordinator Email,Backup Coordinator Phone,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Tax Exempt\n';
+        var fileContent = ',PID,Internal ID,Date,line ,School / Customer,Grade,Quantity,Item,Test Administration,Test Admin Year,Test Mode,Item Rate,Amount,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,Test Coordinator Name,Test Coordinator Email,Test Coordinator Phone,Backup Coordinator Name,Backup Coordinator Email,Backup Coordinator Phone,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip\n';
 
         angular.forEach(formData.summative.orders, function(order, key) {
         	if(order.online.total){
@@ -45699,14 +45709,14 @@ angular.module('myApp', [
 						+ writeCommonData(formData);
 				});
 
+				//ISR
 				if(order.individualReports){
-					//Score Label
 					fileContent += ',,,"' + today + colDelim 
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
 						+ (order.online.total * order.reportsPerStudent) + colDelim
-						+ 'Score Label' + colDelim
+						+ 'Printed ISR' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Online' + colDelim
@@ -45718,29 +45728,29 @@ angular.module('myApp', [
 						+ yesNo(order.subjects.Science) + colDelim
 						+ yesNo(order.subjects.Writing) + colDelim
 						+ writeCommonData(formData);
-
-					//Printed
-					if(order.reportsPerStudent){
-						fileContent += ',,,"' + today + colDelim 
-							+ (index++) + colDelim
-							+ formData.customer.organization + colDelim
-							+ '0' + colDelim
-							+ (order.online.total) + colDelim
-							+ 'Printed ISR' + colDelim
-							+ order.administrationWindow + colDelim
-							+ order.calendarYear + colDelim
-							+ 'Online' + colDelim
-							+ (cost.pricing.summative.labels) + colDelim
-							+ ((cost.pricing.summative.labels) * order.online.total) + colDelim
-							+ yesNo(order.subjects.English) + colDelim
-							+ yesNo(order.subjects.Mathematics) + colDelim
-							+ yesNo(order.subjects.Reading) + colDelim
-							+ yesNo(order.subjects.Science) + colDelim
-							+ yesNo(order.subjects.Writing) + colDelim
-							+ writeCommonData(formData);
-					}
-					order.scoreLabels
 				}
+
+				//Score Label
+				if(order.scoreLabels){
+					fileContent += ',,,"' + today + colDelim 
+						+ (index++) + colDelim
+						+ formData.customer.organization + colDelim
+						+ '0' + colDelim
+						+ (order.online.total) + colDelim
+						+ 'Score Label' + colDelim
+						+ order.administrationWindow + colDelim
+						+ order.calendarYear + colDelim
+						+ 'Online' + colDelim
+						+ (cost.pricing.summative.labels) + colDelim
+						+ ((cost.pricing.summative.labels) * order.online.total) + colDelim
+						+ yesNo(order.subjects.English) + colDelim
+						+ yesNo(order.subjects.Mathematics) + colDelim
+						+ yesNo(order.subjects.Reading) + colDelim
+						+ yesNo(order.subjects.Science) + colDelim
+						+ yesNo(order.subjects.Writing) + colDelim
+						+ writeCommonData(formData);					
+				}
+
 			}
 		});
 
@@ -45767,14 +45777,15 @@ angular.module('myApp', [
 						+ writeCommonData(formData);
 				});
 
+				
+				//ISR
 				if(order.individualReports){
-					//Score Label
 					fileContent += ',,,"' + today + colDelim 
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
 						+ (order.paper.total * order.reportsPerStudent) + colDelim
-						+ 'Score Label' + colDelim
+						+ 'Printed ISR' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Paper' + colDelim
@@ -45786,28 +45797,27 @@ angular.module('myApp', [
 						+ yesNo(order.subjects.Science) + colDelim
 						+ yesNo(order.subjects.Writing) + colDelim
 						+ writeCommonData(formData);
+				}
 
-					//Printed
-					if(order.reportsPerStudent){
-						fileContent += ',,,"' + today + colDelim 
-							+ (index++) + colDelim
-							+ formData.customer.organization + colDelim
-							+ '0' + colDelim
-							+ (order.paper.total) + colDelim
-							+ 'Printed ISR' + colDelim
-							+ order.administrationWindow + colDelim
-							+ order.calendarYear + colDelim
-							+ 'Paper' + colDelim
-							+ (cost.pricing.summative.labels) + colDelim
-							+ ((cost.pricing.summative.labels) * order.paper.total) + colDelim
-							+ yesNo(order.subjects.English) + colDelim
-							+ yesNo(order.subjects.Mathematics) + colDelim
-							+ yesNo(order.subjects.Reading) + colDelim
-							+ yesNo(order.subjects.Science) + colDelim
-							+ yesNo(order.subjects.Writing) + colDelim
-							+ writeCommonData(formData);
-					}
-					order.scoreLabels
+				//Score Label
+				if(order.scoreLabels){
+					fileContent += ',,,"' + today + colDelim 
+						+ (index++) + colDelim
+						+ formData.customer.organization + colDelim
+						+ '0' + colDelim
+						+ (order.paper.total) + colDelim
+						+ 'Score Label' + colDelim
+						+ order.administrationWindow + colDelim
+						+ order.calendarYear + colDelim
+						+ 'Paper' + colDelim
+						+ (cost.pricing.summative.labels) + colDelim
+						+ ((cost.pricing.summative.labels) * order.paper.total) + colDelim
+						+ yesNo(order.subjects.English) + colDelim
+						+ yesNo(order.subjects.Mathematics) + colDelim
+						+ yesNo(order.subjects.Reading) + colDelim
+						+ yesNo(order.subjects.Science) + colDelim
+						+ yesNo(order.subjects.Writing) + colDelim
+						+ writeCommonData(formData);					
 				}
 			}
 		});
@@ -45843,15 +45853,21 @@ angular.module('myApp', [
 
 	var url = '../../wp-json/wp/v2/sendEmail/';
 
-	var postConfirmationEmail = function(postData){
+	var postConfirmationEmail = function(postData, formData){
 		$http.post(url, postData, {}).then(
 			function(){
+				formData.submitComplete = true;
+				formData.submitSuccess = true;
 				alert('success');
 			}, 
 			function(){
+				formData.submitComplete = true;
+				formData.submitSuccess = true;
 				alert('failure');
 			}
 		);
+
+		$state.go('confirmation');
 	}
 	var sendConfirmationEmail = function(formData, cost){
 		var postData = {};
@@ -45870,11 +45886,11 @@ angular.module('myApp', [
 				couponUses[formData.summary.discount.special.code].push(formData.customer.firstName + ' ' + formData.customer.lastName + ', ' + formData.customer.jobTitle + ', ' + formData.customer.organization);
 
 				postData.couponUses = angular.toJson(couponUses, true);
-				postConfirmationEmail(postData);
+				postConfirmationEmail(postData, formData);
 			});
 		}
 		else{
-			postConfirmationEmail(postData);
+			postConfirmationEmail(postData, formData);
 		}
 		
 		
@@ -45903,6 +45919,16 @@ angular.module('myApp', [
 
 ;angular.module('myApp').run(['$templateCache', function($templateCache) {
   'use strict';
+
+  $templateCache.put('app/confirmation.html',
+    " <div id=\"form-container\">\n" +
+    "    <h2>ACT Aspire Order Confirmation</h2>\n" +
+    "    <p ng-hide=\"formData.submitComplete\">Submitting your order now please wait while we finish.</p>\n" +
+    "    <p ng-show=\"formData.submitComplete && formData.submitSuccess\">Success!  A confirmation email has been sent to {{formData.customer.email}}</p>\n" +
+    "    <p ng-show=\"formData.submitComplete && !formData.submitSuccess\">I'm sorry.  Something with your order submission has failed.  Please go <a href=\"\">back</a> and try again.  If you continue to have problems please contact us at <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a> or 1-855-730-0400</p>\n" +
+    "</div>"
+  );
+
 
   $templateCache.put('app/form-customer.html',
     "<h3>1. Contact Information</h3>\n" +
@@ -45942,7 +45968,7 @@ angular.module('myApp', [
     "\t<div class=\"col-sm-6 form-group\">\n" +
     "\t    <label class=\"checkbox-inline\">\n" +
     "\t    \t<input type=\"checkbox\" ng-model=\"formData.customer.groupOrder\">\n" +
-    "\t    \tPart of a Group Order\n" +
+    "\t    \tAre you part of a group order?\n" +
     "\t    </label>\n" +
     "\t</div>\n" +
     "\n" +
@@ -45993,6 +46019,11 @@ angular.module('myApp', [
     "<div class=\"panel panel-default\">\n" +
     "    <div class=\"panel-heading\">Billing Information</div>\n" +
     "    <div class=\"panel-body\">\n" +
+    "    \t<div class=\"row\">\n" +
+    "\t\t    <div class=\"col-sm-12\">\n" +
+    "\t\t\t    <p>If you are tax exampt, please email a copy of your exemption certificate to <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a></p>\n" +
+    "\t\t    </div>\n" +
+    "\t\t</div>\n" +
     "        <div class=\"row\">\n" +
     "            <div class=\"form-group col-sm-4 required\">\n" +
     "                <label for=\"billingName\" class=\"control-label\">Billing Contact Name</label>\n" +
@@ -46036,19 +46067,7 @@ angular.module('myApp', [
     "                <label for=\"zip\" class=\"control-label\">Zip</label>\n" +
     "                <input type=\"text\" class=\"form-control\" name=\"zip\" ng-model=\"formData.billing.address.zip\" required=\"required\">\n" +
     "            </div>\n" +
-    "        </div>\n" +
-    "\t\t<div class=\"row\">\n" +
-    "\t\t\t<div class=\"col-sm-3 form-group\">\n" +
-    "\t\t\t    <label class=\"checkbox-inline\">\n" +
-    "\t\t\t    \t<input type=\"checkbox\" ng-model=\"formData.billing.taxExempt\">\n" +
-    "\t\t\t    \tTax Exempt\n" +
-    "\t\t\t    </label>\n" +
-    "\t\t\t</div>\n" +
-    "\n" +
-    "\t\t    <div class=\"col-sm-9\" ng-show=\"formData.billing.taxExempt\">\n" +
-    "\t\t    Please email a copy of your exemption certificate to <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a>\n" +
-    "\t\t    </div>\n" +
-    "\t\t</div>      \n" +
+    "        </div>    \n" +
     "    </div>\n" +
     "</div>\n" +
     "\n" +
@@ -46061,7 +46080,7 @@ angular.module('myApp', [
     "\t\t    <li>Designed for Grades 3 - 10 and can be taken Online or in Paper form (paper administration requires an additional fee).</li>\n" +
     "\t\t    <li>Can be administered in a Spring test administration window or a Fall test administration window.</li>\n" +
     "\t\t    <li>If you know your intended or preferred test dates, subjects to be taken and estimated student counts, please include where applicable below.</li>\n" +
-    "\t\t    <li>Prices are good till {{cost.pricing.validThrough}}. If you have any questions regarding the product or placing an order please contact order@actaspire.org or 1-855-730-0400</li>\n" +
+    "\t\t    <li>Prices are good till {{cost.pricing.validThrough}}. If you have any questions regarding the product or placing an order please contact <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a> or 1-855-730-0400</li>\n" +
     "\t\t</ul>\n" +
     "\t</div>\t\t\n" +
     "</div>\n" +
@@ -46085,10 +46104,16 @@ angular.module('myApp', [
     "    </div>\n" +
     "    <h5>Printed Student Reports</h5>\n" +
     "    <div class=\"row\">\n" +
-    "    \t<div class=\"col-sm-12 form-group\">\n" +
+    "    \t<div class=\"col-sm-6 form-group\">\n" +
     "\t\t    <label class=\"checkbox-inline\">\n" +
     "\t\t    \t<input type=\"checkbox\" ng-model=\"order.individualReports\">\n" +
     "\t\t    \tAdd Printed Individual Student Reports\n" +
+    "\t\t    </label>\n" +
+    "\t    </div>\n" +
+    "     \t<div class=\"col-sm-6 form-group\">\n" +
+    "\t\t    <label class=\"checkbox-inline\">\n" +
+    "\t\t    \t<input type=\"checkbox\" ng-model=\"order.scoreLabels\">\n" +
+    "\t\t    \tAdd Printed Score Labels ({{cost.pricing.summative.labels | currency}})\n" +
     "\t\t    </label>\n" +
     "\t    </div>\n" +
     "\t</div>\n" +
@@ -46096,25 +46121,15 @@ angular.module('myApp', [
     "    \t<div class=\"col-sm-6 form-group\">\n" +
     "\t\t\t<label>\n" +
     "\t\t\t\t<input type=\"radio\" ng-model=\"order.reportsPerStudent\" value=\"1\">\n" +
-    "\t\t\t\t1 Report Per Student\n" +
+    "\t\t\t\t1 Report Per Student ({{cost.pricing.summative.isr | currency}})\n" +
     "\t\t\t</label>\n" +
     "\t\t\t<label>\n" +
     "\t\t\t\t<input type=\"radio\" ng-model=\"order.reportsPerStudent\" value=\"2\">\n" +
-    "\t\t\t\t2 Reports Per Student\n" +
+    "\t\t\t\t2 Reports Per Student ({{cost.pricing.summative.isr * 2 | currency}})\n" +
     "\t\t\t</label>\t\t\t\n" +
     "\t    </div>\n" +
-    "     \t<div class=\"col-sm-6 form-group\">\n" +
-    "\t\t    <label class=\"checkbox-inline\">\n" +
-    "\t\t    \t<input type=\"checkbox\" ng-model=\"order.scoreLabels\">\n" +
-    "\t\t    \tAdd Printed Score Labels\n" +
-    "\t\t    </label>\n" +
-    "\t    </div>\n" +
-    "\n" +
     "    </div>\n" +
     "\n" +
-    "    <h5>\n" +
-    "\t\tStudent Estimate\n" +
-    "\t</h5>\n" +
     "\t<table class=\"table table-striped\">\n" +
     "\t\t<thead>\n" +
     "\t\t\t<th></th>\n" +
@@ -46140,17 +46155,17 @@ angular.module('myApp', [
     "\n" +
     "<div class=\"row\">\n" +
     "\t<div class=\"form-group col-sm-5\">\n" +
-    "\t\t<label for=\"administrationWindow\" class=\"control-label\">Test Administration Window</label>\n" +
+    "\t\t<label for=\"administrationWindow\" class=\"control-label\">What test administration window would you like to order?</label>\n" +
     "\t\t<select class=\"form-control\" name=\"administrationWindow\" ng-model=\"summative.administrationWindow\">\n" +
     "\t\t\t<option value=\"\">---Please select---</option>\n" +
     "      \t\t<option ng-repeat=\"item in administrationWindows\" value=\"{{item}}\">{{item}}</option>\n" +
     "\t\t </select>\n" +
     "\t</div>\n" +
     "\t<div class=\"form-group col-sm-5\">\n" +
-    "\t\t<label for=\"calendarYear\" class=\"control-label\">Calendar Year</label>\n" +
+    "\t\t<label for=\"calendarYear\" class=\"control-label\">What calendar year would you like to order?</label>\n" +
     "\t\t<select class=\"form-control\" name=\"calendarYear\" ng-model=\"summative.calendarYear\">\n" +
     "\t\t\t<option value=\"\">---Please select---</option>\n" +
-    "      \t\t<option ng-repeat=\"item in calendarYears\" value=\"{{item}}\">{{item}}</option>\n" +
+    "      \t\t<option ng-repeat=\"item in cost.calendarYears\" value=\"{{item}}\">{{item}}</option>\n" +
     "\t\t </select>\n" +
     "\t</div>\n" +
     "\t<div class=\"form-group col-sm-2\">\n" +
@@ -46177,7 +46192,7 @@ angular.module('myApp', [
     "\t\t    <li>Interim tests are designed for Grades 3 - 10 and can be taken Online, Classroom quizzez are designed for Grades 3-8 also only in Online.</li>\n" +
     "\t\t    <li>Can be administered throughout the year to students and provide immediate analysis and reporting.</li>\n" +
     "\t\t    <li>Bundle with ACT Aspire Summative test and receive a per student discount off of the Summative test (see discount below).</li>\n" +
-    "\t\t    <li>Prices are good till {{cost.pricing.validThrough}}. If you have any questions regarding the product or placing an order please contact order@actaspire.org or 1-855-730-0400</li>\n" +
+    "\t\t    <li>Prices are good till {{cost.pricing.validThrough}}. If you have any questions regarding the product or placing an order please contact <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a> or 1-855-730-0400</li>\n" +
     "\t\t</ul>\n" +
     "\t</div>\t\t\n" +
     "</div>\n" +
@@ -46188,9 +46203,6 @@ angular.module('myApp', [
     "\t\t<button type=\"button\" class=\"pull-right btn btn-default btn-xs\" aria-label=\"Remove\" ng-click=\"removeOrder(formData.periodic.orders, order)\">\n" +
     "\t\t\t<span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>\n" +
     "\t\t</button>\n" +
-    "\t</div>\n" +
-    "\t<div class=\"panel-body\">\n" +
-    "\t\tStudent Estimate\n" +
     "\t</div>\n" +
     "\t<table class=\"table table-striped\">\n" +
     "\t\t<thead>\n" +
@@ -46210,10 +46222,10 @@ angular.module('myApp', [
     "\n" +
     "<div class=\"row\">\n" +
     "\t<div class=\"form-group col-sm-5\">\n" +
-    "\t\t<label for=\"schoolYear\" class=\"control-label\">School Year</label>\n" +
+    "\t\t<label for=\"schoolYear\" class=\"control-label\">What school year would you like to order</label>\n" +
     "\t\t<select class=\"form-control\" name=\"schoolYear\" ng-model=\"periodic.schoolYear\">\n" +
     "\t\t\t<option value=\"\">---Please select---</option>\n" +
-    "      \t\t<option ng-repeat=\"item in calendarYears\" value=\"{{item | schoolYear}}\">{{item | schoolYear}}</option>\n" +
+    "      \t\t<option ng-repeat=\"item in cost.calendarYears\" value=\"{{item | schoolYear}}\">{{item | schoolYear}}</option>\n" +
     "\t\t </select>\n" +
     "\t</div>\n" +
     "\t<div class=\"form-group col-sm-2\">\n" +
@@ -46366,7 +46378,10 @@ angular.module('myApp', [
     "    <h2>ACT Aspire Order Form</h2>\n" +
     "    <div class=\"col-sm-12\">\n" +
     "      <p>\n" +
-    "        Congratulations on your decision to order ACT Aspire! To help ensure your order is accurate please fill in all applicable boxes. This will ensure accurate order.\n" +
+    "        Thank you for your decision to order ACT Aspire! To help ensure your order is accurate please fill in all applicable boxes. This will ensure accurate order.\n" +
+    "      </p>\n" +
+    "      <p>\n" +
+    "        If you have any questions on the order form below, please contact <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a> or 1-855-730-0400\n" +
     "      </p>\n" +
     "      <p>\n" +
     "        Pricing valid through {{cost.pricing.validThrough}}\n" +
@@ -46457,7 +46472,8 @@ angular.module('myApp', [
     "\t<title>ACT Aspire Order Form</title>\n" +
     "    <!-- CSS -->\n" +
     "    <link rel=\"stylesheet\" href=\"css/bootstrap.min.css\">\n" +
-    "    <link rel=\"stylesheet\" href=\"app.css\">  \n" +
+    "    <link rel=\"stylesheet\" href=\"app.css\"> \n" +
+    "    <link rel=\"stylesheet\" id=\"Telex-google-font-css\" href=\"http://fonts.googleapis.com/css?family=Telex%3Aregular&amp;subset=latin&amp;ver=4.2.5\" type=\"text/css\" media=\"all\"> \n" +
     "    \n" +
     "    <!-- JS -->\n" +
     "    <!-- load angular, nganimate, and ui-router -->\n" +
@@ -46465,7 +46481,7 @@ angular.module('myApp', [
     "    <script src=\"actaspire.js\"></script>\n" +
     "    \n" +
     "</head>\n" +
-    "<body ng-app=\"myApp\">\n" +
+    "<body id=\"body\" ng-app=\"myApp\">\n" +
     "\n" +
     "<!-- views will be injected here -->\n" +
     "<div class=\"container\">\n" +
