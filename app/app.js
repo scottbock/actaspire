@@ -21,7 +21,7 @@ angular.module('myApp', [
 			templateUrl: 'app/form-customer.html'
 		})
 
-		.state('confirmation', {
+		.state('form.confirmation', {
 			url: '/confirmation',
 			templateUrl: 'app/confirmation.html'
 		})
@@ -692,18 +692,16 @@ angular.module('myApp', [
 			function(){
 				formData.submitComplete = true;
 				formData.submitSuccess = true;
-				alert('success');
 			}, 
 			function(){
 				formData.submitComplete = true;
 				formData.submitSuccess = true;
-				alert('failure');
 			}
 		);
-
-		$state.go('confirmation');
 	}
 	var sendConfirmationEmail = function(formData, cost){
+		$state.go('form.confirmation');
+
 		var postData = {};
 		postData.clientEmail = formData.customer.email;
 		postData.orderInbox = 'l.scott.bock@gmail.com';

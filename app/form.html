@@ -1,26 +1,6 @@
-
-  
-  <div id="form-container">
-    <h2>ACT Aspire Order Form</h2>
-    <div class="col-sm-12">
-      <p>
-        Thank you for your decision to order ACT Aspire! To help ensure your order is accurate please fill in all applicable boxes. This will ensure accurate order.
-      </p>
-      <p>
-        If you have any questions on the order form below, please contact <a href="mailto:Orders@ActAspire.org">Orders@ActAspire.org</a> or 1-855-730-0400
-      </p>
-      <p>
-        Pricing valid through {{cost.pricing.validThrough}}
-      </p>
-    </div>
-      <!-- use ng-submit to catch the form submission and use our Angular function -->
-      <form id="customerForm" name="customerForm" ng-submit="processForm()">        
-        <!-- our nested state views will be injected here -->
-        <div id="form-views" ui-view></div>
-      </form>
-  
-  </div>
-
-  <div id="footer">
-  </div>
-
+<div id="form-container">
+  <img src="http://www.discoveractaspire.org/wp-content/uploads/2014/07/ACTAspire_WebsiteLogo.png" alt="" width="233">
+  <div ui-view></div>
+</div>
+<div id="footer">
+</div>

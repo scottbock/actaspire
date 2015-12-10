@@ -62,4 +62,18 @@ input.ng-invalid.ng-touched {
 
 #body{
   font-family:Telex;
+  color:#757575;
+  /*background-color: #988575;*/
+}
+.container{
+  background-color: #FFF;
+}
+a{
+  color: #21b3d1;
+}
+a:hover{
+  color: #28e2ff;
+}
+.fill{
+  min-height:100%;
 }

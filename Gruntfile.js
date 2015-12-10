@@ -60,7 +60,8 @@ module.exports = function(grunt) {
           {expand: true, flatten: true, src: ['app/index.html', 'app/bower_components/bootstrap/dist/css/bootstrap.min.css', 'app/app.css'], dest: 'dist/', filter: 'isFile'},
           {expand: true, flatten: true, src: ['app/json/*.*'], dest: 'dist/json/', filter: 'isFile'},
           {expand: true, flatten: true, src: ['app/bower_components/bootstrap/dist/fonts/*.*'], dest: 'dist/fonts/', filter: 'isFile'},
-          {expand: true, flatten: true, src: ['app/bower_components/bootstrap/dist/css/bootstrap.min.css'], dest: 'dist/css/', filter: 'isFile'}
+          {expand: true, flatten: true, src: ['app/bower_components/bootstrap/dist/css/bootstrap.min.css'], dest: 'dist/css/', filter: 'isFile'},
+          {expand: true, flatten: true, src: ['app/images/*.*'], dest: 'dist/images/', filter: 'isFile'}
         ],
       },
       toWordPress: {
