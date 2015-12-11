@@ -388,7 +388,7 @@ angular.module('myApp', [
 	}
 }])
 
-.factory('EmailService', ['$http', 'currencyFilter', 'dateFilter', '$state', function ($http, currencyFilter, dateFilter, $state) {
+.factory('EmailService', ['$http', 'currencyFilter', 'dateFilter', '$state', '$cookies', function ($http, currencyFilter, dateFilter, $state, $cookies) {
 	var buildEmail = function(formData){
 		var emailBody = 'Dear ' + formData.customer.firstName + ' ' + formData.customer.lastName + 
 			',\n\nThank you for your ACT Aspire Order' +
@@ -524,23 +524,25 @@ angular.module('myApp', [
         	if(order.online.total){
 	        	var index = 0;
 				angular.forEach(order.grade, function(grade, gradeKey) {
-					fileContent += ',,,"' + today + colDelim 
-						+ (index++) + colDelim
-						+ formData.customer.organization + colDelim
-						+ gradeKey + colDelim
-						+ grade.online + colDelim
-						+ 'Summative Test' + colDelim
-						+ order.administrationWindow + colDelim
-						+ order.calendarYear + colDelim
-						+ 'Online' + colDelim
-						+ (cost.pricing.summative.online - order.online.totalDiscountPerStudent) + colDelim
-						+ ((cost.pricing.summative.online - order.online.totalDiscountPerStudent) * grade.online) + colDelim
-						+ yesNo(order.subjects.English) + colDelim
-						+ yesNo(order.subjects.Mathematics) + colDelim
-						+ yesNo(order.subjects.Reading) + colDelim
-						+ yesNo(order.subjects.Science) + colDelim
-						+ yesNo(order.subjects.Writing) + colDelim
-						+ writeCommonData(formData);
+					if(grade.online){
+						fileContent += ',,,"' + today + colDelim 
+							+ (index++) + colDelim
+							+ formData.customer.organization + colDelim
+							+ gradeKey + colDelim
+							+ grade.online + colDelim
+							+ 'Summative Test' + colDelim
+							+ order.administrationWindow + colDelim
+							+ order.calendarYear + colDelim
+							+ 'Online' + colDelim
+							+ (cost.pricing.summative.online - order.online.totalDiscountPerStudent) + colDelim
+							+ ((cost.pricing.summative.online - order.online.totalDiscountPerStudent) * grade.online) + colDelim
+							+ yesNo(order.subjects.English) + colDelim
+							+ yesNo(order.subjects.Mathematics) + colDelim
+							+ yesNo(order.subjects.Reading) + colDelim
+							+ yesNo(order.subjects.Science) + colDelim
+							+ yesNo(order.subjects.Writing) + colDelim
+							+ writeCommonData(formData);
+					}
 				});
 
 				//ISR
@@ -592,23 +594,25 @@ angular.module('myApp', [
 			if(order.paper.total){
 	        	var index = 0;
 				angular.forEach(order.grade, function(grade, gradeKey) {
-					fileContent += ',,,"' + today + colDelim 
-						+ (index++) + colDelim
-						+ formData.customer.organization + colDelim
-						+ gradeKey + colDelim
-						+ grade.paper + colDelim
-						+ 'Summative Test' + colDelim
-						+ order.administrationWindow + colDelim
-						+ order.calendarYear + colDelim
-						+ 'Paper' + colDelim
-						+ (cost.pricing.summative.paper - order.paper.totalDiscountPerStudent) + colDelim
-						+ ((cost.pricing.summative.paper - order.paper.totalDiscountPerStudent) * grade.paper) + colDelim
-						+ yesNo(order.subjects.English) + colDelim
-						+ yesNo(order.subjects.Mathematics) + colDelim
-						+ yesNo(order.subjects.Reading) + colDelim
-						+ yesNo(order.subjects.Science) + colDelim
-						+ yesNo(order.subjects.Writing) + colDelim
-						+ writeCommonData(formData);
+					if(grade.paper){
+						fileContent += ',,,"' + today + colDelim 
+							+ (index++) + colDelim
+							+ formData.customer.organization + colDelim
+							+ gradeKey + colDelim
+							+ grade.paper + colDelim
+							+ 'Summative Test' + colDelim
+							+ order.administrationWindow + colDelim
+							+ order.calendarYear + colDelim
+							+ 'Paper' + colDelim
+							+ (cost.pricing.summative.paper - order.paper.totalDiscountPerStudent) + colDelim
+							+ ((cost.pricing.summative.paper - order.paper.totalDiscountPerStudent) * grade.paper) + colDelim
+							+ yesNo(order.subjects.English) + colDelim
+							+ yesNo(order.subjects.Mathematics) + colDelim
+							+ yesNo(order.subjects.Reading) + colDelim
+							+ yesNo(order.subjects.Science) + colDelim
+							+ yesNo(order.subjects.Writing) + colDelim
+							+ writeCommonData(formData);
+					}	
 				});
 
 				
@@ -660,23 +664,25 @@ angular.module('myApp', [
 			if(order.onlineTotal){
 	        	var index = 0;
 				angular.forEach(order.grade, function(grade, gradeKey) {
-					fileContent += ',,,"' + today + colDelim 
-						+ (index++) + colDelim
-						+ formData.customer.organization + colDelim
-						+ gradeKey + colDelim
-						+ grade.online + colDelim
-						+ 'Periodic' + colDelim
-						+ 'School Year' + colDelim
-						+ order.calendarYear + colDelim
-						+ 'Online' + colDelim
-						+ (cost.pricing.periodic - order.totalDiscountPerStudent) + colDelim
-						+ ((cost.pricing.periodic - order.totalDiscountPerStudent) * grade.online) + colDelim
-						+ yesNo(true) + colDelim
-						+ yesNo(true) + colDelim
-						+ yesNo(true) + colDelim
-						+ yesNo(true) + colDelim
-						+ yesNo(true) + colDelim
-						+ writeCommonData(formData);
+					if(grade.online){
+						fileContent += ',,,"' + today + colDelim 
+							+ (index++) + colDelim
+							+ formData.customer.organization + colDelim
+							+ gradeKey + colDelim
+							+ grade.online + colDelim
+							+ 'Periodic' + colDelim
+							+ 'School Year' + colDelim
+							+ order.calendarYear + colDelim
+							+ 'Online' + colDelim
+							+ (cost.pricing.periodic - order.totalDiscountPerStudent) + colDelim
+							+ ((cost.pricing.periodic - order.totalDiscountPerStudent) * grade.online) + colDelim
+							+ yesNo(true) + colDelim
+							+ yesNo(true) + colDelim
+							+ yesNo(true) + colDelim
+							+ yesNo(true) + colDelim
+							+ yesNo(true) + colDelim
+							+ writeCommonData(formData);
+					}
 				});
 			}
 		});
@@ -692,10 +698,11 @@ angular.module('myApp', [
 			function(){
 				formData.submitComplete = true;
 				formData.submitSuccess = true;
+				$cookies.remove('formData');
 			}, 
 			function(){
 				formData.submitComplete = true;
-				formData.submitSuccess = true;
+				formData.submitSuccess = false;
 			}
 		);
 	}

@@ -52,10 +52,11 @@
 		    	<input type="checkbox" ng-model="formData.customer.groupOrder">
 		    	Are you part of a group order?
 		    </label>
+		    <p><a href="http://www.discoveractaspire.org/order-act-aspire/" target="_blank">Not sure? Find more information about Group Orders</a></p>
 		</div>
 
 	    <div class="form-group col-sm-6 required" ng-show="formData.customer.groupOrder">
-	        <label for="groupContact" class="control-label">Group Contact Name</label>
+	        <label for="groupContact" class="control-label">Group Owner Name</label>
 	        <input type="text" class="form-control" name="groupContact" ng-model="formData.customer.groupContact" ng-required="formData.customer.groupOrder">
 	    </div>
 	</div>
@@ -158,10 +159,10 @@
 		<div class="col-sm-12">
 	  		<h5>ACT Aspire Summative Test</h5>
 	  		<ul>
-			    <li>Is a vertically scaled, standards-based battery of achievement test that are linked to the College and Career Readiness Standard in the subject areas of: English, mathmatics, reading, science and writing.</li>				
+			    <li>Is a vertically scaled, standards-based battery of achievement test that are linked to the College and Career Readiness Standard in the subject areas of: English, mathematics, reading, science and writing.</li>				
 			    <li>Designed for Grades 3 - 10 and can be taken Online or in Paper form (paper administration requires an additional fee).</li>
 			    <li>Can be administered in a Spring test administration window or a Fall test administration window.</li>
-			    <li>Prices are good till {{cost.pricing.validThrough}}. If you have any questions regarding the product or placing an order please contact <a href="mailto:Orders@ActAspire.org">Orders@ActAspire.org</a> or 1-855-730-0400</li>
+			    <li>Prices advertised on this form are valid through {{cost.pricing.validThrough}}. If you have any questions regarding the product or placing an order please contact <a href="mailto:Orders@ActAspire.org">Orders@ActAspire.org</a> or 1-855-730-0400</li>
 			</ul>
 		</div>		
 	</div>
@@ -269,11 +270,12 @@
 		<div class="col-sm-12">
 	  		<h5>ACT Aspire Periodic</h5>
 	  		<ul>
-			    <li>Is a complement to the ACT Aspire Summative test, this is a school year long subscription to access a series of interim tests and classroom quizzes in the subject areas of: English, mathmatics, reading, science and writing.</li>
-			    <li>Interim tests are designed for Grades 3 - 10 and can be taken Online, Classroom quizzez are designed for Grades 3-8 also only in Online.</li>
-			    <li>Can be administered throughout the year to students and provide immediate analysis and reporting.</li>
-			    <li>Bundle with ACT Aspire Summative test and receive a per student discount off of the Summative test (see discount below).</li>
-			    <li>Prices are good till {{cost.pricing.validThrough}}. If you have any questions regarding the product or placing an order please contact <a href="mailto:Orders@ActAspire.org">Orders@ActAspire.org</a> or 1-855-730-0400</li>
+			    <li>Is a complement to the ACT Aspire Summative test, offered via ACT Aspire’s Online platform.</li>
+			    <li>Includes access to Classroom quizzes as well as Interim Assessments, which are designed for grades 3 – 10</li>
+			    <li>Is a subscription to access a series of interim tests and classroom quizzes in the subject areas of: English, mathematics, reading, science and writing. The subscription is effective from September to June of each school year.</li>
+			    <li>Can be administered to students throughout the year and provides immediate performance analysis and score reporting.</li>
+				<li>Can be bundled with ACT Aspire Summative test at a per-student discount off of the Summative test (discount will be automatically applied, refer to Order Summary below).</li>
+				<li>Prices as advertised on this form are valid through {{cost.pricing.validThrough}}. If you have any questions regarding the product or placing an order please contact <a href="mailto:Orders@ActAspire.org">Orders@ActAspire.org</a> or 1-855-730-0400.</li>
 			</ul>
 		</div>		
 	</div>
@@ -303,7 +305,7 @@
 
 	<div class="row">
 		<div class="form-group col-sm-5">
-			<label for="schoolYear" class="control-label">What school year would you like to order</label>
+			<label for="schoolYear" class="control-label">What school year would you like to order?</label>
 			<select class="form-control" name="schoolYear" ng-model="periodic.schoolYear">
 				<option value="">---Please select---</option>
 	      		<option ng-repeat="item in cost.calendarYears" value="{{item | schoolYear}}">{{item | schoolYear}}</option>

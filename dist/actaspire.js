@@ -45554,7 +45554,7 @@ angular.module('myApp', [
 	}
 }])
 
-.factory('EmailService', ['$http', 'currencyFilter', 'dateFilter', '$state', function ($http, currencyFilter, dateFilter, $state) {
+.factory('EmailService', ['$http', 'currencyFilter', 'dateFilter', '$state', '$cookies', function ($http, currencyFilter, dateFilter, $state, $cookies) {
 	var buildEmail = function(formData){
 		var emailBody = 'Dear ' + formData.customer.firstName + ' ' + formData.customer.lastName + 
 			',\n\nThank you for your ACT Aspire Order' +
@@ -45690,23 +45690,25 @@ angular.module('myApp', [
         	if(order.online.total){
 	        	var index = 0;
 				angular.forEach(order.grade, function(grade, gradeKey) {
-					fileContent += ',,,"' + today + colDelim 
-						+ (index++) + colDelim
-						+ formData.customer.organization + colDelim
-						+ gradeKey + colDelim
-						+ grade.online + colDelim
-						+ 'Summative Test' + colDelim
-						+ order.administrationWindow + colDelim
-						+ order.calendarYear + colDelim
-						+ 'Online' + colDelim
-						+ (cost.pricing.summative.online - order.online.totalDiscountPerStudent) + colDelim
-						+ ((cost.pricing.summative.online - order.online.totalDiscountPerStudent) * grade.online) + colDelim
-						+ yesNo(order.subjects.English) + colDelim
-						+ yesNo(order.subjects.Mathematics) + colDelim
-						+ yesNo(order.subjects.Reading) + colDelim
-						+ yesNo(order.subjects.Science) + colDelim
-						+ yesNo(order.subjects.Writing) + colDelim
-						+ writeCommonData(formData);
+					if(grade.online){
+						fileContent += ',,,"' + today + colDelim 
+							+ (index++) + colDelim
+							+ formData.customer.organization + colDelim
+							+ gradeKey + colDelim
+							+ grade.online + colDelim
+							+ 'Summative Test' + colDelim
+							+ order.administrationWindow + colDelim
+							+ order.calendarYear + colDelim
+							+ 'Online' + colDelim
+							+ (cost.pricing.summative.online - order.online.totalDiscountPerStudent) + colDelim
+							+ ((cost.pricing.summative.online - order.online.totalDiscountPerStudent) * grade.online) + colDelim
+							+ yesNo(order.subjects.English) + colDelim
+							+ yesNo(order.subjects.Mathematics) + colDelim
+							+ yesNo(order.subjects.Reading) + colDelim
+							+ yesNo(order.subjects.Science) + colDelim
+							+ yesNo(order.subjects.Writing) + colDelim
+							+ writeCommonData(formData);
+					}
 				});
 
 				//ISR
@@ -45758,23 +45760,25 @@ angular.module('myApp', [
 			if(order.paper.total){
 	        	var index = 0;
 				angular.forEach(order.grade, function(grade, gradeKey) {
-					fileContent += ',,,"' + today + colDelim 
-						+ (index++) + colDelim
-						+ formData.customer.organization + colDelim
-						+ gradeKey + colDelim
-						+ grade.paper + colDelim
-						+ 'Summative Test' + colDelim
-						+ order.administrationWindow + colDelim
-						+ order.calendarYear + colDelim
-						+ 'Paper' + colDelim
-						+ (cost.pricing.summative.paper - order.paper.totalDiscountPerStudent) + colDelim
-						+ ((cost.pricing.summative.paper - order.paper.totalDiscountPerStudent) * grade.paper) + colDelim
-						+ yesNo(order.subjects.English) + colDelim
-						+ yesNo(order.subjects.Mathematics) + colDelim
-						+ yesNo(order.subjects.Reading) + colDelim
-						+ yesNo(order.subjects.Science) + colDelim
-						+ yesNo(order.subjects.Writing) + colDelim
-						+ writeCommonData(formData);
+					if(grade.paper){
+						fileContent += ',,,"' + today + colDelim 
+							+ (index++) + colDelim
+							+ formData.customer.organization + colDelim
+							+ gradeKey + colDelim
+							+ grade.paper + colDelim
+							+ 'Summative Test' + colDelim
+							+ order.administrationWindow + colDelim
+							+ order.calendarYear + colDelim
+							+ 'Paper' + colDelim
+							+ (cost.pricing.summative.paper - order.paper.totalDiscountPerStudent) + colDelim
+							+ ((cost.pricing.summative.paper - order.paper.totalDiscountPerStudent) * grade.paper) + colDelim
+							+ yesNo(order.subjects.English) + colDelim
+							+ yesNo(order.subjects.Mathematics) + colDelim
+							+ yesNo(order.subjects.Reading) + colDelim
+							+ yesNo(order.subjects.Science) + colDelim
+							+ yesNo(order.subjects.Writing) + colDelim
+							+ writeCommonData(formData);
+					}	
 				});
 
 				
@@ -45826,23 +45830,25 @@ angular.module('myApp', [
 			if(order.onlineTotal){
 	        	var index = 0;
 				angular.forEach(order.grade, function(grade, gradeKey) {
-					fileContent += ',,,"' + today + colDelim 
-						+ (index++) + colDelim
-						+ formData.customer.organization + colDelim
-						+ gradeKey + colDelim
-						+ grade.online + colDelim
-						+ 'Periodic' + colDelim
-						+ 'School Year' + colDelim
-						+ order.calendarYear + colDelim
-						+ 'Online' + colDelim
-						+ (cost.pricing.periodic - order.totalDiscountPerStudent) + colDelim
-						+ ((cost.pricing.periodic - order.totalDiscountPerStudent) * grade.online) + colDelim
-						+ yesNo(true) + colDelim
-						+ yesNo(true) + colDelim
-						+ yesNo(true) + colDelim
-						+ yesNo(true) + colDelim
-						+ yesNo(true) + colDelim
-						+ writeCommonData(formData);
+					if(grade.online){
+						fileContent += ',,,"' + today + colDelim 
+							+ (index++) + colDelim
+							+ formData.customer.organization + colDelim
+							+ gradeKey + colDelim
+							+ grade.online + colDelim
+							+ 'Periodic' + colDelim
+							+ 'School Year' + colDelim
+							+ order.calendarYear + colDelim
+							+ 'Online' + colDelim
+							+ (cost.pricing.periodic - order.totalDiscountPerStudent) + colDelim
+							+ ((cost.pricing.periodic - order.totalDiscountPerStudent) * grade.online) + colDelim
+							+ yesNo(true) + colDelim
+							+ yesNo(true) + colDelim
+							+ yesNo(true) + colDelim
+							+ yesNo(true) + colDelim
+							+ yesNo(true) + colDelim
+							+ writeCommonData(formData);
+					}
 				});
 			}
 		});
@@ -45858,10 +45864,11 @@ angular.module('myApp', [
 			function(){
 				formData.submitComplete = true;
 				formData.submitSuccess = true;
+				$cookies.remove('formData');
 			}, 
 			function(){
 				formData.submitComplete = true;
-				formData.submitSuccess = true;
+				formData.submitSuccess = false;
 			}
 		);
 	}
@@ -45983,10 +45990,11 @@ angular.module('myApp', [
     "\t\t    \t<input type=\"checkbox\" ng-model=\"formData.customer.groupOrder\">\n" +
     "\t\t    \tAre you part of a group order?\n" +
     "\t\t    </label>\n" +
+    "\t\t    <p><a href=\"http://www.discoveractaspire.org/order-act-aspire/\" target=\"_blank\">Not sure? Find more information about Group Orders</a></p>\n" +
     "\t\t</div>\n" +
     "\n" +
     "\t    <div class=\"form-group col-sm-6 required\" ng-show=\"formData.customer.groupOrder\">\n" +
-    "\t        <label for=\"groupContact\" class=\"control-label\">Group Contact Name</label>\n" +
+    "\t        <label for=\"groupContact\" class=\"control-label\">Group Owner Name</label>\n" +
     "\t        <input type=\"text\" class=\"form-control\" name=\"groupContact\" ng-model=\"formData.customer.groupContact\" ng-required=\"formData.customer.groupOrder\">\n" +
     "\t    </div>\n" +
     "\t</div>\n" +
@@ -46089,10 +46097,10 @@ angular.module('myApp', [
     "\t\t<div class=\"col-sm-12\">\n" +
     "\t  \t\t<h5>ACT Aspire Summative Test</h5>\n" +
     "\t  \t\t<ul>\n" +
-    "\t\t\t    <li>Is a vertically scaled, standards-based battery of achievement test that are linked to the College and Career Readiness Standard in the subject areas of: English, mathmatics, reading, science and writing.</li>\t\t\t\t\n" +
+    "\t\t\t    <li>Is a vertically scaled, standards-based battery of achievement test that are linked to the College and Career Readiness Standard in the subject areas of: English, mathematics, reading, science and writing.</li>\t\t\t\t\n" +
     "\t\t\t    <li>Designed for Grades 3 - 10 and can be taken Online or in Paper form (paper administration requires an additional fee).</li>\n" +
     "\t\t\t    <li>Can be administered in a Spring test administration window or a Fall test administration window.</li>\n" +
-    "\t\t\t    <li>Prices are good till {{cost.pricing.validThrough}}. If you have any questions regarding the product or placing an order please contact <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a> or 1-855-730-0400</li>\n" +
+    "\t\t\t    <li>Prices advertised on this form are valid through {{cost.pricing.validThrough}}. If you have any questions regarding the product or placing an order please contact <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a> or 1-855-730-0400</li>\n" +
     "\t\t\t</ul>\n" +
     "\t\t</div>\t\t\n" +
     "\t</div>\n" +
@@ -46200,11 +46208,12 @@ angular.module('myApp', [
     "\t\t<div class=\"col-sm-12\">\n" +
     "\t  \t\t<h5>ACT Aspire Periodic</h5>\n" +
     "\t  \t\t<ul>\n" +
-    "\t\t\t    <li>Is a complement to the ACT Aspire Summative test, this is a school year long subscription to access a series of interim tests and classroom quizzes in the subject areas of: English, mathmatics, reading, science and writing.</li>\n" +
-    "\t\t\t    <li>Interim tests are designed for Grades 3 - 10 and can be taken Online, Classroom quizzez are designed for Grades 3-8 also only in Online.</li>\n" +
-    "\t\t\t    <li>Can be administered throughout the year to students and provide immediate analysis and reporting.</li>\n" +
-    "\t\t\t    <li>Bundle with ACT Aspire Summative test and receive a per student discount off of the Summative test (see discount below).</li>\n" +
-    "\t\t\t    <li>Prices are good till {{cost.pricing.validThrough}}. If you have any questions regarding the product or placing an order please contact <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a> or 1-855-730-0400</li>\n" +
+    "\t\t\t    <li>Is a complement to the ACT Aspire Summative test, offered via ACT Aspire’s Online platform.</li>\n" +
+    "\t\t\t    <li>Includes access to Classroom quizzes as well as Interim Assessments, which are designed for grades 3 – 10</li>\n" +
+    "\t\t\t    <li>Is a subscription to access a series of interim tests and classroom quizzes in the subject areas of: English, mathematics, reading, science and writing. The subscription is effective from September to June of each school year.</li>\n" +
+    "\t\t\t    <li>Can be administered to students throughout the year and provides immediate performance analysis and score reporting.</li>\n" +
+    "\t\t\t\t<li>Can be bundled with ACT Aspire Summative test at a per-student discount off of the Summative test (discount will be automatically applied, refer to Order Summary below).</li>\n" +
+    "\t\t\t\t<li>Prices as advertised on this form are valid through {{cost.pricing.validThrough}}. If you have any questions regarding the product or placing an order please contact <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a> or 1-855-730-0400.</li>\n" +
     "\t\t\t</ul>\n" +
     "\t\t</div>\t\t\n" +
     "\t</div>\n" +
@@ -46234,7 +46243,7 @@ angular.module('myApp', [
     "\n" +
     "\t<div class=\"row\">\n" +
     "\t\t<div class=\"form-group col-sm-5\">\n" +
-    "\t\t\t<label for=\"schoolYear\" class=\"control-label\">What school year would you like to order</label>\n" +
+    "\t\t\t<label for=\"schoolYear\" class=\"control-label\">What school year would you like to order?</label>\n" +
     "\t\t\t<select class=\"form-control\" name=\"schoolYear\" ng-model=\"periodic.schoolYear\">\n" +
     "\t\t\t\t<option value=\"\">---Please select---</option>\n" +
     "\t      \t\t<option ng-repeat=\"item in cost.calendarYears\" value=\"{{item | schoolYear}}\">{{item | schoolYear}}</option>\n" +
@@ -46476,7 +46485,7 @@ angular.module('myApp', [
     "<body id=\"body\" class=\"fill\" ng-app=\"myApp\">\n" +
     "\n" +
     "<!-- views will be injected here -->\n" +
-    "<div class=\"container fill\">\n" +
+    "<div class=\"container-fluid fill\">\n" +
     "    <div class=\"fill\" ui-view></div>\n" +
     "</div>\n" +
     "\n" +
