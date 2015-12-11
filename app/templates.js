@@ -542,7 +542,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
 
   $templateCache.put('app/index.html',
     "<!DOCTYPE html>\n" +
-    "<html class=\"fill\">\n" +
+    "<html>\n" +
     "<head>\n" +
     "    <meta charset=\"utf-8\">\n" +
     "\t<link rel=\"shortcut icon\" href=\"http://www.discoveractaspire.org/wp-content/uploads/2014/09/favicon.ico\" type=\"image/x-icon\">\n" +
@@ -558,11 +558,11 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "    <script src=\"actaspire.js\"></script>\n" +
     "    \n" +
     "</head>\n" +
-    "<body id=\"body\" class=\"fill\" ng-app=\"myApp\">\n" +
+    "<body id=\"body\" ng-app=\"myApp\">\n" +
     "\n" +
     "<!-- views will be injected here -->\n" +
     "<div class=\"container-fluid fill\">\n" +
-    "    <div class=\"fill\" ui-view></div>\n" +
+    "    <div ui-view></div>\n" +
     "</div>\n" +
     "\n" +
     "</body>\n" +
