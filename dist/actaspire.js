@@ -45885,6 +45885,9 @@ angular.module('myApp', [
 		if(formData.summary.discount.special && formData.summary.discount.special.code && !formData.summary.discount.special.error){
 			$http.get('json/couponUses.json', { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
 	    		var couponUses = response.data;
+	    		if(!couponUses){
+	    			couponUses = {};
+	    		}
 	    		if(!couponUses[formData.summary.discount.special.code]){
 					couponUses[formData.summary.discount.special.code] = new Array();
 	    		}
