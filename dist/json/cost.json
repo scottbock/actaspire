@@ -22,5 +22,6 @@
 			"discountPer":4.0
 		}
 	},
-	"calendarYears":[2016,2017,2018]
+	"calendarYears":[2016,2017,2018],
+	"ordersInbox":"l.scott.bock@gmail.com"
 }

@@ -300,6 +300,7 @@ angular.module('myApp', [
     	cost.pricing = response.data.pricing;
 		cost.discounts = response.data.discounts;
 		cost.calendarYears = response.data.calendarYears;
+		cost.ordersInbox = response.data.ordersInbox;
 	});
 
 	//todo: uncomment this code when ready to include sales tax
@@ -711,7 +712,7 @@ angular.module('myApp', [
 
 		var postData = {};
 		postData.clientEmail = formData.customer.email;
-		postData.orderInbox = 'l.scott.bock@gmail.com';
+		postData.orderInbox = cost.ordersInbox;
 		postData.message = buildEmail(formData);
 		postData.csv = buildCsvFile(formData, cost);
 		postData.csvFileName = formData.customer.lastName + formData.customer.organization + new Date() + '.csv';
