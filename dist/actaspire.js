@@ -45346,17 +45346,20 @@ angular.module('myApp', [
 		if($scope.cost.pricing){
 			angular.forEach($scope.formData.summative.orders, function(order, key) {
 				var onlineTotal = 0;
-				var onlineGrades = 0;
+				var gradeCount = 0;
 				var paperTotal = 0;
-				var paperGrades = 0;
 				angular.forEach(order.grade, function(grade, key) {
+					var countGrade = false;
 					if(grade.online !== null && !isNaN(grade.online)){
 						onlineTotal += parseInt(grade.online);
-						onlineGrades ++;
+						countGrade = true;
 					}
 					if(grade.paper !== null && !isNaN(grade.paper)){
 						paperTotal += parseInt(grade.paper);
-						paperGrades ++;
+						countGrade = true;
+					}
+					if(countGrade){
+						gradeCount++;
 					}
 				});
 				order.online = {};
@@ -45376,8 +45379,8 @@ angular.module('myApp', [
 				order.online.extendedPrice = order.online.price * order.online.total;
 
 				order.online.discounts = {};
-				order.online.discounts.volume = costService.getVolumeDiscount(order.online.total);
-				order.online.discounts.multiGrade = costService.getMultigradeDiscount(onlineGrades);
+				order.online.discounts.volume = costService.getVolumeDiscount(order.online.total + order.paper.total);
+				order.online.discounts.multiGrade = costService.getMultigradeDiscount(gradeCount);
 				if(periodicOrder && periodicOrder.onlineTotal > 0){
 					order.online.discounts.periodic = costService.getPeriodicDiscount(order.online.total, periodicOrder.onlineTotal);
 					order.online.periodicNumberApplied = Math.min(order.online.total, periodicOrder.onlineTotal);
@@ -45401,8 +45404,8 @@ angular.module('myApp', [
 				order.paper.extendedPrice = order.paper.price * order.paper.total;
 
 				order.paper.discounts = {};
-				order.paper.discounts.volume = costService.getVolumeDiscount(order.paper.total);
-				order.paper.discounts.multiGrade = costService.getMultigradeDiscount(paperGrades);
+				order.paper.discounts.volume = costService.getVolumeDiscount(order.paper.total + order.online.total);
+				order.paper.discounts.multiGrade = costService.getMultigradeDiscount(gradeCount);
 				if(periodicOrder && periodicOrder.onlineTotal > order.online.total){
 					//Only apply what's left after the online portion is disounted
 					order.paper.discounts.periodic = costService.getPeriodicDiscount(order.paper.total, periodicOrder.onlineTotal - order.online.total);
@@ -46163,8 +46166,8 @@ angular.module('myApp', [
     "\t\t\t</thead>\n" +
     "\t\t\t<tr ng-repeat=\"grade in [3,4,5,6,7,8,9,10]\">\n" +
     "\t\t\t\t<td>Grade {{grade}}</td>\n" +
-    "\t\t\t\t<td><input type=\"number\" ng-model=\"order.grade[grade].online\" name=\"\"></td>\n" +
-    "\t\t\t\t<td><input type=\"number\" ng-model=\"order.grade[grade].paper\" name=\"\"></td>\n" +
+    "\t\t\t\t<td><input type=\"number\" ng-model=\"order.grade[grade].online\" name=\"\" min=\"0\"></td>\n" +
+    "\t\t\t\t<td><input type=\"number\" ng-model=\"order.grade[grade].paper\" name=\"\" min=\"0\"></td>\n" +
     "\t\t\t\t<td>{{order.grade[grade].online + order.grade[grade].paper}}</td>\n" +
     "\t\t\t</tr>\n" +
     "\t\t\t<tr>\n" +
@@ -46185,6 +46188,8 @@ angular.module('myApp', [
     "\t      \t\t<option ng-repeat=\"item in administrationWindows\" value=\"{{item}}\">{{item}}</option>\n" +
     "\t\t\t </select>\n" +
     "\t\t</div>\n" +
+    "\t</div>\n" +
+    "\t<div class=\"row\">\n" +
     "\t\t<div class=\"form-group col-sm-5\">\n" +
     "\t\t\t<label for=\"calendarYear\" class=\"control-label\">What calendar year would you like to order?</label>\n" +
     "\t\t\t<select class=\"form-control\" name=\"calendarYear\" ng-model=\"summative.calendarYear\">\n" +
@@ -46236,7 +46241,7 @@ angular.module('myApp', [
     "\t\t\t</thead>\n" +
     "\t\t\t<tr ng-repeat=\"grade in [3,4,5,6,7,8,9,10]\">\n" +
     "\t\t\t\t<td>Grade {{grade}}</td>\n" +
-    "\t\t\t\t<td><input type=\"number\" ng-model=\"order.grade[grade].online\" name=\"\"></td>\n" +
+    "\t\t\t\t<td><input type=\"number\" ng-model=\"order.grade[grade].online\" name=\"\" min=\"0\"></td>\n" +
     "\t\t\t</tr>\n" +
     "\t\t\t<tr>\n" +
     "\t\t\t\t<td>Total</td>\n" +

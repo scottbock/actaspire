@@ -235,8 +235,8 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t</thead>\n" +
     "\t\t\t<tr ng-repeat=\"grade in [3,4,5,6,7,8,9,10]\">\n" +
     "\t\t\t\t<td>Grade {{grade}}</td>\n" +
-    "\t\t\t\t<td><input type=\"number\" ng-model=\"order.grade[grade].online\" name=\"\"></td>\n" +
-    "\t\t\t\t<td><input type=\"number\" ng-model=\"order.grade[grade].paper\" name=\"\"></td>\n" +
+    "\t\t\t\t<td><input type=\"number\" ng-model=\"order.grade[grade].online\" name=\"\" min=\"0\"></td>\n" +
+    "\t\t\t\t<td><input type=\"number\" ng-model=\"order.grade[grade].paper\" name=\"\" min=\"0\"></td>\n" +
     "\t\t\t\t<td>{{order.grade[grade].online + order.grade[grade].paper}}</td>\n" +
     "\t\t\t</tr>\n" +
     "\t\t\t<tr>\n" +
@@ -257,6 +257,8 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t      \t\t<option ng-repeat=\"item in administrationWindows\" value=\"{{item}}\">{{item}}</option>\n" +
     "\t\t\t </select>\n" +
     "\t\t</div>\n" +
+    "\t</div>\n" +
+    "\t<div class=\"row\">\n" +
     "\t\t<div class=\"form-group col-sm-5\">\n" +
     "\t\t\t<label for=\"calendarYear\" class=\"control-label\">What calendar year would you like to order?</label>\n" +
     "\t\t\t<select class=\"form-control\" name=\"calendarYear\" ng-model=\"summative.calendarYear\">\n" +
@@ -308,7 +310,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t</thead>\n" +
     "\t\t\t<tr ng-repeat=\"grade in [3,4,5,6,7,8,9,10]\">\n" +
     "\t\t\t\t<td>Grade {{grade}}</td>\n" +
-    "\t\t\t\t<td><input type=\"number\" ng-model=\"order.grade[grade].online\" name=\"\"></td>\n" +
+    "\t\t\t\t<td><input type=\"number\" ng-model=\"order.grade[grade].online\" name=\"\" min=\"0\"></td>\n" +
     "\t\t\t</tr>\n" +
     "\t\t\t<tr>\n" +
     "\t\t\t\t<td>Total</td>\n" +

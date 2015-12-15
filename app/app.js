@@ -180,17 +180,20 @@ angular.module('myApp', [
 		if($scope.cost.pricing){
 			angular.forEach($scope.formData.summative.orders, function(order, key) {
 				var onlineTotal = 0;
-				var onlineGrades = 0;
+				var gradeCount = 0;
 				var paperTotal = 0;
-				var paperGrades = 0;
 				angular.forEach(order.grade, function(grade, key) {
+					var countGrade = false;
 					if(grade.online !== null && !isNaN(grade.online)){
 						onlineTotal += parseInt(grade.online);
-						onlineGrades ++;
+						countGrade = true;
 					}
 					if(grade.paper !== null && !isNaN(grade.paper)){
 						paperTotal += parseInt(grade.paper);
-						paperGrades ++;
+						countGrade = true;
+					}
+					if(countGrade){
+						gradeCount++;
 					}
 				});
 				order.online = {};
@@ -210,8 +213,8 @@ angular.module('myApp', [
 				order.online.extendedPrice = order.online.price * order.online.total;
 
 				order.online.discounts = {};
-				order.online.discounts.volume = costService.getVolumeDiscount(order.online.total);
-				order.online.discounts.multiGrade = costService.getMultigradeDiscount(onlineGrades);
+				order.online.discounts.volume = costService.getVolumeDiscount(order.online.total + order.paper.total);
+				order.online.discounts.multiGrade = costService.getMultigradeDiscount(gradeCount);
 				if(periodicOrder && periodicOrder.onlineTotal > 0){
 					order.online.discounts.periodic = costService.getPeriodicDiscount(order.online.total, periodicOrder.onlineTotal);
 					order.online.periodicNumberApplied = Math.min(order.online.total, periodicOrder.onlineTotal);
@@ -235,8 +238,8 @@ angular.module('myApp', [
 				order.paper.extendedPrice = order.paper.price * order.paper.total;
 
 				order.paper.discounts = {};
-				order.paper.discounts.volume = costService.getVolumeDiscount(order.paper.total);
-				order.paper.discounts.multiGrade = costService.getMultigradeDiscount(paperGrades);
+				order.paper.discounts.volume = costService.getVolumeDiscount(order.paper.total + order.online.total);
+				order.paper.discounts.multiGrade = costService.getMultigradeDiscount(gradeCount);
 				if(periodicOrder && periodicOrder.onlineTotal > order.online.total){
 					//Only apply what's left after the online portion is disounted
 					order.paper.discounts.periodic = costService.getPeriodicDiscount(order.paper.total, periodicOrder.onlineTotal - order.online.total);
