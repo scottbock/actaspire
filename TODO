@@ -1,15 +1,7 @@
 TODO
 
-remove sales tax Sales Tax database to calculate sales tax if they do not click tax exempt (hide for now ) remove the toggle and put the send certificate to below the grey bar but above biling contact name
-
-Move up score labels so you can order either one but not click one for the other
-
-Add price in parathenses to ISR and score labels ($1.50 and $1.00)
-
 Fix or remove save draft
 
-javascript tutorial for Chris
+double scroll bars
 
-
-fix grade totals == undefined or null in summary csv
-
+no-cache on json calls
