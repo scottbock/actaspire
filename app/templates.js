@@ -118,7 +118,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t    <div class=\"panel-body\">\n" +
     "\t    \t<div class=\"row\">\n" +
     "\t\t\t    <div class=\"col-sm-12\">\n" +
-    "\t\t\t\t    <p>If you are tax exampt, please email a copy of your exemption certificate to <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a></p>\n" +
+    "\t\t\t\t    <p>If you are tax exempt, please email a copy of your exemption certificate to <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a></p>\n" +
     "\t\t\t    </div>\n" +
     "\t\t\t</div>\n" +
     "\t        <div class=\"row\">\n" +
@@ -287,8 +287,8 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t  \t\t<h5>ACT Aspire Periodic</h5>\n" +
     "\t  \t\t<ul>\n" +
     "\t\t\t    <li>Is a complement to the ACT Aspire Summative test, offered via ACT Aspire’s Online platform.</li>\n" +
-    "\t\t\t    <li>Includes access to Classroom quizzes as well as Interim Assessments, which are designed for grades 3 – 10</li>\n" +
-    "\t\t\t    <li>Is a subscription to access a series of interim tests and classroom quizzes in the subject areas of: English, mathematics, reading, science and writing. The subscription is effective from September to June of each school year.</li>\n" +
+    "\t\t\t    <li>Includes access to Classroom quizzes (designed for grades 3 – 8) as well as Interim Assessments (designed for grades 3 – 10)</li>\n" +
+    "\t\t\t    <li>Is a subscription to access a series of interim tests and classroom quizzes in the subject areas of: English, mathematics, reading, science and writing. The subscription is effective from September through June of each school year.</li>\n" +
     "\t\t\t    <li>Can be administered to students throughout the year and provides immediate performance analysis and score reporting.</li>\n" +
     "\t\t\t\t<li>Can be bundled with ACT Aspire Summative test at a per-student discount off of the Summative test (discount will be automatically applied, refer to Order Summary below).</li>\n" +
     "\t\t\t\t<li>Prices as advertised on this form are valid through {{cost.pricing.validThrough}}. If you have any questions regarding the product or placing an order please contact <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a> or 1-855-730-0400.</li>\n" +
@@ -349,31 +349,37 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t</div>\n" +
     "\t\t<div class=\"panel-body\">\n" +
     "\t\t\t<div class=\"row\">\n" +
-    "\t\t\t\t<div class=\"form-group col-sm-4\">\n" +
+    "\t\t\t\t<div class=\"col-sm-6 form-group\">\n" +
+    "\t\t\t\t    <label class=\"checkbox-inline\">\n" +
+    "\t\t\t\t    \t<input type=\"checkbox\" ng-model=\"formData.hasDiscountCode\">\n" +
+    "\t\t\t\t    \tDo you have a discount coupon code?\n" +
+    "\t\t\t\t    </label>\n" +
+    "\t\t\t\t</div>\n" +
+    "\t\t\t\t<div class=\"form-group col-sm-4\" ng-show=\"formData.hasDiscountCode\">\n" +
     "\t\t\t\t\t<label for=\"discountCode\" class=\"control-label\">Discount Code</label>\n" +
     "\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"discountCode\" ng-model=\"discountCode\">\n" +
     "\t\t\t\t</div>\n" +
-    "\t\t\t\t<div class=\"col-sm-2\">\n" +
+    "\t\t\t\t<div class=\"col-sm-2\" ng-show=\"formData.hasDiscountCode\">\n" +
     "\t\t\t\t\t<label class=\"control-label\">&nbsp;</label>\n" +
     "\t\t\t\t\t<div>\n" +
     "\t\t\t\t\t\t<button type=\"button\" ng-click=\"addDiscountCode(discountCode); discountCode = '';\" class=\"btn btn-default\">Add</button>\n" +
     "\t\t\t\t\t</div>\n" +
     "\t\t\t\t</div>\n" +
     "\t\t\t</div>\n" +
-    "\t\t\t<div class=\"row\">\t\n" +
-    "\t\t\t\t<div class=\"col-sm-6\" ng-show=\"!formData.summary.discount.special.error\">\n" +
+    "\t\t\t<div class=\"row\" ng-show=\"formData.hasDiscountCode\">\t\n" +
+    "\t\t\t\t<div class=\"col-sm-offset-6 col-sm-6\" ng-show=\"!formData.summary.discount.special.error\">\n" +
     "\t\t\t\t\t<p class=\"coupon-code\">{{formData.summary.discount.special.code}}</p>\n" +
     "\t\t\t\t</div>\n" +
-    "\t\t\t\t<div class=\"alert alert-danger\" role=\"alert\" ng-show=\"formData.summary.discount.special.error\">\n" +
+    "\t\t\t\t<div class=\"col-sm-offset-6 col-sm-6 alert alert-danger\" role=\"alert\" ng-show=\"formData.summary.discount.special.error\">\n" +
     "\t\t\t\t\t<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
     "\t\t\t\t\t<span class=\"sr-only\">Error:</span>\n" +
     "\t\t\t\t\t{{formData.summary.discount.special.error}}\n" +
     "\t\t\t\t</div>\n" +
     "\t\t\t</div> \t\n" +
     "\t\t</div>\n" +
-    "\t\t<table class=\"table table-striped\">\n" +
+    "\t\t<table class=\"table table-striped table-condensed\">\n" +
     "\t\t\t<thead>\n" +
-    "\t\t\t\t<th>Order</th>\n" +
+    "\t\t\t\t<th>Product Ordered</th>\n" +
     "\t\t\t\t<th>Total Student</th>\n" +
     "\t\t\t\t<th>Price</th>\n" +
     "\t\t\t\t<th>Extended Price</th>\n" +
@@ -388,11 +394,13 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t\t<td>{{order.online.price  | currency}}</td>\n" +
     "\t\t\t\t\t<td>{{order.online.extendedPrice | currency}}</td>\n" +
     "\t\t\t\t\t<td>\n" +
-    "\t\t\t\t\t\t<div ng-show=\"order.online.discounts.volume\">{{order.online.discounts.volume | currency}} (Volume)</div>\n" +
-    "\t\t\t\t\t\t<div ng-show=\"order.online.discounts.multiGrade\">{{order.online.discounts.multiGrade | currency}} (Multi-Grade)</div>\n" +
-    "\t\t\t\t\t\t<div ng-show=\"order.online.discounts.periodic\">{{order.online.discounts.periodic | currency}} ({{order.online.periodicNumberApplied }} Periodic @ {{cost.discounts.periodic.discountPer | currency}})</div>\n" +
-    "\t\t\t\t\t\t<div ng-show=\"order.online.discounts.special\">{{order.online.discounts.special | currency}} (Special)</div>\n" +
-    "\t\t\t\t\t\t<hr />\n" +
+    "\t\t\t\t\t\t<span ng-show=\"order.online.totalDiscountPerStudent\">\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.online.discounts.volume\">{{order.online.discounts.volume | currency}} (Volume)</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.online.discounts.multiGrade\">{{order.online.discounts.multiGrade | currency}} (Multi-Grade)</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.online.discounts.periodic\">{{order.online.discounts.periodic | currency}} ({{order.online.periodicNumberApplied }} Periodic @ {{cost.discounts.periodic.discountPer | currency}})</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.online.discounts.special\">{{order.online.discounts.special | currency}} (Special)</div>\n" +
+    "\t\t\t\t\t\t\t<hr />\n" +
+    "\t\t\t\t\t\t</span>\n" +
     "\t\t\t\t\t\t<div>{{order.online.totalDiscountPerStudent | currency}}</div>\n" +
     "\t\t\t\t\t</td>\t\n" +
     "\t\t\t\t\t<td>{{order.online.totalDiscount | currency}}</td>\n" +
@@ -404,11 +412,13 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t\t<td>{{order.paper.price  | currency}}</td>\n" +
     "\t\t\t\t\t<td>{{order.paper.extendedPrice | currency}}</td>\n" +
     "\t\t\t\t\t<td>\n" +
-    "\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.volume\">{{order.paper.discounts.volume | currency}} (Volume)</div>\n" +
-    "\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.multiGrade\">{{order.paper.discounts.multiGrade | currency}} (Multi-Grade)</div>\n" +
-    "\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.periodic\">{{order.paper.discounts.periodic | currency}} ({{order.paper.periodicNumberApplied }} Periodic @ {{cost.discounts.periodic.discountPer | currency}})</div>\n" +
-    "\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.special\">{{order.paper.discounts.special | currency}} (Special)</div>\n" +
-    "\t\t\t\t\t\t<hr />\n" +
+    "\t\t\t\t\t\t<span ng-show=\"order.paper.totalDiscountPerStudent\">\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.volume\">{{order.paper.discounts.volume | currency}} (Volume)</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.multiGrade\">{{order.paper.discounts.multiGrade | currency}} (Multi-Grade)</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.periodic\">{{order.paper.discounts.periodic | currency}} ({{order.paper.periodicNumberApplied }} Periodic @ {{cost.discounts.periodic.discountPer | currency}})</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.special\">{{order.paper.discounts.special | currency}} (Special)</div>\n" +
+    "\t\t\t\t\t\t\t<hr />\n" +
+    "\t\t\t\t\t\t</span>\n" +
     "\t\t\t\t\t\t<div>{{order.paper.totalDiscountPerStudent | currency}}</div>\n" +
     "\t\t\t\t\t</td>\t\n" +
     "\t\t\t\t\t<td>{{order.paper.totalDiscount | currency}}</td>\n" +
@@ -420,8 +430,10 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t\t<td>{{order.price  | currency}}</td>\n" +
     "\t\t\t\t\t<td>{{order.extendedPrice | currency}}</td>\n" +
     "\t\t\t\t\t<td>\n" +
-    "\t\t\t\t\t\t<div ng-show=\"order.discounts.special\">{{order.discounts.special | currency}} (Special)</div>\n" +
-    "\t\t\t\t\t\t<hr />\n" +
+    "\t\t\t\t\t\t<span ng-show=\"order.totalDiscountPerStudent\">\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.discounts.special\">{{order.discounts.special | currency}} (Special)</div>\n" +
+    "\t\t\t\t\t\t\t<hr />\n" +
+    "\t\t\t\t\t\t</span>\n" +
     "\t\t\t\t\t\t<div>{{order.totalDiscountPerStudent | currency}}</div>\n" +
     "\t\t\t\t\t</td>\t\n" +
     "\t\t\t\t\t<td>{{order.totalDiscount | currency}}</td>\n" +

@@ -299,7 +299,7 @@ angular.module('myApp', [
 
 .factory('CostService', ['$http', function ($http) {
 	var cost = {};
-	$http.get('json/cost.json').then(function(response) { 
+	$http.get('json/cost.json', { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
     	cost.pricing = response.data.pricing;
 		cost.discounts = response.data.discounts;
 		cost.calendarYears = response.data.calendarYears;
@@ -311,7 +311,7 @@ angular.module('myApp', [
     	cost.salesTax = response.data;
 	});*/
 
-	$http.get('json/coupons.json').then(function(response) { 
+	$http.get('json/coupons.json', { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
 	    cost.coupons = response.data.coupons;
 	});
 
