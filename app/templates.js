@@ -66,7 +66,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t    \t<input type=\"checkbox\" ng-model=\"formData.customer.groupOrder\">\n" +
     "\t\t    \tAre you part of a group order?\n" +
     "\t\t    </label>\n" +
-    "\t\t    <p><a href=\"http://www.discoveractaspire.org/order-act-aspire/\" target=\"_blank\">Not sure? Find more information about Group Orders</a></p>\n" +
+    "\t\t    <p><a href=\"http://www.discoveractaspire.org/order/\" target=\"_blank\">Not sure? Find more information about Group Orders</a></p>\n" +
     "\t\t</div>\n" +
     "\n" +
     "\t    <div class=\"form-group col-sm-6 required\" ng-show=\"formData.customer.groupOrder\">\n" +
@@ -181,10 +181,10 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t</div>\t\t\n" +
     "\t</div>\n" +
     "\t\t\n" +
-    "\t<div class=\"panel panel-default\" ng-repeat=\"order in formData.summative.orders\">\n" +
+    "\t<div class=\"panel panel-default\" ng-repeat=\"order in orders.summative.orders\">\n" +
     "\t\t<div class=\"panel-heading\">\n" +
     "\t\t\t{{order.administrationWindow}} {{order.calendarYear}} Summative Order\n" +
-    "\t\t\t<button type=\"button\" class=\"pull-right btn btn-default btn-xs\" aria-label=\"Remove\" ng-click=\"removeOrder(formData.summative.orders, order)\">\n" +
+    "\t\t\t<button type=\"button\" class=\"pull-right btn btn-default btn-xs\" aria-label=\"Remove\" ng-click=\"removeOrder(orders.summative.orders, order)\">\n" +
     "\t\t\t\t<span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>\n" +
     "\t\t\t</button>\n" +
     "\t\t</div>\n" +
@@ -263,13 +263,13 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t<label for=\"calendarYear\" class=\"control-label\">What calendar year would you like to order?</label>\n" +
     "\t\t\t<select class=\"form-control\" name=\"calendarYear\" ng-model=\"summative.calendarYear\">\n" +
     "\t\t\t\t<option value=\"\">---Please select---</option>\n" +
-    "\t      \t\t<option ng-repeat=\"item in cost.calendarYears\" value=\"{{item}}\">{{item}}</option>\n" +
+    "\t      \t\t<option ng-repeat=\"item in cost.summativeCalendarYears\" value=\"{{item}}\">{{item}}</option>\n" +
     "\t\t\t </select>\n" +
     "\t\t</div>\n" +
     "\t\t<div class=\"form-group col-sm-2\">\n" +
     "\t\t\t<label class=\"control-label\">&nbsp;</label>\n" +
     "\t\t\t<div>\n" +
-    "\t\t\t\t<button type=\"button\" ng-model=\"addSummativeOrderButton\" ng-click=\"addOrder(formData.summative.orders, summative.calendarYear, summative.administrationWindow, summative.error)\" class=\"btn btn-default\" ng-disabled=\"!summative.calendarYear || !summative.administrationWindow\">Add to Order</button>\n" +
+    "\t\t\t\t<button type=\"button\" ng-model=\"addSummativeOrderButton\" ng-click=\"addOrder(orders.summative.orders, summative.calendarYear, summative.administrationWindow, summative.error)\" class=\"btn btn-default\" ng-disabled=\"!summative.calendarYear || !summative.administrationWindow\">Add to Order</button>\n" +
     "\t\t\t</div>\n" +
     "\t\t</div>\n" +
     "\t</div>\n" +
@@ -296,10 +296,10 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t</div>\t\t\n" +
     "\t</div>\n" +
     "\n" +
-    "\t<div class=\"panel panel-default\" ng-repeat=\"order in formData.periodic.orders\">\n" +
+    "\t<div class=\"panel panel-default\" ng-repeat=\"order in orders.periodic.orders\">\n" +
     "\t\t<div class=\"panel-heading\">\n" +
     "\t\t\t{{order.calendarYear}} Periodic Order\n" +
-    "\t\t\t<button type=\"button\" class=\"pull-right btn btn-default btn-xs\" aria-label=\"Remove\" ng-click=\"removeOrder(formData.periodic.orders, order)\">\n" +
+    "\t\t\t<button type=\"button\" class=\"pull-right btn btn-default btn-xs\" aria-label=\"Remove\" ng-click=\"removeOrder(orders.periodic.orders, order)\">\n" +
     "\t\t\t\t<span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>\n" +
     "\t\t\t</button>\n" +
     "\t\t</div>\n" +
@@ -324,13 +324,13 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t<label for=\"schoolYear\" class=\"control-label\">What school year would you like to order?</label>\n" +
     "\t\t\t<select class=\"form-control\" name=\"schoolYear\" ng-model=\"periodic.schoolYear\">\n" +
     "\t\t\t\t<option value=\"\">---Please select---</option>\n" +
-    "\t      \t\t<option ng-repeat=\"item in cost.calendarYears\" value=\"{{item | schoolYear}}\">{{item | schoolYear}}</option>\n" +
+    "\t      \t\t<option ng-repeat=\"item in cost.periodicCalendarYears\" value=\"{{item | schoolYear}}\">{{item | schoolYear}}</option>\n" +
     "\t\t\t </select>\n" +
     "\t\t</div>\n" +
     "\t\t<div class=\"form-group col-sm-2\">\n" +
     "\t\t\t<label class=\"control-label\">&nbsp;</label>\n" +
     "\t\t\t<div>\n" +
-    "\t\t\t\t<button type=\"button\" ng-model=\"addPeriodicOrderButton\" ng-click=\"addOrder(formData.periodic.orders, periodic.schoolYear)\"  class=\"btn btn-default\" ng-disabled=\"!periodic.schoolYear\">Add to Order</button>\n" +
+    "\t\t\t\t<button type=\"button\" ng-model=\"addPeriodicOrderButton\" ng-click=\"addOrder(orders.periodic.orders, periodic.schoolYear)\"  class=\"btn btn-default\" ng-disabled=\"!periodic.schoolYear\">Add to Order</button>\n" +
     "\t\t\t</div>\n" +
     "\t\t</div>\n" +
     "\t</div>\n" +
@@ -388,7 +388,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t<th>Order Balance</th>\n" +
     "\t\t\t</thead>\n" +
     "\t\t\t<tbody>\n" +
-    "\t\t\t\t<tr ng-repeat=\"order in formData.summative.orders\">\n" +
+    "\t\t\t\t<tr ng-repeat=\"order in orders.summative.orders | filter:notZero('online')\">\n" +
     "\t\t\t\t\t<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Order Online</td>\n" +
     "\t\t\t\t\t<td>{{order.online.total}}</td>\n" +
     "\t\t\t\t\t<td>{{order.online.price  | currency}}</td>\n" +
@@ -398,15 +398,16 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t\t\t\t<div ng-show=\"order.online.discounts.volume\">{{order.online.discounts.volume | currency}} (Volume)</div>\n" +
     "\t\t\t\t\t\t\t<div ng-show=\"order.online.discounts.multiGrade\">{{order.online.discounts.multiGrade | currency}} (Multi-Grade)</div>\n" +
     "\t\t\t\t\t\t\t<div ng-show=\"order.online.discounts.periodic\">{{order.online.discounts.periodic | currency}} ({{order.online.periodicNumberApplied }} Periodic @ {{cost.discounts.periodic.discountPer | currency}})</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.online.discounts.state\">{{order.online.discounts.state | currency}} (State)</div>\n" +
     "\t\t\t\t\t\t\t<div ng-show=\"order.online.discounts.special\">{{order.online.discounts.special | currency}} (Special)</div>\n" +
     "\t\t\t\t\t\t\t<hr />\n" +
     "\t\t\t\t\t\t</span>\n" +
-    "\t\t\t\t\t\t<div>{{order.online.totalDiscountPerStudent | currency}}</div>\n" +
+    "\t\t\t\t\t\t<div>{{order.online.totalDiscountPerStudent | currency}} (Total Discount)</div>\n" +
     "\t\t\t\t\t</td>\t\n" +
     "\t\t\t\t\t<td>{{order.online.totalDiscount | currency}}</td>\n" +
     "\t\t\t\t\t<td>{{order.online.balance | currency}}</td>\t\t\t\t\n" +
     "\t\t\t\t</tr>\n" +
-    "\t\t\t\t<tr ng-repeat=\"order in formData.summative.orders\">\n" +
+    "\t\t\t\t<tr ng-repeat=\"order in orders.summative.orders | filter:notZero('paper')\">\n" +
     "\t\t\t\t\t<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Order Paper</td>\n" +
     "\t\t\t\t\t<td>{{order.paper.total}}</td>\n" +
     "\t\t\t\t\t<td>{{order.paper.price  | currency}}</td>\n" +
@@ -416,25 +417,27 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.volume\">{{order.paper.discounts.volume | currency}} (Volume)</div>\n" +
     "\t\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.multiGrade\">{{order.paper.discounts.multiGrade | currency}} (Multi-Grade)</div>\n" +
     "\t\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.periodic\">{{order.paper.discounts.periodic | currency}} ({{order.paper.periodicNumberApplied }} Periodic @ {{cost.discounts.periodic.discountPer | currency}})</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.state\">{{order.paper.discounts.state | currency}} (State)</div>\n" +
     "\t\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.special\">{{order.paper.discounts.special | currency}} (Special)</div>\n" +
     "\t\t\t\t\t\t\t<hr />\n" +
     "\t\t\t\t\t\t</span>\n" +
-    "\t\t\t\t\t\t<div>{{order.paper.totalDiscountPerStudent | currency}}</div>\n" +
+    "\t\t\t\t\t\t<div>{{order.paper.totalDiscountPerStudent | currency}} (Total Discount)</div>\n" +
     "\t\t\t\t\t</td>\t\n" +
     "\t\t\t\t\t<td>{{order.paper.totalDiscount | currency}}</td>\n" +
     "\t\t\t\t\t<td>{{order.paper.balance | currency}}</td>\t\t\t\t\n" +
     "\t\t\t\t</tr>\n" +
-    "\t\t\t\t<tr ng-repeat=\"order in formData.periodic.orders\">\n" +
+    "\t\t\t\t<tr ng-repeat=\"order in orders.periodic.orders\">\n" +
     "\t\t\t\t\t<td>{{order.administrationWindow}} {{order.calendarYear}} Periodic Order Online</td>\n" +
     "\t\t\t\t\t<td>{{order.onlineTotal}}</td>\n" +
     "\t\t\t\t\t<td>{{order.price  | currency}}</td>\n" +
     "\t\t\t\t\t<td>{{order.extendedPrice | currency}}</td>\n" +
     "\t\t\t\t\t<td>\n" +
     "\t\t\t\t\t\t<span ng-show=\"order.totalDiscountPerStudent\">\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.discounts.state\">{{order.discounts.state | currency}} (State)</div>\n" +
     "\t\t\t\t\t\t\t<div ng-show=\"order.discounts.special\">{{order.discounts.special | currency}} (Special)</div>\n" +
     "\t\t\t\t\t\t\t<hr />\n" +
     "\t\t\t\t\t\t</span>\n" +
-    "\t\t\t\t\t\t<div>{{order.totalDiscountPerStudent | currency}}</div>\n" +
+    "\t\t\t\t\t\t<div>{{order.totalDiscountPerStudent | currency}} (Total Discount)</div>\n" +
     "\t\t\t\t\t</td>\t\n" +
     "\t\t\t\t\t<td>{{order.totalDiscount | currency}}</td>\n" +
     "\t\t\t\t\t<td>{{order.balance | currency}}</td>\t\t\t\t\t\t\n" +
@@ -456,7 +459,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t</div>\n" +
     "\n" +
     "\t<div class=\"row\">\n" +
-    "\t\t<div class=\"col-sm-4 form-group\">\n" +
+    "\t\t<div class=\"col-sm-12 form-group\">\n" +
     "\t\t    <label class=\"checkbox-inline\">\n" +
     "\t\t    \t<input type=\"checkbox\" ng-model=\"formData.acceptTerms\">\n" +
     "\t\t    \tI agree to ACT Aspire's <a href=\"./json/ActAspireTermsAndConditions.pdf\" target=\"_blank\">Terms and Conditions</a>\n" +

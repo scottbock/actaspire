@@ -54,35 +54,53 @@ angular.module('myApp', [
 	};
 
 	$scope.saveDraft = function(){
-		$cookies.put('formData', angular.toJson($scope.formData));
+		localStorage.setItem('formData', angular.toJson($scope.formData));
+		localStorage.setItem('summative', angular.toJson($scope.orders.summative));
+		localStorage.setItem('periodic', angular.toJson($scope.orders.periodic));
+	};
+
+	$scope.notZero = function(type) {
+	  return function(order) { return order[type].total; }
 	};
 
 	// we will store all of our form data in this object
 	$scope.formData = {
 		customer: {},
+		summary:{
+			discount:{}
+		}
+	};
+	$scope.orders = {
 		summative: {
 			orders: []
 		},
 		periodic: {
 			orders: []
-		},
-		summary:{
-			discount:{}
 		}
-	};
+	}
 
-	var cookieFormData = $cookies.get('formData');
+	var cookieFormData = localStorage.getItem('formData');
 	if(cookieFormData){
 		$scope.formData = angular.fromJson(cookieFormData);
 	}
 
+	var summativeData = localStorage.getItem('summative');
+	if(summativeData){
+		$scope.orders.summative = angular.fromJson(summativeData);
+	}
+
+	var periodicData = localStorage.getItem('periodic');
+	if(periodicData){
+		$scope.orders.periodic = angular.fromJson(periodicData);
+	}
+
 	$scope.updateTotals = function(){	
 		$scope.formData.summary.total = 0.0;
-		angular.forEach($scope.formData.summative.orders, function(order, key) {
+		angular.forEach($scope.orders.summative.orders, function(order, key) {
 			$scope.formData.summary.total += order.online.balance + order.paper.balance;
 		});
 		
-		angular.forEach($scope.formData.periodic.orders, function(order, key) {
+		angular.forEach($scope.orders.periodic.orders, function(order, key) {
 			$scope.formData.summary.total += order.balance;
 		});
 
@@ -144,7 +162,7 @@ angular.module('myApp', [
 
 	$scope.updatePeriodicOrders = function(){
 		if($scope.cost.pricing){
-			angular.forEach($scope.formData.periodic.orders, function(order, key) {
+			angular.forEach($scope.orders.periodic.orders, function(order, key) {
 				var onlineTotal = 0;
 				angular.forEach(order.grade, function(grade, key) {
 					if(grade.online !== null && !isNaN(grade.online)){
@@ -158,6 +176,9 @@ angular.module('myApp', [
 
 				//Discounts
 				order.discounts = {};
+				if($scope.formData.billing && $scope.formData.billing.address && $scope.formData.billing.address.state){
+					order.discounts.state = costService.getStateDiscount($scope.formData.billing.address.state, "periodic");
+				}
 				if($scope.formData.summary.discount.special && $scope.formData.summary.discount.special.periodic){
 					order.discounts.special = $scope.formData.summary.discount.special.periodic.discountPer;
 				}
@@ -178,7 +199,7 @@ angular.module('myApp', [
 		
 	$scope.updateSummativeOrders = function(){
 		if($scope.cost.pricing){
-			angular.forEach($scope.formData.summative.orders, function(order, key) {
+			angular.forEach($scope.orders.summative.orders, function(order, key) {
 				var onlineTotal = 0;
 				var gradeCount = 0;
 				var paperTotal = 0;
@@ -202,7 +223,7 @@ angular.module('myApp', [
 				order.paper.total = paperTotal;	
 
 				var periodicOrder;
-				angular.forEach($scope.formData.periodic.orders, function(periodic, periodicKey) {
+				angular.forEach($scope.orders.periodic.orders, function(periodic, periodicKey) {
 					if((order.administrationWindow == 'Fall' && periodic.calendarYear.indexOf(order.calendarYear) == 0) ||  (order.administrationWindow == 'Spring' && periodic.calendarYear.indexOf(order.calendarYear) == 7)){
 						periodicOrder = periodic;
 					}
@@ -218,6 +239,9 @@ angular.module('myApp', [
 				if(periodicOrder && periodicOrder.onlineTotal > 0){
 					order.online.discounts.periodic = costService.getPeriodicDiscount(order.online.total, periodicOrder.onlineTotal);
 					order.online.periodicNumberApplied = Math.min(order.online.total, periodicOrder.onlineTotal);
+				}
+				if($scope.formData.billing && $scope.formData.billing.address && $scope.formData.billing.address.state){
+					order.online.discounts.state = costService.getStateDiscount($scope.formData.billing.address.state, "summativeOnline");
 				}
 				if($scope.formData.summary.discount.special && $scope.formData.summary.discount.special.summativeOnline){
 					order.online.discounts.special = $scope.formData.summary.discount.special.summativeOnline.discountPer;
@@ -245,9 +269,13 @@ angular.module('myApp', [
 					order.paper.discounts.periodic = costService.getPeriodicDiscount(order.paper.total, periodicOrder.onlineTotal - order.online.total);
 					order.paper.periodicNumberApplied = Math.min(order.paper.total, periodicOrder.onlineTotal - order.online.total);
 				}
+				if($scope.formData.billing && $scope.formData.billing.address && $scope.formData.billing.address.state){
+					order.paper.discounts.state = costService.getStateDiscount($scope.formData.billing.address.state, "summativePaper");
+				}
 				if($scope.formData.summary.discount.special && $scope.formData.summary.discount.special.summativePaper){
 					order.paper.discounts.special = $scope.formData.summary.discount.special.summativePaper.discountPer;
 				}
+
 
 				order.paper.totalDiscountPerStudent = 0.0;
 				for(discountType in order.paper.discounts){
@@ -274,22 +302,25 @@ angular.module('myApp', [
     
 	// function to process the form
 	$scope.processForm = function() {
-		emailService.sendConfirmationEmail($scope.formData, $scope.cost);
+		emailService.sendConfirmationEmail($scope.formData, $scope.orders, $scope.cost);
 	};   
 
 
-	$scope.$watch('formData.summative.orders', function(newValue, oldValue){
+	$scope.$watch('orders.summative.orders', function(newValue, oldValue){
 		$scope.updateSummativeOrders();		
 	}, true);
 
-	$scope.$watch('formData.periodic.orders', function(newValue, oldValue){
+	$scope.$watch('orders.periodic.orders', function(newValue, oldValue){
 		$scope.updatePeriodicOrders();
 	}, true);	
 	//update the orders once the cost resolves
 	$scope.$watch('cost', function(newValue, oldValue){
 		$scope.updatePeriodicOrders();
 	}, true);
-
+	//update the orders when the state changes
+	$scope.$watch('formData.billing.address.state', function(newValue, oldValue){
+		$scope.updatePeriodicOrders();
+	}, true);
 	//TODO: uncomment when adding back sales tax
 	//Update sales tax when billing zip or taxExempt status changes
 	// $scope.$watchCollection('[formData.billing.taxExempt, formData.billing.address.zip]', function(newValue, oldValue){
@@ -302,7 +333,8 @@ angular.module('myApp', [
 	$http.get('json/cost.json', { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
     	cost.pricing = response.data.pricing;
 		cost.discounts = response.data.discounts;
-		cost.calendarYears = response.data.calendarYears;
+		cost.summativeCalendarYears = response.data.summativeCalendarYears;
+		cost.periodicCalendarYears = response.data.periodicCalendarYears
 		cost.ordersInbox = response.data.ordersInbox;
 	});
 
@@ -352,6 +384,16 @@ angular.module('myApp', [
 		return discountAmount;
 	};
 
+	var getStateDiscount = function(state, type){
+		var discountAmount = 0;
+		
+		if(cost.discounts && cost.discounts.state && cost.discounts.state[state]){
+			discountAmount = cost.discounts.state[state][type];
+		}
+
+		return discountAmount;
+	};
+
 	var checkMaxUses = function(couponCode, discountAmount){
 		$http.get('json/couponUses.json', { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
     		var couponUses = response.data;
@@ -388,12 +430,13 @@ angular.module('myApp', [
 		'getVolumeDiscount':getVolumeDiscount,
 		'getMultigradeDiscount':getMultigradeDiscount,
 		'getPeriodicDiscount':getPeriodicDiscount,
-		'getSpecialDiscount':getSpecialDiscount
+		'getSpecialDiscount':getSpecialDiscount,
+		'getStateDiscount': getStateDiscount
 	}
 }])
 
 .factory('EmailService', ['$http', 'currencyFilter', 'dateFilter', '$state', '$cookies', function ($http, currencyFilter, dateFilter, $state, $cookies) {
-	var buildEmail = function(formData){
+	var buildEmail = function(formData, orders){
 		var emailBody = 'Dear ' + formData.customer.firstName + ' ' + formData.customer.lastName + 
 			',\n\nThank you for your ACT Aspire Order' +
 			'\n\nContact: ' + formData.customer.firstName + ' ' + formData.customer.lastName + ', ' + formData.customer.jobTitle + ', ' + formData.customer.organization +
@@ -417,7 +460,7 @@ angular.module('myApp', [
 		// 	emailBody += '\n\nTax Exempt: Y';
 		// }	
 
-		angular.forEach(formData.summative.orders, function(order, key) {
+		angular.forEach(orders.summative.orders, function(order, key) {
 			if(order.online.total){
 				emailBody += '\n\n' + order.administrationWindow + ' ' + order.calendarYear + ' Summative Order Online:';
 				angular.forEach(order.subjects, function(checked, subject){
@@ -435,7 +478,7 @@ angular.module('myApp', [
 			}
 		});
 
-		angular.forEach(formData.summative.orders, function(order, key) {
+		angular.forEach(orders.summative.orders, function(order, key) {
 			if(order.paper.total){
 				emailBody += '\n\n' + order.administrationWindow + ' ' + order.calendarYear + ' Summative Order Paper:';
 				angular.forEach(order.subjects, function(checked, subject){
@@ -453,7 +496,7 @@ angular.module('myApp', [
 			}
 		});
 
-		angular.forEach(formData.periodic.orders, function(order, key) {
+		angular.forEach(orders.periodic.orders, function(order, key) {
 			if(order.onlineTotal){
 				emailBody += '\n\n' + order.calendarYear + ' Periodic Order Online';
 				emailBody += '\n' + order.onlineTotal + ' Students X ' + currencyFilter(order.finalPricePerStudent) + ' = ' + currencyFilter(order.balance);
@@ -511,25 +554,40 @@ angular.module('myApp', [
 			+ formData.billingContact.name + colDelim
 			+ formData.billingContact.email + colDelim
 			+ formData.billingContact.phone + colDelim
-			+ formData.billing.address.line1 + colDelim
-			+ formData.billing.address.line2 + colDelim
-			+ formData.billing.address.city + colDelim
+			+ formData.billing.address.line1 + colDelim;
+
+		if(formData.billing.address.line2){
+			fileContent += formData.billing.address.line2 + colDelim
+		}
+		else{
+			fileContent += colDelim;
+		}
+
+		fileContent +=	formData.billing.address.city + colDelim
 			+ formData.billing.address.state + colDelim
-			+ formData.billing.address.zip + rowDelim;
-			// + yesNo(formData.billing.taxExempt) + rowDelim;
+			+ formData.billing.address.zip + colDelim
+			+ yesNo(formData.acceptTerms) + colDelim;
+			// + yesNo(formData.billing.taxExempt) + colDelim;
+
+		if(formData.summary.discount.special && formData.summary.discount.special.code && !formData.summary.discount.special.error){
+			fileContent += formData.summary.discount.special.code + rowDelim;
+		}
+		else {
+			fileContent += rowDelim;
+		}
 
 		return fileContent;
 	};
 
-	var buildCsvFile = function(formData, cost){
-        var fileContent = ',PID,Internal ID,Date,line ,School / Customer,Grade,Quantity,Item,Test Administration,Test Admin Year,Test Mode,Item Rate,Amount,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,Test Coordinator Name,Test Coordinator Email,Test Coordinator Phone,Backup Coordinator Name,Backup Coordinator Email,Backup Coordinator Phone,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip\n';
+	var buildCsvFile = function(formData, orders, cost){
+        var fileContent = 'NS Name,Internal ID,Date,line ,School / Customer,Grade,Quantity,Item,Test Administration,Test Admin Year,Test Mode,Item Rate,Amount,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,Test Coordinator Name,Test Coordinator Email,Test Coordinator Phone,Backup Coordinator Name,Backup Coordinator Email,Backup Coordinator Phone,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions,Discount Code\n';
 
-        angular.forEach(formData.summative.orders, function(order, key) {
+        angular.forEach(orders.summative.orders, function(order, key) {
         	if(order.online.total){
 	        	var index = 0;
 				angular.forEach(order.grade, function(grade, gradeKey) {
 					if(grade.online){
-						fileContent += ',,,"' + today + colDelim 
+						fileContent += ',,"' + today + colDelim 
 							+ (index++) + colDelim
 							+ formData.customer.organization + colDelim
 							+ gradeKey + colDelim
@@ -541,7 +599,7 @@ angular.module('myApp', [
 							+ (cost.pricing.summative.online - order.online.totalDiscountPerStudent) + colDelim
 							+ ((cost.pricing.summative.online - order.online.totalDiscountPerStudent) * grade.online) + colDelim
 							+ yesNo(order.subjects.English) + colDelim
-							+ yesNo(order.subjects.Mathematics) + colDelim
+							+ yesNo(order.subjects.Math) + colDelim
 							+ yesNo(order.subjects.Reading) + colDelim
 							+ yesNo(order.subjects.Science) + colDelim
 							+ yesNo(order.subjects.Writing) + colDelim
@@ -551,19 +609,19 @@ angular.module('myApp', [
 
 				//ISR
 				if(order.individualReports){
-					fileContent += ',,,"' + today + colDelim 
+					fileContent += ',,"' + today + colDelim 
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
 						+ (order.online.total * order.reportsPerStudent) + colDelim
-						+ 'Printed ISR' + colDelim
+						+ 'ACT Aspire Printed Individual Student Reports' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Online' + colDelim
 						+ (cost.pricing.summative.isr) + colDelim
 						+ ((cost.pricing.summative.isr) * order.online.total * order.reportsPerStudent) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
-						+ yesNo(order.subjects.Mathematics) + colDelim
+						+ yesNo(order.subjects.Math) + colDelim
 						+ yesNo(order.subjects.Reading) + colDelim
 						+ yesNo(order.subjects.Science) + colDelim
 						+ yesNo(order.subjects.Writing) + colDelim
@@ -572,19 +630,19 @@ angular.module('myApp', [
 
 				//Score Label
 				if(order.scoreLabels){
-					fileContent += ',,,"' + today + colDelim 
+					fileContent += ',,"' + today + colDelim 
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
 						+ (order.online.total) + colDelim
-						+ 'Score Label' + colDelim
+						+ 'ACT Aspire Printed Score Labels' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Online' + colDelim
 						+ (cost.pricing.summative.labels) + colDelim
 						+ ((cost.pricing.summative.labels) * order.online.total) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
-						+ yesNo(order.subjects.Mathematics) + colDelim
+						+ yesNo(order.subjects.Math) + colDelim
 						+ yesNo(order.subjects.Reading) + colDelim
 						+ yesNo(order.subjects.Science) + colDelim
 						+ yesNo(order.subjects.Writing) + colDelim
@@ -594,12 +652,12 @@ angular.module('myApp', [
 			}
 		});
 
-		angular.forEach(formData.summative.orders, function(order, key) {
+		angular.forEach(orders.summative.orders, function(order, key) {
 			if(order.paper.total){
 	        	var index = 0;
 				angular.forEach(order.grade, function(grade, gradeKey) {
 					if(grade.paper){
-						fileContent += ',,,"' + today + colDelim 
+						fileContent += ',,"' + today + colDelim 
 							+ (index++) + colDelim
 							+ formData.customer.organization + colDelim
 							+ gradeKey + colDelim
@@ -611,7 +669,7 @@ angular.module('myApp', [
 							+ (cost.pricing.summative.paper - order.paper.totalDiscountPerStudent) + colDelim
 							+ ((cost.pricing.summative.paper - order.paper.totalDiscountPerStudent) * grade.paper) + colDelim
 							+ yesNo(order.subjects.English) + colDelim
-							+ yesNo(order.subjects.Mathematics) + colDelim
+							+ yesNo(order.subjects.Math) + colDelim
 							+ yesNo(order.subjects.Reading) + colDelim
 							+ yesNo(order.subjects.Science) + colDelim
 							+ yesNo(order.subjects.Writing) + colDelim
@@ -622,19 +680,19 @@ angular.module('myApp', [
 				
 				//ISR
 				if(order.individualReports){
-					fileContent += ',,,"' + today + colDelim 
+					fileContent += ',,"' + today + colDelim 
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
 						+ (order.paper.total * order.reportsPerStudent) + colDelim
-						+ 'Printed ISR' + colDelim
+						+ 'ACT Aspire Printed Individual Student Reports' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Paper' + colDelim
 						+ (cost.pricing.summative.isr) + colDelim
 						+ ((cost.pricing.summative.isr) * order.paper.total * order.reportsPerStudent) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
-						+ yesNo(order.subjects.Mathematics) + colDelim
+						+ yesNo(order.subjects.Math) + colDelim
 						+ yesNo(order.subjects.Reading) + colDelim
 						+ yesNo(order.subjects.Science) + colDelim
 						+ yesNo(order.subjects.Writing) + colDelim
@@ -643,19 +701,19 @@ angular.module('myApp', [
 
 				//Score Label
 				if(order.scoreLabels){
-					fileContent += ',,,"' + today + colDelim 
+					fileContent += ',,"' + today + colDelim 
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
 						+ (order.paper.total) + colDelim
-						+ 'Score Label' + colDelim
+						+ 'ACT Aspire Printed Score Labels' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Paper' + colDelim
 						+ (cost.pricing.summative.labels) + colDelim
 						+ ((cost.pricing.summative.labels) * order.paper.total) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
-						+ yesNo(order.subjects.Mathematics) + colDelim
+						+ yesNo(order.subjects.Math) + colDelim
 						+ yesNo(order.subjects.Reading) + colDelim
 						+ yesNo(order.subjects.Science) + colDelim
 						+ yesNo(order.subjects.Writing) + colDelim
@@ -664,12 +722,12 @@ angular.module('myApp', [
 			}
 		});
 
-		angular.forEach(formData.periodic.orders, function(order, key) {
+		angular.forEach(orders.periodic.orders, function(order, key) {
 			if(order.onlineTotal){
 	        	var index = 0;
 				angular.forEach(order.grade, function(grade, gradeKey) {
 					if(grade.online){
-						fileContent += ',,,"' + today + colDelim 
+						fileContent += ',,"' + today + colDelim 
 							+ (index++) + colDelim
 							+ formData.customer.organization + colDelim
 							+ gradeKey + colDelim
@@ -702,7 +760,9 @@ angular.module('myApp', [
 			function(){
 				formData.submitComplete = true;
 				formData.submitSuccess = true;
-				$cookies.remove('formData');
+				localStorage.removeItem('formData');
+				localStorage.removeItem('summative');
+				localStorage.removeItem('periodic');
 			}, 
 			function(){
 				formData.submitComplete = true;
@@ -710,14 +770,14 @@ angular.module('myApp', [
 			}
 		);
 	}
-	var sendConfirmationEmail = function(formData, cost){
+	var sendConfirmationEmail = function(formData, orders, cost){
 		$state.go('form.confirmation');
 
 		var postData = {};
 		postData.clientEmail = formData.customer.email;
 		postData.orderInbox = cost.ordersInbox;
-		postData.message = buildEmail(formData);
-		postData.csv = buildCsvFile(formData, cost);
+		postData.message = buildEmail(formData, orders);
+		postData.csv = buildCsvFile(formData, orders, cost);
 		postData.csvFileName = formData.customer.lastName + formData.customer.organization + new Date() + '.csv';
 
 		if(formData.summary.discount.special && formData.summary.discount.special.code && !formData.summary.discount.special.error){
