@@ -391,7 +391,15 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t<tr ng-repeat=\"order in orders.summative.orders | filter:notZero('online')\">\n" +
     "\t\t\t\t\t<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Order Online</td>\n" +
     "\t\t\t\t\t<td>{{order.online.total}}</td>\n" +
-    "\t\t\t\t\t<td>{{order.online.price  | currency}}</td>\n" +
+    "\t\t\t\t\t<td>\n" +
+    "\t\t\t\t\t\t<div ng-show=\"order.individualReports || order.scoreLabels\">\n" +
+    "\t\t\t\t\t\t\t<div>{{cost.pricing.summative.online | currency}}</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.individualReports\">{{order.reportsPerStudent * cost.pricing.summative.isr | currency}} (ISR)</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.scoreLabels\">{{cost.pricing.summative.labels | currency}} (Labels)</div>\n" +
+    "\t\t\t\t\t\t\t<hr />\n" +
+    "\t\t\t\t\t\t</div>\n" +
+    "\t\t\t\t\t\t<div>{{order.online.price  | currency}}</div>\n" +
+    "\t\t\t\t\t</td>\n" +
     "\t\t\t\t\t<td>{{order.online.extendedPrice | currency}}</td>\n" +
     "\t\t\t\t\t<td>\n" +
     "\t\t\t\t\t\t<span ng-show=\"order.online.totalDiscountPerStudent\">\n" +
@@ -410,7 +418,15 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t<tr ng-repeat=\"order in orders.summative.orders | filter:notZero('paper')\">\n" +
     "\t\t\t\t\t<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Order Paper</td>\n" +
     "\t\t\t\t\t<td>{{order.paper.total}}</td>\n" +
-    "\t\t\t\t\t<td>{{order.paper.price  | currency}}</td>\n" +
+    "\t\t\t\t\t<td>\n" +
+    "\t\t\t\t\t\t<div ng-show=\"order.individualReports || order.scoreLabels\">\n" +
+    "\t\t\t\t\t\t\t<div>{{cost.pricing.summative.paper | currency}}</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.individualReports\">{{order.reportsPerStudent * cost.pricing.summative.isr | currency}} (ISR)</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.scoreLabels\">{{cost.pricing.summative.labels | currency}} (Labels)</div>\n" +
+    "\t\t\t\t\t\t\t<hr />\n" +
+    "\t\t\t\t\t\t</div>\n" +
+    "\t\t\t\t\t\t<div>{{order.paper.price  | currency}}</div>\n" +
+    "\t\t\t\t\t</td>\n" +
     "\t\t\t\t\t<td>{{order.paper.extendedPrice | currency}}</td>\n" +
     "\t\t\t\t\t<td>\n" +
     "\t\t\t\t\t\t<span ng-show=\"order.paper.totalDiscountPerStudent\">\n" +

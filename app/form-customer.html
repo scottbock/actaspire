@@ -377,7 +377,15 @@
 				<tr ng-repeat="order in orders.summative.orders | filter:notZero('online')">
 					<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Order Online</td>
 					<td>{{order.online.total}}</td>
-					<td>{{order.online.price  | currency}}</td>
+					<td>
+						<div ng-show="order.individualReports || order.scoreLabels">
+							<div>{{cost.pricing.summative.online | currency}}</div>
+							<div ng-show="order.individualReports">{{order.reportsPerStudent * cost.pricing.summative.isr | currency}} (ISR)</div>
+							<div ng-show="order.scoreLabels">{{cost.pricing.summative.labels | currency}} (Labels)</div>
+							<hr />
+						</div>
+						<div>{{order.online.price  | currency}}</div>
+					</td>
 					<td>{{order.online.extendedPrice | currency}}</td>
 					<td>
 						<span ng-show="order.online.totalDiscountPerStudent">
@@ -396,7 +404,15 @@
 				<tr ng-repeat="order in orders.summative.orders | filter:notZero('paper')">
 					<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Order Paper</td>
 					<td>{{order.paper.total}}</td>
-					<td>{{order.paper.price  | currency}}</td>
+					<td>
+						<div ng-show="order.individualReports || order.scoreLabels">
+							<div>{{cost.pricing.summative.paper | currency}}</div>
+							<div ng-show="order.individualReports">{{order.reportsPerStudent * cost.pricing.summative.isr | currency}} (ISR)</div>
+							<div ng-show="order.scoreLabels">{{cost.pricing.summative.labels | currency}} (Labels)</div>
+							<hr />
+						</div>
+						<div>{{order.paper.price  | currency}}</div>
+					</td>
 					<td>{{order.paper.extendedPrice | currency}}</td>
 					<td>
 						<span ng-show="order.paper.totalDiscountPerStudent">

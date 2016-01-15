@@ -570,17 +570,17 @@ angular.module('myApp', [
 			// + yesNo(formData.billing.taxExempt) + colDelim;
 
 		if(formData.summary.discount.special && formData.summary.discount.special.code && !formData.summary.discount.special.error){
-			fileContent += formData.summary.discount.special.code + rowDelim;
+			fileContent += formData.summary.discount.special.code + colDelim;
 		}
 		else {
-			fileContent += rowDelim;
+			fileContent += colDelim;
 		}
 
-		return fileContent;
+		return fileContent += formData.comments + rowDelim;
 	};
 
 	var buildCsvFile = function(formData, orders, cost){
-        var fileContent = 'NS Name,Internal ID,Date,line ,School / Customer,Grade,Quantity,Item,Test Administration,Test Admin Year,Test Mode,Item Rate,Amount,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,Test Coordinator Name,Test Coordinator Email,Test Coordinator Phone,Backup Coordinator Name,Backup Coordinator Email,Backup Coordinator Phone,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions,Discount Code\n';
+        var fileContent = 'NS Name,Internal ID,Date,line ,School / Customer,Grade,Quantity,Item,Test Administration,Test Admin Year,Test Mode,Item Rate,Amount,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,Test Coordinator Name,Test Coordinator Email,Test Coordinator Phone,Backup Coordinator Name,Backup Coordinator Email,Backup Coordinator Phone,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions,Discount Code,Memo\n';
 
         angular.forEach(orders.summative.orders, function(order, key) {
         	if(order.online.total){
