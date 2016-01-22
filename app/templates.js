@@ -6,7 +6,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "    <h2>ACT Aspire Order Confirmation</h2>\n" +
     "    <p ng-hide=\"formData.submitComplete\">Submitting your order now please wait while we finish.<img src=\"images/ring.gif\" /></p>\n" +
     "    <p ng-show=\"formData.submitComplete && formData.submitSuccess\">Success!  A confirmation email has been sent to {{formData.customer.email}}</p>\n" +
-    "    <p ng-show=\"formData.submitComplete && !formData.submitSuccess\">I'm sorry.  Something with your order submission has failed.  Please go <a href=\"\">back</a> and try again.  If you continue to have problems please contact us at <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a> or 1-855-730-0400</p>\n" +
+    "    <p ng-show=\"formData.submitComplete && !formData.submitSuccess\">I'm sorry.  Something with your order submission has failed.  Please go <a href=\"#\" onclick=\"history.go(-1)\">back</a> and try again.  If you continue to have problems please contact us at <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a> or 1-855-730-0400</p>\n" +
     "</div>"
   );
 

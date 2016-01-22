@@ -778,7 +778,8 @@ angular.module('myApp', [
 		postData.orderInbox = cost.ordersInbox;
 		postData.message = buildEmail(formData, orders);
 		postData.csv = buildCsvFile(formData, orders, cost);
-		postData.csvFileName = formData.customer.lastName + formData.customer.organization + new Date() + '.csv';
+		postData.csvFileName = formData.customer.lastName + formData.customer.organization + new Date().getTime() + '.csv';
+		postData.csvFileName = postData.csvFileName.replace(/[/\\\\]/g, '');;
 
 		if(formData.summary.discount.special && formData.summary.discount.special.code && !formData.summary.discount.special.error){
 			$http.get('json/couponUses.json', { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
