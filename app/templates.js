@@ -209,7 +209,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t     \t<div class=\"col-sm-6 form-group\">\n" +
     "\t\t\t    <label class=\"checkbox-inline\">\n" +
     "\t\t\t    \t<input type=\"checkbox\" ng-model=\"order.scoreLabels\">\n" +
-    "\t\t\t    \tAdd Printed Score Labels ({{cost.pricing.summative.labels | currency}})\n" +
+    "\t\t\t    \tAdd Printed Score Labels ({{cost.pricing.summative[order.calendarYear].labels | currency}})\n" +
     "\t\t\t    </label>\n" +
     "\t\t    </div>\n" +
     "\t\t</div>\n" +
@@ -217,11 +217,11 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t    \t<div class=\"col-sm-6 form-group\">\n" +
     "\t\t\t\t<label>\n" +
     "\t\t\t\t\t<input type=\"radio\" ng-model=\"order.reportsPerStudent\" value=\"1\">\n" +
-    "\t\t\t\t\t1 Report Per Student ({{cost.pricing.summative.isr | currency}})\n" +
+    "\t\t\t\t\t1 Report Per Student ({{cost.pricing.summative[order.calendarYear].isr | currency}})\n" +
     "\t\t\t\t</label>\n" +
     "\t\t\t\t<label>\n" +
     "\t\t\t\t\t<input type=\"radio\" ng-model=\"order.reportsPerStudent\" value=\"2\">\n" +
-    "\t\t\t\t\t2 Reports Per Student ({{cost.pricing.summative.isr * 2 | currency}})\n" +
+    "\t\t\t\t\t2 Reports Per Student ({{cost.pricing.summative[order.calendarYear].isr * 2 | currency}})\n" +
     "\t\t\t\t</label>\t\t\t\n" +
     "\t\t    </div>\n" +
     "\t    </div>\n" +
@@ -298,7 +298,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\n" +
     "\t<div class=\"panel panel-default\" ng-repeat=\"order in orders.periodic.orders\">\n" +
     "\t\t<div class=\"panel-heading\">\n" +
-    "\t\t\t{{order.calendarYear}} Periodic Order\n" +
+    "\t\t\t{{order.calendarYear | schoolYear}} Periodic Order\n" +
     "\t\t\t<button type=\"button\" class=\"pull-right btn btn-default btn-xs\" aria-label=\"Remove\" ng-click=\"removeOrder(orders.periodic.orders, order)\">\n" +
     "\t\t\t\t<span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>\n" +
     "\t\t\t</button>\n" +
@@ -324,7 +324,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t<label for=\"schoolYear\" class=\"control-label\">What school year would you like to order?</label>\n" +
     "\t\t\t<select class=\"form-control\" name=\"schoolYear\" ng-model=\"periodic.schoolYear\">\n" +
     "\t\t\t\t<option value=\"\">---Please select---</option>\n" +
-    "\t      \t\t<option ng-repeat=\"item in cost.periodicCalendarYears\" value=\"{{item | schoolYear}}\">{{item | schoolYear}}</option>\n" +
+    "\t      \t\t<option ng-repeat=\"item in cost.periodicCalendarYears\" value=\"{{item}}\">{{item | schoolYear}}</option>\n" +
     "\t\t\t </select>\n" +
     "\t\t</div>\n" +
     "\t\t<div class=\"form-group col-sm-2\">\n" +
@@ -393,9 +393,9 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t\t<td>{{order.online.total}}</td>\n" +
     "\t\t\t\t\t<td>\n" +
     "\t\t\t\t\t\t<div ng-show=\"order.individualReports || order.scoreLabels\">\n" +
-    "\t\t\t\t\t\t\t<div>{{cost.pricing.summative.online | currency}}</div>\n" +
-    "\t\t\t\t\t\t\t<div ng-show=\"order.individualReports\">{{order.reportsPerStudent * cost.pricing.summative.isr | currency}} (ISR)</div>\n" +
-    "\t\t\t\t\t\t\t<div ng-show=\"order.scoreLabels\">{{cost.pricing.summative.labels | currency}} (Labels)</div>\n" +
+    "\t\t\t\t\t\t\t<div>{{cost.pricing.summative[order.calendarYear].online | currency}}</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.individualReports\">{{order.reportsPerStudent * cost.pricing.summative[order.calendarYear].isr | currency}} (ISR)</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.scoreLabels\">{{cost.pricing.summative[order.calendarYear].labels | currency}} (Labels)</div>\n" +
     "\t\t\t\t\t\t\t<hr />\n" +
     "\t\t\t\t\t\t</div>\n" +
     "\t\t\t\t\t\t<div>{{order.online.price  | currency}}</div>\n" +
@@ -420,9 +420,9 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t\t<td>{{order.paper.total}}</td>\n" +
     "\t\t\t\t\t<td>\n" +
     "\t\t\t\t\t\t<div ng-show=\"order.individualReports || order.scoreLabels\">\n" +
-    "\t\t\t\t\t\t\t<div>{{cost.pricing.summative.paper | currency}}</div>\n" +
-    "\t\t\t\t\t\t\t<div ng-show=\"order.individualReports\">{{order.reportsPerStudent * cost.pricing.summative.isr | currency}} (ISR)</div>\n" +
-    "\t\t\t\t\t\t\t<div ng-show=\"order.scoreLabels\">{{cost.pricing.summative.labels | currency}} (Labels)</div>\n" +
+    "\t\t\t\t\t\t\t<div>{{cost.pricing.summative[order.calendarYear].paper | currency}}</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.individualReports\">{{order.reportsPerStudent * cost.pricing.summative[order.calendarYear].isr | currency}} (ISR)</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.scoreLabels\">{{cost.pricing.summative[order.calendarYear].labels | currency}} (Labels)</div>\n" +
     "\t\t\t\t\t\t\t<hr />\n" +
     "\t\t\t\t\t\t</div>\n" +
     "\t\t\t\t\t\t<div>{{order.paper.price  | currency}}</div>\n" +
@@ -443,7 +443,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t\t<td>{{order.paper.balance | currency}}</td>\t\t\t\t\n" +
     "\t\t\t\t</tr>\n" +
     "\t\t\t\t<tr ng-repeat=\"order in orders.periodic.orders\">\n" +
-    "\t\t\t\t\t<td>{{order.administrationWindow}} {{order.calendarYear}} Periodic Order Online</td>\n" +
+    "\t\t\t\t\t<td>{{order.administrationWindow}} {{order.calendarYear | schoolYear}} Periodic Order Online</td>\n" +
     "\t\t\t\t\t<td>{{order.onlineTotal}}</td>\n" +
     "\t\t\t\t\t<td>{{order.price  | currency}}</td>\n" +
     "\t\t\t\t\t<td>{{order.extendedPrice | currency}}</td>\n" +

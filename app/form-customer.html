@@ -195,7 +195,7 @@
 	     	<div class="col-sm-6 form-group">
 			    <label class="checkbox-inline">
 			    	<input type="checkbox" ng-model="order.scoreLabels">
-			    	Add Printed Score Labels ({{cost.pricing.summative.labels | currency}})
+			    	Add Printed Score Labels ({{cost.pricing.summative[order.calendarYear].labels | currency}})
 			    </label>
 		    </div>
 		</div>
@@ -203,11 +203,11 @@
 	    	<div class="col-sm-6 form-group">
 				<label>
 					<input type="radio" ng-model="order.reportsPerStudent" value="1">
-					1 Report Per Student ({{cost.pricing.summative.isr | currency}})
+					1 Report Per Student ({{cost.pricing.summative[order.calendarYear].isr | currency}})
 				</label>
 				<label>
 					<input type="radio" ng-model="order.reportsPerStudent" value="2">
-					2 Reports Per Student ({{cost.pricing.summative.isr * 2 | currency}})
+					2 Reports Per Student ({{cost.pricing.summative[order.calendarYear].isr * 2 | currency}})
 				</label>			
 		    </div>
 	    </div>
@@ -284,7 +284,7 @@
 
 	<div class="panel panel-default" ng-repeat="order in orders.periodic.orders">
 		<div class="panel-heading">
-			{{order.calendarYear}} Periodic Order
+			{{order.calendarYear | schoolYear}} Periodic Order
 			<button type="button" class="pull-right btn btn-default btn-xs" aria-label="Remove" ng-click="removeOrder(orders.periodic.orders, order)">
 				<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
 			</button>
@@ -310,7 +310,7 @@
 			<label for="schoolYear" class="control-label">What school year would you like to order?</label>
 			<select class="form-control" name="schoolYear" ng-model="periodic.schoolYear">
 				<option value="">---Please select---</option>
-	      		<option ng-repeat="item in cost.periodicCalendarYears" value="{{item | schoolYear}}">{{item | schoolYear}}</option>
+	      		<option ng-repeat="item in cost.periodicCalendarYears" value="{{item}}">{{item | schoolYear}}</option>
 			 </select>
 		</div>
 		<div class="form-group col-sm-2">
@@ -379,9 +379,9 @@
 					<td>{{order.online.total}}</td>
 					<td>
 						<div ng-show="order.individualReports || order.scoreLabels">
-							<div>{{cost.pricing.summative.online | currency}}</div>
-							<div ng-show="order.individualReports">{{order.reportsPerStudent * cost.pricing.summative.isr | currency}} (ISR)</div>
-							<div ng-show="order.scoreLabels">{{cost.pricing.summative.labels | currency}} (Labels)</div>
+							<div>{{cost.pricing.summative[order.calendarYear].online | currency}}</div>
+							<div ng-show="order.individualReports">{{order.reportsPerStudent * cost.pricing.summative[order.calendarYear].isr | currency}} (ISR)</div>
+							<div ng-show="order.scoreLabels">{{cost.pricing.summative[order.calendarYear].labels | currency}} (Labels)</div>
 							<hr />
 						</div>
 						<div>{{order.online.price  | currency}}</div>
@@ -406,9 +406,9 @@
 					<td>{{order.paper.total}}</td>
 					<td>
 						<div ng-show="order.individualReports || order.scoreLabels">
-							<div>{{cost.pricing.summative.paper | currency}}</div>
-							<div ng-show="order.individualReports">{{order.reportsPerStudent * cost.pricing.summative.isr | currency}} (ISR)</div>
-							<div ng-show="order.scoreLabels">{{cost.pricing.summative.labels | currency}} (Labels)</div>
+							<div>{{cost.pricing.summative[order.calendarYear].paper | currency}}</div>
+							<div ng-show="order.individualReports">{{order.reportsPerStudent * cost.pricing.summative[order.calendarYear].isr | currency}} (ISR)</div>
+							<div ng-show="order.scoreLabels">{{cost.pricing.summative[order.calendarYear].labels | currency}} (Labels)</div>
 							<hr />
 						</div>
 						<div>{{order.paper.price  | currency}}</div>
@@ -429,7 +429,7 @@
 					<td>{{order.paper.balance | currency}}</td>				
 				</tr>
 				<tr ng-repeat="order in orders.periodic.orders">
-					<td>{{order.administrationWindow}} {{order.calendarYear}} Periodic Order Online</td>
+					<td>{{order.administrationWindow}} {{order.calendarYear | schoolYear}} Periodic Order Online</td>
 					<td>{{order.onlineTotal}}</td>
 					<td>{{order.price  | currency}}</td>
 					<td>{{order.extendedPrice | currency}}</td>

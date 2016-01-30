@@ -45337,7 +45337,7 @@ angular.module('myApp', [
 				});
 				order.onlineTotal = onlineTotal;		
 
-				order.price = $scope.cost.pricing.periodic;
+				order.price = $scope.cost.pricing.periodic[order.calendarYear];
 				order.extendedPrice = order.price * order.onlineTotal;
 
 				//Discounts
@@ -45390,13 +45390,13 @@ angular.module('myApp', [
 
 				var periodicOrder;
 				angular.forEach($scope.orders.periodic.orders, function(periodic, periodicKey) {
-					if((order.administrationWindow == 'Fall' && periodic.calendarYear.indexOf(order.calendarYear) == 0) ||  (order.administrationWindow == 'Spring' && periodic.calendarYear.indexOf(order.calendarYear) == 7)){
+					if((order.administrationWindow == 'Fall' && periodic.calendarYear == order.calendarYear) ||  (order.administrationWindow == 'Spring' && (parseInt(periodic.calendarYear) + 1) == order.calendarYear)){
 						periodicOrder = periodic;
 					}
 				});
 
 				//Online portion
-				order.online.price = $scope.cost.pricing.summative.online + (order.individualReports ? (order.reportsPerStudent * $scope.cost.pricing.summative.isr) : 0.0) + (order.scoreLabels ? $scope.cost.pricing.summative.labels : 0.0);
+				order.online.price = $scope.cost.pricing.summative[order.calendarYear].online + (order.individualReports ? (order.reportsPerStudent * $scope.cost.pricing.summative[order.calendarYear].isr) : 0.0) + (order.scoreLabels ? $scope.cost.pricing.summative[order.calendarYear].labels : 0.0);
 				order.online.extendedPrice = order.online.price * order.online.total;
 
 				order.online.discounts = {};
@@ -45424,7 +45424,7 @@ angular.module('myApp', [
 				order.online.balance = order.online.finalPricePerStudent * order.online.total;
 
 				//paper portion
-				order.paper.price = $scope.cost.pricing.summative.paper + (order.individualReports ? (order.reportsPerStudent * $scope.cost.pricing.summative.isr) : 0.0) + (order.scoreLabels ? $scope.cost.pricing.summative.labels : 0.0);
+				order.paper.price = $scope.cost.pricing.summative[order.calendarYear].paper + (order.individualReports ? (order.reportsPerStudent * $scope.cost.pricing.summative[order.calendarYear].isr) : 0.0) + (order.scoreLabels ? $scope.cost.pricing.summative[order.calendarYear].labels : 0.0);
 				order.paper.extendedPrice = order.paper.price * order.paper.total;
 
 				order.paper.discounts = {};
@@ -45499,9 +45499,10 @@ angular.module('myApp', [
 	$http.get('json/cost.json', { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
     	cost.pricing = response.data.pricing;
 		cost.discounts = response.data.discounts;
-		cost.summativeCalendarYears = response.data.summativeCalendarYears;
-		cost.periodicCalendarYears = response.data.periodicCalendarYears
+		cost.summativeCalendarYears = Object.keys(response.data.pricing.summative);
+		cost.periodicCalendarYears = Object.keys(response.data.pricing.periodic);
 		cost.ordersInbox = response.data.ordersInbox;
+		cost.ordersBcc = response.data.ordersBcc;
 	});
 
 	//todo: uncomment this code when ready to include sales tax
@@ -45601,7 +45602,7 @@ angular.module('myApp', [
 	}
 }])
 
-.factory('EmailService', ['$http', 'currencyFilter', 'dateFilter', '$state', '$cookies', function ($http, currencyFilter, dateFilter, $state, $cookies) {
+.factory('EmailService', ['$http', 'currencyFilter', 'dateFilter', 'schoolYearFilter', '$state', '$cookies', function ($http, currencyFilter, dateFilter, schoolYearFilter, $state, $cookies) {
 	var buildEmail = function(formData, orders){
 		var emailBody = 'Dear ' + formData.customer.firstName + ' ' + formData.customer.lastName + 
 			',\n\nThank you for your ACT Aspire Order' +
@@ -45664,7 +45665,7 @@ angular.module('myApp', [
 
 		angular.forEach(orders.periodic.orders, function(order, key) {
 			if(order.onlineTotal){
-				emailBody += '\n\n' + order.calendarYear + ' Periodic Order Online';
+				emailBody += '\n\n' + schoolYearFilter(order.calendarYear) + ' Periodic Order Online';
 				emailBody += '\n' + order.onlineTotal + ' Students X ' + currencyFilter(order.finalPricePerStudent) + ' = ' + currencyFilter(order.balance);
 			}
 		});
@@ -45762,8 +45763,8 @@ angular.module('myApp', [
 							+ order.administrationWindow + colDelim
 							+ order.calendarYear + colDelim
 							+ 'Online' + colDelim
-							+ (cost.pricing.summative.online - order.online.totalDiscountPerStudent) + colDelim
-							+ ((cost.pricing.summative.online - order.online.totalDiscountPerStudent) * grade.online) + colDelim
+							+ (cost.pricing.summative[order.calendarYear].online - order.online.totalDiscountPerStudent) + colDelim
+							+ ((cost.pricing.summative[order.calendarYear].online - order.online.totalDiscountPerStudent) * grade.online) + colDelim
 							+ yesNo(order.subjects.English) + colDelim
 							+ yesNo(order.subjects.Math) + colDelim
 							+ yesNo(order.subjects.Reading) + colDelim
@@ -45784,8 +45785,8 @@ angular.module('myApp', [
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Online' + colDelim
-						+ (cost.pricing.summative.isr) + colDelim
-						+ ((cost.pricing.summative.isr) * order.online.total * order.reportsPerStudent) + colDelim
+						+ (cost.pricing.summative[order.calendarYear].isr) + colDelim
+						+ ((cost.pricing.summative[order.calendarYear].isr) * order.online.total * order.reportsPerStudent) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
 						+ yesNo(order.subjects.Math) + colDelim
 						+ yesNo(order.subjects.Reading) + colDelim
@@ -45805,8 +45806,8 @@ angular.module('myApp', [
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Online' + colDelim
-						+ (cost.pricing.summative.labels) + colDelim
-						+ ((cost.pricing.summative.labels) * order.online.total) + colDelim
+						+ (cost.pricing.summative[order.calendarYear].labels) + colDelim
+						+ ((cost.pricing.summative[order.calendarYear].labels) * order.online.total) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
 						+ yesNo(order.subjects.Math) + colDelim
 						+ yesNo(order.subjects.Reading) + colDelim
@@ -45832,8 +45833,8 @@ angular.module('myApp', [
 							+ order.administrationWindow + colDelim
 							+ order.calendarYear + colDelim
 							+ 'Paper' + colDelim
-							+ (cost.pricing.summative.paper - order.paper.totalDiscountPerStudent) + colDelim
-							+ ((cost.pricing.summative.paper - order.paper.totalDiscountPerStudent) * grade.paper) + colDelim
+							+ (cost.pricing.summative[order.calendarYear].paper - order.paper.totalDiscountPerStudent) + colDelim
+							+ ((cost.pricing.summative[order.calendarYear].paper - order.paper.totalDiscountPerStudent) * grade.paper) + colDelim
 							+ yesNo(order.subjects.English) + colDelim
 							+ yesNo(order.subjects.Math) + colDelim
 							+ yesNo(order.subjects.Reading) + colDelim
@@ -45855,8 +45856,8 @@ angular.module('myApp', [
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Paper' + colDelim
-						+ (cost.pricing.summative.isr) + colDelim
-						+ ((cost.pricing.summative.isr) * order.paper.total * order.reportsPerStudent) + colDelim
+						+ (cost.pricing.summative[order.calendarYear].isr) + colDelim
+						+ ((cost.pricing.summative[order.calendarYear].isr) * order.paper.total * order.reportsPerStudent) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
 						+ yesNo(order.subjects.Math) + colDelim
 						+ yesNo(order.subjects.Reading) + colDelim
@@ -45876,8 +45877,8 @@ angular.module('myApp', [
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Paper' + colDelim
-						+ (cost.pricing.summative.labels) + colDelim
-						+ ((cost.pricing.summative.labels) * order.paper.total) + colDelim
+						+ (cost.pricing.summative[order.calendarYear].labels) + colDelim
+						+ ((cost.pricing.summative[order.calendarYear].labels) * order.paper.total) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
 						+ yesNo(order.subjects.Math) + colDelim
 						+ yesNo(order.subjects.Reading) + colDelim
@@ -45900,10 +45901,10 @@ angular.module('myApp', [
 							+ grade.online + colDelim
 							+ 'Periodic' + colDelim
 							+ 'School Year' + colDelim
-							+ order.calendarYear + colDelim
+							+ schoolYearFilter(order.calendarYear) + colDelim
 							+ 'Online' + colDelim
-							+ (cost.pricing.periodic - order.totalDiscountPerStudent) + colDelim
-							+ ((cost.pricing.periodic - order.totalDiscountPerStudent) * grade.online) + colDelim
+							+ (cost.pricing.periodic[order.calendarYear] - order.totalDiscountPerStudent) + colDelim
+							+ ((cost.pricing.periodic[order.calendarYear] - order.totalDiscountPerStudent) * grade.online) + colDelim
 							+ yesNo(true) + colDelim
 							+ yesNo(true) + colDelim
 							+ yesNo(true) + colDelim
@@ -45942,6 +45943,7 @@ angular.module('myApp', [
 		var postData = {};
 		postData.clientEmail = formData.customer.email;
 		postData.orderInbox = cost.ordersInbox;
+		postData.orderBcc = cost.ordersBcc;
 		postData.message = buildEmail(formData, orders);
 		postData.csv = buildCsvFile(formData, orders, cost);
 		postData.csvFileName = formData.customer.lastName + formData.customer.organization + new Date().getTime() + '.csv';
@@ -46201,7 +46203,7 @@ angular.module('myApp', [
     "\t     \t<div class=\"col-sm-6 form-group\">\n" +
     "\t\t\t    <label class=\"checkbox-inline\">\n" +
     "\t\t\t    \t<input type=\"checkbox\" ng-model=\"order.scoreLabels\">\n" +
-    "\t\t\t    \tAdd Printed Score Labels ({{cost.pricing.summative.labels | currency}})\n" +
+    "\t\t\t    \tAdd Printed Score Labels ({{cost.pricing.summative[order.calendarYear].labels | currency}})\n" +
     "\t\t\t    </label>\n" +
     "\t\t    </div>\n" +
     "\t\t</div>\n" +
@@ -46209,11 +46211,11 @@ angular.module('myApp', [
     "\t    \t<div class=\"col-sm-6 form-group\">\n" +
     "\t\t\t\t<label>\n" +
     "\t\t\t\t\t<input type=\"radio\" ng-model=\"order.reportsPerStudent\" value=\"1\">\n" +
-    "\t\t\t\t\t1 Report Per Student ({{cost.pricing.summative.isr | currency}})\n" +
+    "\t\t\t\t\t1 Report Per Student ({{cost.pricing.summative[order.calendarYear].isr | currency}})\n" +
     "\t\t\t\t</label>\n" +
     "\t\t\t\t<label>\n" +
     "\t\t\t\t\t<input type=\"radio\" ng-model=\"order.reportsPerStudent\" value=\"2\">\n" +
-    "\t\t\t\t\t2 Reports Per Student ({{cost.pricing.summative.isr * 2 | currency}})\n" +
+    "\t\t\t\t\t2 Reports Per Student ({{cost.pricing.summative[order.calendarYear].isr * 2 | currency}})\n" +
     "\t\t\t\t</label>\t\t\t\n" +
     "\t\t    </div>\n" +
     "\t    </div>\n" +
@@ -46290,7 +46292,7 @@ angular.module('myApp', [
     "\n" +
     "\t<div class=\"panel panel-default\" ng-repeat=\"order in orders.periodic.orders\">\n" +
     "\t\t<div class=\"panel-heading\">\n" +
-    "\t\t\t{{order.calendarYear}} Periodic Order\n" +
+    "\t\t\t{{order.calendarYear | schoolYear}} Periodic Order\n" +
     "\t\t\t<button type=\"button\" class=\"pull-right btn btn-default btn-xs\" aria-label=\"Remove\" ng-click=\"removeOrder(orders.periodic.orders, order)\">\n" +
     "\t\t\t\t<span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>\n" +
     "\t\t\t</button>\n" +
@@ -46316,7 +46318,7 @@ angular.module('myApp', [
     "\t\t\t<label for=\"schoolYear\" class=\"control-label\">What school year would you like to order?</label>\n" +
     "\t\t\t<select class=\"form-control\" name=\"schoolYear\" ng-model=\"periodic.schoolYear\">\n" +
     "\t\t\t\t<option value=\"\">---Please select---</option>\n" +
-    "\t      \t\t<option ng-repeat=\"item in cost.periodicCalendarYears\" value=\"{{item | schoolYear}}\">{{item | schoolYear}}</option>\n" +
+    "\t      \t\t<option ng-repeat=\"item in cost.periodicCalendarYears\" value=\"{{item}}\">{{item | schoolYear}}</option>\n" +
     "\t\t\t </select>\n" +
     "\t\t</div>\n" +
     "\t\t<div class=\"form-group col-sm-2\">\n" +
@@ -46385,9 +46387,9 @@ angular.module('myApp', [
     "\t\t\t\t\t<td>{{order.online.total}}</td>\n" +
     "\t\t\t\t\t<td>\n" +
     "\t\t\t\t\t\t<div ng-show=\"order.individualReports || order.scoreLabels\">\n" +
-    "\t\t\t\t\t\t\t<div>{{cost.pricing.summative.online | currency}}</div>\n" +
-    "\t\t\t\t\t\t\t<div ng-show=\"order.individualReports\">{{order.reportsPerStudent * cost.pricing.summative.isr | currency}} (ISR)</div>\n" +
-    "\t\t\t\t\t\t\t<div ng-show=\"order.scoreLabels\">{{cost.pricing.summative.labels | currency}} (Labels)</div>\n" +
+    "\t\t\t\t\t\t\t<div>{{cost.pricing.summative[order.calendarYear].online | currency}}</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.individualReports\">{{order.reportsPerStudent * cost.pricing.summative[order.calendarYear].isr | currency}} (ISR)</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.scoreLabels\">{{cost.pricing.summative[order.calendarYear].labels | currency}} (Labels)</div>\n" +
     "\t\t\t\t\t\t\t<hr />\n" +
     "\t\t\t\t\t\t</div>\n" +
     "\t\t\t\t\t\t<div>{{order.online.price  | currency}}</div>\n" +
@@ -46412,9 +46414,9 @@ angular.module('myApp', [
     "\t\t\t\t\t<td>{{order.paper.total}}</td>\n" +
     "\t\t\t\t\t<td>\n" +
     "\t\t\t\t\t\t<div ng-show=\"order.individualReports || order.scoreLabels\">\n" +
-    "\t\t\t\t\t\t\t<div>{{cost.pricing.summative.paper | currency}}</div>\n" +
-    "\t\t\t\t\t\t\t<div ng-show=\"order.individualReports\">{{order.reportsPerStudent * cost.pricing.summative.isr | currency}} (ISR)</div>\n" +
-    "\t\t\t\t\t\t\t<div ng-show=\"order.scoreLabels\">{{cost.pricing.summative.labels | currency}} (Labels)</div>\n" +
+    "\t\t\t\t\t\t\t<div>{{cost.pricing.summative[order.calendarYear].paper | currency}}</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.individualReports\">{{order.reportsPerStudent * cost.pricing.summative[order.calendarYear].isr | currency}} (ISR)</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.scoreLabels\">{{cost.pricing.summative[order.calendarYear].labels | currency}} (Labels)</div>\n" +
     "\t\t\t\t\t\t\t<hr />\n" +
     "\t\t\t\t\t\t</div>\n" +
     "\t\t\t\t\t\t<div>{{order.paper.price  | currency}}</div>\n" +
@@ -46435,7 +46437,7 @@ angular.module('myApp', [
     "\t\t\t\t\t<td>{{order.paper.balance | currency}}</td>\t\t\t\t\n" +
     "\t\t\t\t</tr>\n" +
     "\t\t\t\t<tr ng-repeat=\"order in orders.periodic.orders\">\n" +
-    "\t\t\t\t\t<td>{{order.administrationWindow}} {{order.calendarYear}} Periodic Order Online</td>\n" +
+    "\t\t\t\t\t<td>{{order.administrationWindow}} {{order.calendarYear | schoolYear}} Periodic Order Online</td>\n" +
     "\t\t\t\t\t<td>{{order.onlineTotal}}</td>\n" +
     "\t\t\t\t\t<td>{{order.price  | currency}}</td>\n" +
     "\t\t\t\t\t<td>{{order.extendedPrice | currency}}</td>\n" +
