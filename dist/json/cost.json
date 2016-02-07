@@ -1,25 +1,55 @@
 {
 	"pricing":{
-		"summative":{
-			"2016":{
+		"summative":[
+			{
+				"semester":"Fall",
+				"year":2016,
 				"online":25.0,
 				"paper":31.0,
 				"isr":1.5,
 				"labels":0.5
 			},
-			"2017":{
+			{
+				"semester":"Spring",
+				"year":2017,
 				"online":25.0,
 				"paper":31.0,
 				"isr":1.5,
 				"labels":0.5
 			},
-			"2018":{
+			{
+				"semester":"Fall",
+				"year":2017,
+				"online":25.0,
+				"paper":31.0,
+				"isr":1.5,
+				"labels":0.5
+			},
+			{		
+				"semester":"Spring",
+				"year":2018,
+				"online":25.0,
+				"paper":31.0,
+				"isr":1.5,
+				"labels":0.5
+			},
+			{		
+				"semester":"Fall",
+				"year":2018,
+				"online":25.0,
+				"paper":31.0,
+				"isr":1.5,
+				"labels":0.5
+			},
+			{		
+				"semester":"Spring",
+				"year":2019,
 				"online":25.0,
 				"paper":31.0,
 				"isr":1.5,
 				"labels":0.5
 			}
-		},
+		],
 		"periodic":{
 			"2015":9.0,
 			"2016":9.0,
@@ -43,7 +73,17 @@
 			"NE":{
 				"summativeOnline":2.0,
 				"summativePaper":2.0,
-				"periodic":0.0
+				"periodic":0.0,
+				"summativeLimit":[
+					{
+						"semester":"Fall",
+						"year":2017
+					},
+					{
+						"semester":"Spring",
+						"year":2017						
+					}
+				]
 			},
 			"CO":{
 				"summativeOnline":2.0,
@@ -54,6 +94,12 @@
 				"summativeOnline":2.0,
 				"summativePaper":0.0,
 				"periodic":0.0
+			},
+			"AL":{
+				"summativeOnline":0.0,
+				"summativePaper":0.0,
+				"periodic":0.5,
+				"periodicLimit":["2015", "2017"]
 			}
 		}
 	},
