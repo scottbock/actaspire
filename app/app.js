@@ -131,7 +131,14 @@ angular.module('myApp', [
 			if(administrationWindow){
 				order.subjects = {};
 				angular.copy($scope.subjects, order.subjects);	
+			}		
+			
+			if(orders.length > 0){ //copy in the last order
+				var lastOrder = orders[orders.length - 1];
+				angular.copy(lastOrder, order);
+			}
 
+			if(administrationWindow){
 				angular.forEach($scope.cost.pricing.summative, function(cost){
 					if(cost.year == calendarYear && cost.semester == administrationWindow){
 						order.cost = cost;
@@ -141,11 +148,6 @@ angular.module('myApp', [
 			else{
 				order.cost = $scope.cost.pricing.periodic[calendarYear];
 			}		
-			
-			if(orders.length > 0){ //copy in the last order
-				var lastOrder = orders[orders.length - 1];
-				angular.copy(lastOrder, order);
-			}			
 			
 			//set window and year
 			order.administrationWindow = administrationWindow;

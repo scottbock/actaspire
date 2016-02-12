@@ -45297,7 +45297,14 @@ angular.module('myApp', [
 			if(administrationWindow){
 				order.subjects = {};
 				angular.copy($scope.subjects, order.subjects);	
+			}		
+			
+			if(orders.length > 0){ //copy in the last order
+				var lastOrder = orders[orders.length - 1];
+				angular.copy(lastOrder, order);
+			}
 
+			if(administrationWindow){
 				angular.forEach($scope.cost.pricing.summative, function(cost){
 					if(cost.year == calendarYear && cost.semester == administrationWindow){
 						order.cost = cost;
@@ -45307,11 +45314,6 @@ angular.module('myApp', [
 			else{
 				order.cost = $scope.cost.pricing.periodic[calendarYear];
 			}		
-			
-			if(orders.length > 0){ //copy in the last order
-				var lastOrder = orders[orders.length - 1];
-				angular.copy(lastOrder, order);
-			}			
 			
 			//set window and year
 			order.administrationWindow = administrationWindow;
@@ -46205,7 +46207,16 @@ angular.module('myApp', [
     "\t\t\t    <li>Designed for Grades 3 - 10 and can be taken Online or in Paper form (paper administration requires an additional fee).</li>\n" +
     "\t\t\t    <li>Can be administered in a Spring test administration window or a Fall test administration window.</li>\n" +
     "\t\t\t    <li>Prices advertised on this form are valid through {{cost.pricing.validThrough}}. If you have any questions regarding the product or placing an order please contact <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a> or 1-855-730-0400</li>\n" +
+    "\t\t\t    <li>When ordering Summative assessments, the following discounts are available*:\n" +
+    "\t\t\t    \t<ul>\n" +
+    "\t\t\t    \t\t<li>Test four or more grades of students: $1.00 off</li>\n" +
+    "\t\t\t\t\t\t<li>Test 400 to 1,000 students: $1.00 off</li>\n" +
+    "\t\t\t\t\t\t<li>Test over 1,000 students: $2.00 off</li>\n" +
+    "\t\t\t\t\t\t<li>Bundle Periodic to Summative order: $4.00 off (applied to Summative)</li>\n" +
+    "\t\t\t    \t</ul>\n" +
+    "\t\t\t    </li>\n" +
     "\t\t\t</ul>\n" +
+    "\t\t\t<p>*ACT Aspire reserves the right to disallow a discount at any time if it is determined the orderor did not earn the discount based on actual volume of tested students. </p>\n" +
     "\t\t</div>\t\t\n" +
     "\t</div>\n" +
     "\t\t\n" +
@@ -46278,7 +46289,7 @@ angular.module('myApp', [
     "\t</div>\n" +
     "\n" +
     "\t<div class=\"row\">\n" +
-    "\t\t<div class=\"form-group col-sm-5\">\n" +
+    "\t\t<div class=\"form-group col-sm-7\">\n" +
     "\t\t\t<label for=\"calendarYear\" class=\"control-label\">What administrative window and year would you like to order?</label>\n" +
     "\t\t\t<select class=\"form-control\" name=\"calendarYear\" ng-model=\"summative.calendarYear\">\n" +
     "\t\t\t\t<option value=\"\">---Please select---</option>\n" +
@@ -46288,7 +46299,7 @@ angular.module('myApp', [
     "\t\t<div class=\"form-group col-sm-2\">\n" +
     "\t\t\t<label class=\"control-label\">&nbsp;</label>\n" +
     "\t\t\t<div>\n" +
-    "\t\t\t\t<button type=\"button\" ng-model=\"addSummativeOrderButton\" ng-click=\"addOrder(orders.summative.orders, summative.calendarYear, summative.error)\" class=\"btn btn-default\" ng-disabled=\"!summative.calendarYear\">Add to Order</button>\n" +
+    "\t\t\t\t<button type=\"button\" ng-model=\"addSummativeOrderButton\" ng-click=\"addOrder(orders.summative.orders, summative.calendarYear, summative.error)\" class=\"btn btn-primary\" ng-disabled=\"!summative.calendarYear\">Order Assessments</button>\n" +
     "\t\t\t</div>\n" +
     "\t\t</div>\n" +
     "\t</div>\n" +
@@ -46309,8 +46320,9 @@ angular.module('myApp', [
     "\t\t\t    <li>Includes access to Classroom quizzes (designed for grades 3 – 8) as well as Interim Assessments (designed for grades 3 – 10)</li>\n" +
     "\t\t\t    <li>Is a subscription to access a series of interim tests and classroom quizzes in the subject areas of: English, mathematics, reading, science and writing. The subscription is effective from September through June of each school year.</li>\n" +
     "\t\t\t    <li>Can be administered to students throughout the year and provides immediate performance analysis and score reporting.</li>\n" +
-    "\t\t\t\t<li>Can be bundled with ACT Aspire Summative test at a per-student discount off of the Summative test (discount will be automatically applied, refer to Order Summary below).</li>\n" +
+    "\t\t\t\t<li>Can be bundled with ACT Aspire Summative test at a per-student discount off of the Summative test (discount will be automatically applied. Refer to Order Summary below).</li>\n" +
     "\t\t\t\t<li>Prices as advertised on this form are valid through {{cost.pricing.validThrough}}. If you have any questions regarding the product or placing an order please contact <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a> or 1-855-730-0400.</li>\n" +
+    "\t\t\t\t<li>Periodic subscriptions are invoiced for the ordered volume and will be reconciled to the actual volume of students tested only when a significant discrepancy arises.</li>\n" +
     "\t\t\t</ul>\n" +
     "\t\t</div>\t\t\n" +
     "\t</div>\n" +
@@ -46339,7 +46351,7 @@ angular.module('myApp', [
     "\t</div>\n" +
     "\n" +
     "\t<div class=\"row\">\n" +
-    "\t\t<div class=\"form-group col-sm-5\">\n" +
+    "\t\t<div class=\"form-group col-sm-7\">\n" +
     "\t\t\t<label for=\"schoolYear\" class=\"control-label\">What school year would you like to order?</label>\n" +
     "\t\t\t<select class=\"form-control\" name=\"schoolYear\" ng-model=\"periodic.schoolYear\">\n" +
     "\t\t\t\t<option value=\"\">---Please select---</option>\n" +
@@ -46349,7 +46361,7 @@ angular.module('myApp', [
     "\t\t<div class=\"form-group col-sm-2\">\n" +
     "\t\t\t<label class=\"control-label\">&nbsp;</label>\n" +
     "\t\t\t<div>\n" +
-    "\t\t\t\t<button type=\"button\" ng-model=\"addPeriodicOrderButton\" ng-click=\"addOrder(orders.periodic.orders, periodic.schoolYear)\"  class=\"btn btn-default\" ng-disabled=\"!periodic.schoolYear\">Add to Order</button>\n" +
+    "\t\t\t\t<button type=\"button\" ng-model=\"addPeriodicOrderButton\" ng-click=\"addOrder(orders.periodic.orders, periodic.schoolYear)\"  class=\"btn btn-primary\" ng-disabled=\"!periodic.schoolYear\">Order Assessments</button>\n" +
     "\t\t\t</div>\n" +
     "\t\t</div>\n" +
     "\t</div>\n" +

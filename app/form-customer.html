@@ -163,7 +163,16 @@
 			    <li>Designed for Grades 3 - 10 and can be taken Online or in Paper form (paper administration requires an additional fee).</li>
 			    <li>Can be administered in a Spring test administration window or a Fall test administration window.</li>
 			    <li>Prices advertised on this form are valid through {{cost.pricing.validThrough}}. If you have any questions regarding the product or placing an order please contact <a href="mailto:Orders@ActAspire.org">Orders@ActAspire.org</a> or 1-855-730-0400</li>
+			    <li>When ordering Summative assessments, the following discounts are available*:
+			    	<ul>
+			    		<li>Test four or more grades of students: $1.00 off</li>
+						<li>Test 400 to 1,000 students: $1.00 off</li>
+						<li>Test over 1,000 students: $2.00 off</li>
+						<li>Bundle Periodic to Summative order: $4.00 off (applied to Summative)</li>
+			    	</ul>
+			    </li>
 			</ul>
+			<p>*ACT Aspire reserves the right to disallow a discount at any time if it is determined the orderor did not earn the discount based on actual volume of tested students. </p>
 		</div>		
 	</div>
 		
@@ -236,7 +245,7 @@
 	</div>
 
 	<div class="row">
-		<div class="form-group col-sm-5">
+		<div class="form-group col-sm-7">
 			<label for="calendarYear" class="control-label">What administrative window and year would you like to order?</label>
 			<select class="form-control" name="calendarYear" ng-model="summative.calendarYear">
 				<option value="">---Please select---</option>
@@ -246,7 +255,7 @@
 		<div class="form-group col-sm-2">
 			<label class="control-label">&nbsp;</label>
 			<div>
-				<button type="button" ng-model="addSummativeOrderButton" ng-click="addOrder(orders.summative.orders, summative.calendarYear, summative.error)" class="btn btn-default" ng-disabled="!summative.calendarYear">Add to Order</button>
+				<button type="button" ng-model="addSummativeOrderButton" ng-click="addOrder(orders.summative.orders, summative.calendarYear, summative.error)" class="btn btn-primary" ng-disabled="!summative.calendarYear">Order Assessments</button>
 			</div>
 		</div>
 	</div>
@@ -267,8 +276,9 @@
 			    <li>Includes access to Classroom quizzes (designed for grades 3 – 8) as well as Interim Assessments (designed for grades 3 – 10)</li>
 			    <li>Is a subscription to access a series of interim tests and classroom quizzes in the subject areas of: English, mathematics, reading, science and writing. The subscription is effective from September through June of each school year.</li>
 			    <li>Can be administered to students throughout the year and provides immediate performance analysis and score reporting.</li>
-				<li>Can be bundled with ACT Aspire Summative test at a per-student discount off of the Summative test (discount will be automatically applied, refer to Order Summary below).</li>
+				<li>Can be bundled with ACT Aspire Summative test at a per-student discount off of the Summative test (discount will be automatically applied. Refer to Order Summary below).</li>
 				<li>Prices as advertised on this form are valid through {{cost.pricing.validThrough}}. If you have any questions regarding the product or placing an order please contact <a href="mailto:Orders@ActAspire.org">Orders@ActAspire.org</a> or 1-855-730-0400.</li>
+				<li>Periodic subscriptions are invoiced for the ordered volume and will be reconciled to the actual volume of students tested only when a significant discrepancy arises.</li>
 			</ul>
 		</div>		
 	</div>
@@ -297,7 +307,7 @@
 	</div>
 
 	<div class="row">
-		<div class="form-group col-sm-5">
+		<div class="form-group col-sm-7">
 			<label for="schoolYear" class="control-label">What school year would you like to order?</label>
 			<select class="form-control" name="schoolYear" ng-model="periodic.schoolYear">
 				<option value="">---Please select---</option>
@@ -307,7 +317,7 @@
 		<div class="form-group col-sm-2">
 			<label class="control-label">&nbsp;</label>
 			<div>
-				<button type="button" ng-model="addPeriodicOrderButton" ng-click="addOrder(orders.periodic.orders, periodic.schoolYear)"  class="btn btn-default" ng-disabled="!periodic.schoolYear">Add to Order</button>
+				<button type="button" ng-model="addPeriodicOrderButton" ng-click="addOrder(orders.periodic.orders, periodic.schoolYear)"  class="btn btn-primary" ng-disabled="!periodic.schoolYear">Order Assessments</button>
 			</div>
 		</div>
 	</div>
