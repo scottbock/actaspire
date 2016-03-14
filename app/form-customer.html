@@ -477,7 +477,7 @@
 	</div>
 	<div class="row">
 	    <div class="col-sm-4">
-	  		<button type="submit" class="btn btn-primary" ng-disabled="customerForm.$invalid || customerForm.$pending || !formData.acceptTerms">Submit Order</button>
+	  		<button type="submit" class="btn btn-primary" ng-disabled="customerForm.$invalid || customerForm.$pending || !formData.acceptTerms || !formData.summary.total">Submit Order</button>
 	    </div>
 		<div class="col-sm-4">
 	  		<button type="button" class="btn btn-default" ng-click="saveDraft()">Save Draft</button>

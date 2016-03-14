@@ -491,7 +491,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t</div>\n" +
     "\t<div class=\"row\">\n" +
     "\t    <div class=\"col-sm-4\">\n" +
-    "\t  \t\t<button type=\"submit\" class=\"btn btn-primary\" ng-disabled=\"customerForm.$invalid || customerForm.$pending || !formData.acceptTerms\">Submit Order</button>\n" +
+    "\t  \t\t<button type=\"submit\" class=\"btn btn-primary\" ng-disabled=\"customerForm.$invalid || customerForm.$pending || !formData.acceptTerms || !formData.summary.total\">Submit Order</button>\n" +
     "\t    </div>\n" +
     "\t\t<div class=\"col-sm-4\">\n" +
     "\t  \t\t<button type=\"button\" class=\"btn btn-default\" ng-click=\"saveDraft()\">Save Draft</button>\n" +
