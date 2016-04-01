@@ -3,7 +3,8 @@
 // Declare app level module which depends on views, and components
 angular.module('myApp', [
   'ui.router',
-  'ngCookies'
+  'ngCookies',
+  'ui.bootstrap'
 ])
 .config(function($stateProvider, $urlRouterProvider) {
     
@@ -12,18 +13,24 @@ angular.module('myApp', [
         // route to show our basic form (/form)
         .state('form', {
             url: '/form',
-            templateUrl: 'app/form.html',
-            controller: 'formController'
+            templateUrl: 'app/form.html'
         })
 		
 		.state('form.customer', {
 			url: '/customer',
-			templateUrl: 'app/form-customer.html'
+			templateUrl: 'app/form-customer.html',
+            controller: 'formController'
 		})
 
 		.state('form.confirmation', {
 			url: '/confirmation',
 			templateUrl: 'app/confirmation.html'
+		})
+
+		.state('form.training', {
+			url: '/training',
+			templateUrl: 'app/form-training.html',
+			controller: 'trainingController'
 		})
         
     // catch all route
@@ -38,7 +45,6 @@ angular.module('myApp', [
 	$http.get('json/states.json').success(function(data) { 
     	$scope.states = data;
 	});
-
 	$scope.cost = costService.cost;
 
 	$scope.date = new Date();
@@ -343,6 +349,55 @@ angular.module('myApp', [
 	// }, true); 
 }])
 
+.controller('trainingController', ['$scope', '$http', '$cookies', 'TrainingCostService', 'EmailService', 'schoolYearFilter', function($scope, $http, $cookies, trainingCostService, emailService, schoolYearFilter) {
+	$scope.cost = trainingCostService.cost;
+	$http.get('json/states.json').success(function(data) { 
+    	$scope.states = data;
+	});
+
+	$scope.trainingOrders = [];
+
+	$scope.addTraining = function(training){
+		var order;
+		angular.forEach($scope.trainingOrders, function(trainingOrder, key) {
+			if(training.title == trainingOrder.title){
+				order = trainingOrder;
+			}
+		});
+			
+
+		if(!order){
+			order = {};
+			angular.copy(training, order);
+			order.quantity = 0;
+			$scope.trainingOrders.push(order);
+		}   
+		
+
+		order.quantity++;
+	}
+
+	$scope.removeTraining = function(training){
+		var index = $scope.trainingOrders.indexOf(training);
+
+		if (index > -1) {
+		    $scope.trainingOrders.splice(index, 1);
+		}
+	}
+
+ 	$scope.dateOptions = {
+   		formatYear: 'yy',
+    	maxDate: new Date(2020, 5, 22),
+    	minDate: new Date(),
+    	startingDay: 1
+  	};
+
+	$scope.openCalendar = function(training) {
+	    training.opened = true;
+	}; 	
+
+}])
+
 .factory('CostService', ['$http', function ($http) {
 	var cost = {};
 	$http.get('json/cost.json', { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
@@ -469,6 +524,19 @@ angular.module('myApp', [
 		'getPeriodicDiscount':getPeriodicDiscount,
 		'getSpecialDiscount':getSpecialDiscount,
 		'getStateDiscount': getStateDiscount
+	}
+}])
+
+.factory('TrainingCostService', ['$http', function ($http) {
+	var cost = {};
+	$http.get('json/trainingcost.json', { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
+    	cost.training = response.data.training;
+		cost.ordersInbox = response.data.ordersInbox;
+		cost.ordersBcc = response.data.ordersBcc;
+	});
+
+	return {
+		'cost':cost
 	}
 }])
 

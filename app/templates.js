@@ -502,6 +502,195 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
   );
 
 
+  $templateCache.put('app/form-training.html',
+    "<h2>ACT Aspire Training Order Form</h2>\t\n" +
+    "\n" +
+    "<form id=\"trainingForm\" name=\"trainingForm\" ng-submit=\"processForm()\"> \n" +
+    "\n" +
+    "\t<div class=\"row\"><div class=\"col-sm-12\"><h4>Date: {{date | date:'yyyy-MM-dd'}}</h4></div></div>\n" +
+    "\n" +
+    "\t<div class=\"row\">\n" +
+    "\t    <div class=\"form-group col-sm-3 required\">\n" +
+    "\t        <label for=\"firstName\" class=\"control-label\">First Name</label>\n" +
+    "\t        <input type=\"text\" class=\"form-control\" name=\"firstName\" ng-model=\"formData.customer.firstName\" required=\"required\">\n" +
+    "\t    </div>\n" +
+    "\n" +
+    "\t    <div class=\"form-group col-sm-3 required\">\n" +
+    "\t        <label for=\"lastName\" class=\"control-label\">Last Name</label>\n" +
+    "\t        <input type=\"text\" class=\"form-control\" name=\"lastName\" ng-model=\"formData.customer.lastName\" required=\"required\">\n" +
+    "\t    </div>\n" +
+    "\n" +
+    "\t    <div class=\"form-group col-sm-6 required\">\n" +
+    "\t        <label for=\"organization\" class=\"control-label\">School / District / Organization</label>\n" +
+    "\t        <input type=\"text\" class=\"form-control\" name=\"organization\" ng-model=\"formData.customer.organization\" required=\"required\">\n" +
+    "\t    </div>\n" +
+    "\t</div>\n" +
+    "\n" +
+    "\t<div class=\"row\">\n" +
+    "\t    <div class=\"form-group col-sm-6 required\">\n" +
+    "\t        <label for=\"jobTitle\" class=\"control-label\">Job Title</label>\n" +
+    "\t        <input type=\"text\" class=\"form-control\" name=\"jobTitle\" ng-model=\"formData.customer.jobTitle\" required=\"required\">\n" +
+    "\t    </div>\n" +
+    "\n" +
+    "\t    <div class=\"form-group col-sm-4 required\">\n" +
+    "\t        <label for=\"email\" class=\"control-label\">Email</label>\n" +
+    "\t        <input type=\"email\" class=\"form-control\" name=\"email\" ng-model=\"formData.customer.email\" required=\"required\">\n" +
+    "\t    </div>\n" +
+    "\t</div>\n" +
+    "\n" +
+    "\t<div class=\"panel panel-default\">\n" +
+    "\t    <div class=\"panel-heading\">Billing Information</div>\n" +
+    "\t    <div class=\"panel-body\">\n" +
+    "\t        <div class=\"row\">\n" +
+    "\t            <div class=\"form-group col-sm-4 required\">\n" +
+    "\t                <label for=\"billingName\" class=\"control-label\">Billing Contact Name</label>\n" +
+    "\t                <input type=\"text\" class=\"form-control\" name=\"billingName\" ng-model=\"formData.billingContact.name\" required=\"required\">\n" +
+    "\t            </div>\n" +
+    "\n" +
+    "\t            <div class=\"form-group col-sm-4 required\">\n" +
+    "\t                <label for=\"billingEmail\" class=\"control-label\">Billing Contact Email</label>\n" +
+    "\t                <input type=\"email\" class=\"form-control\" name=\"billingEmail\" ng-model=\"formData.billingContact.email\" required=\"required\">\n" +
+    "\t            </div>\n" +
+    "\n" +
+    "\t            <div class=\"form-group col-sm-4 required\">\n" +
+    "\t                <label for=\"billingPhone\" class=\"control-label\">Billing Contact Phone</label>\n" +
+    "\t                <input type=\"tel\" class=\"form-control\" name=\"billingPhone\" ng-model=\"formData.billingContact.phone\" required=\"required\">\n" +
+    "\t            </div>\n" +
+    "\t        </div>    \n" +
+    "\t        <div class=\"row\">\n" +
+    "\t            <div class=\"form-group col-sm-12 required\">\n" +
+    "\t                <label for=\"billingAddress\" class=\"control-label\">Billing Address Line 1</label>\n" +
+    "\t                <input type=\"text\" class=\"form-control\" name=\"billingAddress\" ng-model=\"formData.billing.address.line1\" required=\"required\">\n" +
+    "\t            </div>\n" +
+    "\t        </div>\n" +
+    "\t        <div class=\"row\">\n" +
+    "\t            <div class=\"form-group col-sm-12\">\n" +
+    "\t                <label for=\"billingAddress\" class=\"control-label\">Billing Address Line 2</label>\n" +
+    "\t                <input type=\"text\" class=\"form-control\" name=\"billingAddress\" ng-model=\"formData.billing.address.line2\">\n" +
+    "\t            </div>\n" +
+    "\t        </div>        \n" +
+    "\t        <div class=\"row\">\n" +
+    "\t            <div class=\"form-group col-sm-4 required\">\n" +
+    "\t                <label for=\"city\" class=\"control-label\">City</label>\n" +
+    "\t                <input type=\"text\" class=\"form-control\" name=\"city\" ng-model=\"formData.billing.address.city\" required=\"required\">\n" +
+    "\t            </div>\n" +
+    "\n" +
+    "\t            <div class=\"form-group col-sm-4 required\">\n" +
+    "\t                <label for=\"state\" class=\"control-label\">State</label>\n" +
+    "\t        \t\t<select class=\"form-control\" name=\"state\" ng-model=\"formData.billing.address.state\" ng-options=\"key as value for (key , value) in states\" required=\"required\"></select>\n" +
+    "\t            </div>\n" +
+    "\n" +
+    "\t            <div class=\"form-group col-sm-4 required\">\n" +
+    "\t                <label for=\"zip\" class=\"control-label\">Zip</label>\n" +
+    "\t                <input type=\"text\" class=\"form-control\" name=\"zip\" ng-model=\"formData.billing.address.zip\" required=\"required\">\n" +
+    "\t            </div>\n" +
+    "\t        </div>    \n" +
+    "\t    </div>\n" +
+    "\t</div>\n" +
+    "\n" +
+    "\n" +
+    "\n" +
+    "\t<div class=\"panel panel-default\">\n" +
+    "\t\t<div class=\"panel-heading\">\n" +
+    "\t\tAvailable Training\n" +
+    "\t\t</div>\n" +
+    "\n" +
+    "\t\t<table class=\"table table-striped\">\n" +
+    "\t\t\t<thead>\n" +
+    "\t\t\t\t<th>Training</th>\n" +
+    "\t\t\t\t<th>Cost</th>\n" +
+    "\t\t\t\t<th>Duration</th>\n" +
+    "\t\t\t\t<th>Maximum Participants</th>\n" +
+    "\t\t\t\t<th></th>\n" +
+    "\t\t\t</thead>\n" +
+    "\t\t\t<tr ng-repeat=\"training in cost.training\">\n" +
+    "\t\t\t\t<td><a href=\"{{training.url}}\" target=\"_blank\">{{training.mode}}: {{training.title}}</a></td>\n" +
+    "\t\t\t\t<td>{{training.cost | currency}}</td>\n" +
+    "\t\t\t\t<td>{{training.duration}} hr</td>\n" +
+    "\t\t\t\t<td>{{training.maxParticipants}}</td>\n" +
+    "\t\t\t\t<td>\n" +
+    "\t\t\t\t\t<button type=\"button\" ng-model=\"addTrainingButton\" ng-click=\"addTraining(training)\"  class=\"btn btn-primary\">Add</button>\n" +
+    "\t\t\t\t</td>\n" +
+    "\t\t\t</tr>\n" +
+    "\t\t</table>\n" +
+    "\t</div>\n" +
+    "\n" +
+    "\t<div class=\"panel panel-default\">\n" +
+    "\t\t<div class=\"panel-heading\">\n" +
+    "\t\tTraining Orders\n" +
+    "\t\t</div>\n" +
+    "\n" +
+    "\t\t<table class=\"table table-striped\">\n" +
+    "\t\t\t<thead>\n" +
+    "\t\t\t\t<th>Description</th>\n" +
+    "\t\t\t\t<th>Duration</th>\n" +
+    "\t\t\t\t<th>Mode</th>\n" +
+    "\t\t\t\t<th>Maximum Participants</th>\n" +
+    "\t\t\t\t<th>Preferred Date</th>\n" +
+    "\t\t\t\t<th>Preferred Time</th>\n" +
+    "\t\t\t\t<th>Price</th>\n" +
+    "\t\t\t\t<th>Quantity</th>\n" +
+    "\t\t\t\t<th>Total</th>\n" +
+    "\t\t\t\t<th></th>\n" +
+    "\t\t\t</thead>\n" +
+    "\t\t\t<tr ng-repeat=\"training in trainingOrders track by training.title\">\n" +
+    "\t\t\t\t<td><a href=\"{{training.url}}\" target=\"_blank\">{{training.title}}</a></td>\n" +
+    "\t\t\t\t<td>{{training.duration}} hr</td>\n" +
+    "\t\t\t\t<td>{{training.mode}}</td>\n" +
+    "\t\t\t\t<td>{{training.maxParticipants * training.quantity}}</td>\n" +
+    "\t\t\t\t<td>\n" +
+    "\t\t\t        <p class=\"input-group training-order-calendar\">\t\n" +
+    "\t\t\t          <input type=\"text\" class=\"form-control\" uib-datepicker-popup ng-model=\"training.preferredDate\" is-open=\"training.opened\" datepicker-options=\"dateOptions\" ng-required=\"true\" close-text=\"Close\" />\n" +
+    "\t\t\t          <span class=\"input-group-btn\">\n" +
+    "\t\t\t            <button type=\"button\" class=\"btn btn-default\" ng-click=\"openCalendar(training)\"><i class=\"glyphicon glyphicon-calendar\"></i></button>\n" +
+    "\t\t\t          </span>\n" +
+    "\t\t\t        </p>\n" +
+    "\t\t\t\t</td>\n" +
+    "\t\t\t\t<td>\n" +
+    "\t\t\t\t\tAM / PM\n" +
+    "\t\t\t\t</td>\n" +
+    "\t\t\t\t<td>{{training.cost | currency}}</td>\n" +
+    "\t\t\t\t<td>\n" +
+    "\t\t\t\t\t<div class=\"training-order-quantity form-group\">\n" +
+    "\t\t\t\t\t\t<input class=\"form-control\" type=\"number\" ng-model=\"training.quantity\" name=\"\" min=\"1\">\n" +
+    "\t\t\t\t\t</div>\n" +
+    "\t\t\t\t</td>\n" +
+    "\t\t\t\t<td>{{training.quantity * training.cost | currency}}</td>\n" +
+    "\t\t\t\t<td>\t\t\t\n" +
+    "\t\t\t\t\t<button type=\"button\" class=\"pull-right btn btn-default btn-xs\" aria-label=\"Remove\" ng-click=\"removeTraining(training)\">\n" +
+    "\t\t\t\t\t\t<span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>\n" +
+    "\t\t\t\t\t</button>\n" +
+    "\t\t\t\t</td>\n" +
+    "\t\t\t</tr>\n" +
+    "\t\t</table>\n" +
+    "\t</div>\n" +
+    "\n" +
+    "\t<div class=\"row\">\n" +
+    "\t\t<div class=\"col-sm-12 form-group\">\n" +
+    "\t\t    <label class=\"checkbox-inline\">\n" +
+    "\t\t    \t<input type=\"checkbox\" ng-model=\"formData.acceptTerms\">\n" +
+    "\t\t    \tI agree to ACT Aspire's <a href=\"./json/ActAspireTermsAndConditions.pdf\" target=\"_blank\">Terms and Conditions</a>\n" +
+    "\t\t    </label>\n" +
+    "\t\t</div>\n" +
+    "\t</div>\n" +
+    "\t<div class=\"row\" ng-show=\"formData.acceptTerms\">\n" +
+    "\t    <div class=\"form-group col-sm-12 required\">\n" +
+    "\t        <label for=\"firstName\" class=\"control-label\">Signature:</label>\n" +
+    "\t        <input type=\"text\" class=\"form-control\" name=\"firstName\" ng-model=\"formData.customer.signature\" required=\"required\" placeholder=\"Enter your name as a signature\">\n" +
+    "\t    </div>\n" +
+    "\t</div>\n" +
+    "\t<div class=\"row\">\n" +
+    "\t    <div class=\"col-sm-4\">\n" +
+    "\t  \t\t<button type=\"submit\" class=\"btn btn-primary\" ng-disabled=\"customerForm.$invalid || customerForm.$pending || !formData.acceptTerms || !formData.summary.total\">Submit Order</button>\n" +
+    "\t    </div>\n" +
+    "\t\t<div class=\"col-sm-4\">\n" +
+    "\t  \t\t<button type=\"button\" class=\"btn btn-default\" ng-click=\"saveDraft()\">Save Draft</button>\n" +
+    "\t    </div>\n" +
+    "\t</div>\n" +
+    "</form>"
+  );
+
+
   $templateCache.put('app/form.html',
     "<div id=\"form-container\">\n" +
     "  <img src=\"http://www.discoveractaspire.org/wp-content/uploads/2014/07/ACTAspire_WebsiteLogo.png\" alt=\"\" width=\"233\">\n" +

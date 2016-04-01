@@ -15,6 +15,7 @@
     "ngAnimate": "*"
   },
   "devDependencies": {
-    "angular-cookies": "~1.4.7"
+    "angular-cookies": "~1.4.7",
+    "angular-bootstrap": "~1.2.5"
   }
 }

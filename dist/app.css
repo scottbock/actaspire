@@ -81,3 +81,12 @@ a:hover{
 table.table-condensed th {
   text-align: center;
 }
+
+.training-order-calendar{
+  max-width: 230px;
+  min-width: 180px;
+}
+
+.training-order-quantity{
+  width: 100px;
+}
