@@ -351,6 +351,7 @@ angular.module('myApp', [
 
 .controller('trainingController', ['$scope', '$http', '$cookies', 'TrainingCostService', 'EmailService', 'schoolYearFilter', function($scope, $http, $cookies, trainingCostService, emailService, schoolYearFilter) {
 	$scope.cost = trainingCostService.cost;
+	$scope.date = new Date();
 	$http.get('json/states.json').success(function(data) { 
     	$scope.states = data;
 	});
@@ -370,6 +371,7 @@ angular.module('myApp', [
 			order = {};
 			angular.copy(training, order);
 			order.quantity = 0;
+			order.preferredTime = "AM";
 			$scope.trainingOrders.push(order);
 		}   
 		

@@ -647,7 +647,10 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t        </p>\n" +
     "\t\t\t\t</td>\n" +
     "\t\t\t\t<td>\n" +
-    "\t\t\t\t\tAM / PM\n" +
+    "\t\t\t\t\t<select class=\"form-control\" name=\"\" ng-model=\"training.preferredTime\">\n" +
+    "\t\t\t\t\t\t<option value=\"AM\">AM</option>\n" +
+    "\t\t\t\t\t\t<option value=\"PM\">PM</option>\n" +
+    "\t\t\t\t\t</select>\n" +
     "\t\t\t\t</td>\n" +
     "\t\t\t\t<td>{{training.cost | currency}}</td>\n" +
     "\t\t\t\t<td>\n" +
@@ -682,9 +685,6 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t<div class=\"row\">\n" +
     "\t    <div class=\"col-sm-4\">\n" +
     "\t  \t\t<button type=\"submit\" class=\"btn btn-primary\" ng-disabled=\"customerForm.$invalid || customerForm.$pending || !formData.acceptTerms || !formData.summary.total\">Submit Order</button>\n" +
-    "\t    </div>\n" +
-    "\t\t<div class=\"col-sm-4\">\n" +
-    "\t  \t\t<button type=\"button\" class=\"btn btn-default\" ng-click=\"saveDraft()\">Save Draft</button>\n" +
     "\t    </div>\n" +
     "\t</div>\n" +
     "</form>"

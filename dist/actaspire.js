@@ -45526,6 +45526,7 @@ angular.module('myApp', [
 
 .controller('trainingController', ['$scope', '$http', '$cookies', 'TrainingCostService', 'EmailService', 'schoolYearFilter', function($scope, $http, $cookies, trainingCostService, emailService, schoolYearFilter) {
 	$scope.cost = trainingCostService.cost;
+	$scope.date = new Date();
 	$http.get('json/states.json').success(function(data) { 
     	$scope.states = data;
 	});
@@ -45545,6 +45546,7 @@ angular.module('myApp', [
 			order = {};
 			angular.copy(training, order);
 			order.quantity = 0;
+			order.preferredTime = "AM";
 			$scope.trainingOrders.push(order);
 		}   
 		
@@ -46754,7 +46756,10 @@ angular.module('myApp', [
     "\t\t\t        </p>\n" +
     "\t\t\t\t</td>\n" +
     "\t\t\t\t<td>\n" +
-    "\t\t\t\t\tAM / PM\n" +
+    "\t\t\t\t\t<select class=\"form-control\" name=\"\" ng-model=\"training.preferredTime\">\n" +
+    "\t\t\t\t\t\t<option value=\"AM\">AM</option>\n" +
+    "\t\t\t\t\t\t<option value=\"PM\">PM</option>\n" +
+    "\t\t\t\t\t</select>\n" +
     "\t\t\t\t</td>\n" +
     "\t\t\t\t<td>{{training.cost | currency}}</td>\n" +
     "\t\t\t\t<td>\n" +
@@ -46789,9 +46794,6 @@ angular.module('myApp', [
     "\t<div class=\"row\">\n" +
     "\t    <div class=\"col-sm-4\">\n" +
     "\t  \t\t<button type=\"submit\" class=\"btn btn-primary\" ng-disabled=\"customerForm.$invalid || customerForm.$pending || !formData.acceptTerms || !formData.summary.total\">Submit Order</button>\n" +
-    "\t    </div>\n" +
-    "\t\t<div class=\"col-sm-4\">\n" +
-    "\t  \t\t<button type=\"button\" class=\"btn btn-default\" ng-click=\"saveDraft()\">Save Draft</button>\n" +
     "\t    </div>\n" +
     "\t</div>\n" +
     "</form>"
