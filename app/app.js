@@ -398,6 +398,11 @@ angular.module('myApp', [
 	    training.opened = true;
 	}; 	
 
+	// function to process the form
+	$scope.processForm = function() {
+		emailService.sendTrainingConfirmationEmail($scope.formData, $scope.trainingOrders, $scope.cost);
+	};
+
 }])
 
 .factory('CostService', ['$http', function ($http) {
@@ -878,6 +883,21 @@ angular.module('myApp', [
 		);
 	}
 	var sendConfirmationEmail = function(formData, orders, cost){
+		$state.go('form.training.confirmation');
+
+		var postData = {};
+		postData.clientEmail = formData.customer.email;
+		postData.orderInbox = cost.ordersInbox;
+		postData.orderBcc = cost.ordersBcc;
+		postData.message = buildTrainingEmail(formData, orders);
+		postData.csv = buildTrainingCsvFile(formData, orders, cost);
+		postData.csvFileName = formData.customer.lastName + formData.customer.organization + new Date().getTime() + '.csv';
+		postData.csvFileName = postData.csvFileName.replace(/[/\\\\]/g, '');;
+
+		postConfirmationEmail(postData, formData);
+	};
+
+	var sendTrainingConfirmationEmail = function(formData, trainingOrders, cost){
 		$state.go('form.confirmation');
 
 		var postData = {};
@@ -907,9 +927,7 @@ angular.module('myApp', [
 		else{
 			postConfirmationEmail(postData, formData);
 		}
-		
-		
-	};
+	};	
 
 	return {
 		'sendConfirmationEmail':sendConfirmationEmail

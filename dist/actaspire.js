@@ -45573,6 +45573,11 @@ angular.module('myApp', [
 	    training.opened = true;
 	}; 	
 
+	// function to process the form
+	$scope.processForm = function() {
+		emailService.sendTrainingConfirmationEmail($scope.formData, $scope.trainingOrders, $scope.cost);
+	};
+
 }])
 
 .factory('CostService', ['$http', function ($http) {
@@ -46053,6 +46058,21 @@ angular.module('myApp', [
 		);
 	}
 	var sendConfirmationEmail = function(formData, orders, cost){
+		$state.go('form.training.confirmation');
+
+		var postData = {};
+		postData.clientEmail = formData.customer.email;
+		postData.orderInbox = cost.ordersInbox;
+		postData.orderBcc = cost.ordersBcc;
+		postData.message = buildTrainingEmail(formData, orders);
+		postData.csv = buildTrainingCsvFile(formData, orders, cost);
+		postData.csvFileName = formData.customer.lastName + formData.customer.organization + new Date().getTime() + '.csv';
+		postData.csvFileName = postData.csvFileName.replace(/[/\\\\]/g, '');;
+
+		postConfirmationEmail(postData, formData);
+	};
+
+	var sendTrainingConfirmationEmail = function(formData, trainingOrders, cost){
 		$state.go('form.confirmation');
 
 		var postData = {};
@@ -46082,9 +46102,7 @@ angular.module('myApp', [
 		else{
 			postConfirmationEmail(postData, formData);
 		}
-		
-		
-	};
+	};	
 
 	return {
 		'sendConfirmationEmail':sendConfirmationEmail
@@ -46735,8 +46753,8 @@ angular.module('myApp', [
     "\t\t\t\t<th>Duration</th>\n" +
     "\t\t\t\t<th>Mode</th>\n" +
     "\t\t\t\t<th>Maximum Participants</th>\n" +
-    "\t\t\t\t<th>Preferred Date</th>\n" +
-    "\t\t\t\t<th>Preferred Time</th>\n" +
+    "\t\t\t\t<th>*Preferred Date</th>\n" +
+    "\t\t\t\t<th>*Preferred Time</th>\n" +
     "\t\t\t\t<th>Price</th>\n" +
     "\t\t\t\t<th>Quantity</th>\n" +
     "\t\t\t\t<th>Total</th>\n" +
@@ -46777,6 +46795,18 @@ angular.module('myApp', [
     "\t\t</table>\n" +
     "\t</div>\n" +
     "\n" +
+    "\t<div class=\"row gutter\">\n" +
+    "\t\t<h4>Important Next Steps:</h4>\n" +
+    "\t\t<ul>\n" +
+    "\t\t\t<li>Upon completion of the order an invoice for the total due will be sent to the contact above and you will be contacted regarding your preferred Training date and trainer availability.</li>\n" +
+    "\t\t\t<li>Training Service representiative will reach out to you to go through the training options, modules, and scheduling. </li>\n" +
+    "\t\t\t<li>Payment must be rendered before training is delivered. </li>\n" +
+    "\t\t\t<li>Typical turnaround time from order to delivery, depending on your prefered training date, is two weeks.</li>\n" +
+    "\t\t\t<li>Typical turnaround time from order to delivery, depending on your prefered training date, is two weeks.</li>\n" +
+    "\t\t\t<li>*Preferred date and times are to be confirmed.</li>\n" +
+    "\t\t</ul>\n" +
+    "\t</div>\n" +
+    "\n" +
     "\t<div class=\"row\">\n" +
     "\t\t<div class=\"col-sm-12 form-group\">\n" +
     "\t\t    <label class=\"checkbox-inline\">\n" +
@@ -46793,7 +46823,7 @@ angular.module('myApp', [
     "\t</div>\n" +
     "\t<div class=\"row\">\n" +
     "\t    <div class=\"col-sm-4\">\n" +
-    "\t  \t\t<button type=\"submit\" class=\"btn btn-primary\" ng-disabled=\"customerForm.$invalid || customerForm.$pending || !formData.acceptTerms || !formData.summary.total\">Submit Order</button>\n" +
+    "\t  \t\t<button type=\"submit\" class=\"btn btn-primary\" ng-disabled=\"trainingForm.$invalid || trainingForm.$pending || !formData.acceptTerms || \">Submit Order</button>\n" +
     "\t    </div>\n" +
     "\t</div>\n" +
     "</form>"
