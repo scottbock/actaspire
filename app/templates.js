@@ -665,6 +665,13 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t\t</button>\n" +
     "\t\t\t\t</td>\n" +
     "\t\t\t</tr>\n" +
+    "\t\t\t<tfoot>\n" +
+    "\t\t\t\t<tr>\n" +
+    "\t\t\t\t\t<td colspan=\"10\">\n" +
+    "\t\t\t\t\t\t<div class=\"pull-right\"><h4>Total: {{getTotal() | currency}}</h4></div>\n" +
+    "\t\t\t\t\t</td>\n" +
+    "\t\t\t\t</tr>\n" +
+    "\t\t\t</tfoot>\n" +
     "\t\t</table>\n" +
     "\t</div>\n" +
     "\n" +
@@ -696,7 +703,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t</div>\n" +
     "\t<div class=\"row\">\n" +
     "\t    <div class=\"col-sm-4\">\n" +
-    "\t  \t\t<button type=\"submit\" class=\"btn btn-primary\" ng-disabled=\"trainingForm.$invalid || trainingForm.$pending || !formData.acceptTerms || \">Submit Order</button>\n" +
+    "\t  \t\t<button type=\"submit\" class=\"btn btn-primary\" ng-disabled=\"trainingForm.$invalid || trainingForm.$pending || !formData.acceptTerms \">Submit Order</button>\n" +
     "\t    </div>\n" +
     "\t</div>\n" +
     "</form>"

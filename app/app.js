@@ -32,6 +32,11 @@ angular.module('myApp', [
 			templateUrl: 'app/form-training.html',
 			controller: 'trainingController'
 		})
+
+		.state('form.training.confirmation', {
+			url: '/confirmation',
+			templateUrl: 'app/confirmation.html'
+		})
         
     // catch all route
     // send users to the form page 
@@ -396,7 +401,19 @@ angular.module('myApp', [
 
 	$scope.openCalendar = function(training) {
 	    training.opened = true;
-	}; 	
+	};
+
+	$scope.getTotal = function(){
+	    var total = 0;
+	    for(var i = 0; i < $scope.trainingOrders.length; i++){
+	        var training = $scope.trainingOrders[i];
+	        total += (training.quantity * training.cost);
+	    }
+	    if($scope.formData){
+			$scope.formData.total = total;
+	    }	    
+	    return total;
+	};	
 
 	// function to process the form
 	$scope.processForm = function() {
@@ -883,21 +900,6 @@ angular.module('myApp', [
 		);
 	}
 	var sendConfirmationEmail = function(formData, orders, cost){
-		$state.go('form.training.confirmation');
-
-		var postData = {};
-		postData.clientEmail = formData.customer.email;
-		postData.orderInbox = cost.ordersInbox;
-		postData.orderBcc = cost.ordersBcc;
-		postData.message = buildTrainingEmail(formData, orders);
-		postData.csv = buildTrainingCsvFile(formData, orders, cost);
-		postData.csvFileName = formData.customer.lastName + formData.customer.organization + new Date().getTime() + '.csv';
-		postData.csvFileName = postData.csvFileName.replace(/[/\\\\]/g, '');;
-
-		postConfirmationEmail(postData, formData);
-	};
-
-	var sendTrainingConfirmationEmail = function(formData, trainingOrders, cost){
 		$state.go('form.confirmation');
 
 		var postData = {};
@@ -927,10 +929,79 @@ angular.module('myApp', [
 		else{
 			postConfirmationEmail(postData, formData);
 		}
+	};
+
+	var buildTrainingEmail = function(formData, trainingOrders){
+		var emailBody = 'Dear ' + formData.customer.firstName + ' ' + formData.customer.lastName + 
+			',\n\nThank you for your ACT Aspire Order' +
+			'\n\nContact: ' + formData.customer.firstName + ' ' + formData.customer.lastName + ', ' + formData.customer.jobTitle + ', ' + formData.customer.organization +
+			'\nEmail: ' + formData.customer.email;
+
+		emailBody += '\n\nBilling Contact: ' + formData.billingContact.name + ', ' + formData.billingContact.email + ', ' + formData.billingContact.phone;
+		emailBody += '\n' + formData.billing.address.line1;
+		if(formData.billing.address.line2){
+			emailBody += '\n' + formData.billing.address.line2;
+		}
+		emailBody += '\n' + formData.billing.address.city + ', ' + formData.billing.address.state + ' ' + formData.billing.address.zip;
+
+		angular.forEach(trainingOrders, function(training, key) {
+			emailBody += '\n\n' + training.mode + ': ' + training.title;
+			emailBody += '\n' + training.quantity + ' X ' + currencyFilter(training.cost) + ' = ' + currencyFilter(training.quantity * training.cost);
+		});
+		
+		emailBody += '\n\nTotal: ' + currencyFilter(formData.total);
+
+		emailBody += '\n\nI agree to ACT Aspire\'s Terms and Conditions: Y' + '\n\nSignature: ' + formData.customer.signature;
+
+		emailBody += '\n\nSincerely,\nYour ACT Aspire Team\nOrders@actaspire.org\n1-855-730-0400';
+
+		return emailBody;
+	};
+
+	var buildTrainingCsvFile = function(formData, trainingOrders, cost){
+		var fileContent = 'NS Name,Internal ID,Date,line,School / Customer,Training Description,Length (hours),Mode,Capacity,Preferred Date,Preferred Year,Preferred Time,Price,Quantity,Total\n';
+
+		var index = 0;
+        angular.forEach(trainingOrders, function(training, key) {
+
+			fileContent += ',,"' + today + colDelim 
+				+ (index++) + colDelim
+				+ formData.customer.organization + colDelim
+				+ training.title + colDelim
+				+ training.duration + colDelim
+				+ training.mode + colDelim
+				+ (training.maxParticipants * training.quantity) + colDelim
+				+ (training.preferredDate.getMonth() + 1) + ' - ' + training.preferredDate.getDate() + colDelim
+				+ training.preferredDate.getFullYear() + colDelim
+				+ training.preferredTime + colDelim
+				+ currencyFilter(training.cost) + colDelim
+				+ training.quantity + colDelim
+				+ currencyFilter(training.cost * training.quantity) + rowDelim;
+
+				// + writeCommonData(formData);
+		});
+
+		return fileContent;
+	}
+
+	var sendTrainingConfirmationEmail = function(formData, trainingOrders, cost){
+		$state.go('form.training.confirmation');
+
+		var postData = {};
+		postData.clientEmail = formData.customer.email;
+		postData.orderInbox = cost.ordersInbox;
+		postData.orderBcc = cost.ordersBcc;
+		postData.message = buildTrainingEmail(formData, trainingOrders);
+		postData.csv = buildTrainingCsvFile(formData, trainingOrders, cost);
+		postData.csvFileName = formData.customer.lastName + formData.customer.organization + new Date().getTime() + '.csv';
+		postData.csvFileName = postData.csvFileName.replace(/[/\\\\]/g, '');;
+
+		postConfirmationEmail(postData, formData);
 	};	
 
 	return {
-		'sendConfirmationEmail':sendConfirmationEmail
+		'sendConfirmationEmail':sendConfirmationEmail,
+		'sendTrainingConfirmationEmail': sendTrainingConfirmationEmail
 	}
 }])
 

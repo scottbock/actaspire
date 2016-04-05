@@ -160,6 +160,13 @@
 					</button>
 				</td>
 			</tr>
+			<tfoot>
+				<tr>
+					<td colspan="10">
+						<div class="pull-right"><h4>Total: {{getTotal() | currency}}</h4></div>
+					</td>
+				</tr>
+			</tfoot>
 		</table>
 	</div>
 
@@ -191,7 +198,7 @@
 	</div>
 	<div class="row">
 	    <div class="col-sm-4">
-	  		<button type="submit" class="btn btn-primary" ng-disabled="trainingForm.$invalid || trainingForm.$pending || !formData.acceptTerms || ">Submit Order</button>
+	  		<button type="submit" class="btn btn-primary" ng-disabled="trainingForm.$invalid || trainingForm.$pending || !formData.acceptTerms ">Submit Order</button>
 	    </div>
 	</div>
 </form>
