@@ -22,7 +22,7 @@ angular.module('myApp', [
             controller: 'formController'
 		})
 
-		.state('form.confirmation', {
+		.state('form.customer.confirmation', {
 			url: '/confirmation',
 			templateUrl: 'app/confirmation.html'
 		})
@@ -45,11 +45,12 @@ angular.module('myApp', [
 
 // our controller for the form
 // =============================================================================
-.controller('formController', ['$scope', '$http', '$cookies', 'CostService', 'EmailService', 'schoolYearFilter', function($scope, $http, $cookies, costService, emailService, schoolYearFilter) {
+.controller('formController', ['$scope', '$state', '$http', '$cookies', 'CostService', 'EmailService', 'schoolYearFilter', function($scope, $state, $http, $cookies, costService, emailService, schoolYearFilter) {
 
 	$http.get('json/states.json').success(function(data) { 
     	$scope.states = data;
 	});
+	$scope.$state = $state;
 	$scope.cost = costService.cost;
 
 	$scope.date = new Date();
@@ -354,12 +355,17 @@ angular.module('myApp', [
 	// }, true); 
 }])
 
-.controller('trainingController', ['$scope', '$http', '$cookies', 'TrainingCostService', 'EmailService', 'schoolYearFilter', function($scope, $http, $cookies, trainingCostService, emailService, schoolYearFilter) {
+.controller('trainingController', ['$scope', '$state', '$http', '$cookies', 'TrainingCostService', 'EmailService', 'schoolYearFilter', function($scope, $state, $http, $cookies, trainingCostService, emailService, schoolYearFilter) {
 	$scope.cost = trainingCostService.cost;
 	$scope.date = new Date();
 	$http.get('json/states.json').success(function(data) { 
     	$scope.states = data;
 	});
+	$scope.$state = $state;
+
+	$scope.formData = {
+
+	};
 
 	$scope.trainingOrders = [];
 
@@ -900,7 +906,7 @@ angular.module('myApp', [
 		);
 	}
 	var sendConfirmationEmail = function(formData, orders, cost){
-		$state.go('form.confirmation');
+		$state.go('form.customer.confirmation');
 
 		var postData = {};
 		postData.clientEmail = formData.customer.email;
