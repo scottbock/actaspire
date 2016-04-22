@@ -15,6 +15,66 @@
 			"summativeOnline":{"discountPer":7},
 			"summativePaper":{"discountPer":2},
 			"periodic":{"discountPer":2}
+		},
+		"GROUP123":{
+			"override":true,
+			"pricing":{
+				"summative":[
+					{
+						"semester":"Fall",
+						"year":2016,
+						"online":25.0,
+						"paper":31.0,
+						"isr":1.5,
+						"labels":0.5
+					},
+					{
+						"semester":"Spring",
+						"year":2017,
+						"online":25.0,
+						"paper":31.0,
+						"isr":1.5,
+						"labels":0.5
+					},
+					{
+						"semester":"Fall",
+						"year":2017,
+						"online":25.0,
+						"paper":31.0,
+						"isr":1.5,
+						"labels":0.5
+					},
+					{		
+						"semester":"Spring",
+						"year":2018,
+						"online":25.0,
+						"paper":31.0,
+						"isr":1.5,
+						"labels":0.5
+					},
+					{		
+						"semester":"Fall",
+						"year":2018,
+						"online":25.0,
+						"paper":31.0,
+						"isr":1.5,
+						"labels":0.5
+					},
+					{		
+						"semester":"Spring",
+						"year":2019,
+						"online":25.0,
+						"paper":31.0,
+						"isr":1.5,
+						"labels":0.5
+					}
+				],
+				"periodic":{
+					"2015":7.0,
+					"2016":9.0,
+					"2017":9.0
+				}
+			}
 		}
 	}
 }
