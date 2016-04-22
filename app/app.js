@@ -473,6 +473,14 @@ angular.module('myApp', [
 }])
 
 .factory('EmailService', ['$http', 'currencyFilter', 'dateFilter', 'schoolYearFilter', '$state', '$cookies', function ($http, currencyFilter, dateFilter, schoolYearFilter, $state, $cookies) {
+
+	var padLeft = function(number, totalLength){
+		while(number.length <= totalLength){
+			number = ' ' + number;
+		}
+		return number;
+	};
+
 	var buildEmail = function(formData, orders){
 		var emailBody = 'Dear ' + formData.customer.firstName + ' ' + formData.customer.lastName + 
 			',\n\nThank you for your ACT Aspire Order' +
@@ -505,13 +513,34 @@ angular.module('myApp', [
 						emailBody += ' ' + subject;
 					} 
 				});
+
+				var totalLength = currencyFilter(order.online.balance).length;
+
+				emailBody += '\n' + padLeft(currencyFilter(order.cost.online), totalLength) + '  List Price';
 				if(order.individualReports){
-					emailBody += '\nPrinted Individual Reports: ' + order.reportsPerStudent + ' Per Student';
+					emailBody += '\n' + padLeft(currencyFilter(order.reportsPerStudent * order.cost.isr), totalLength) + '  Printed Individual Reports';
 				}
 				if(order.scoreLabels){
-					emailBody += '\nAdd Printed Score Labels: Y';
+					emailBody += '\n' + padLeft(currencyFilter(order.cost.labels), totalLength) + '  Printed Score Labels';
 				}
-				emailBody += '\n' + order.online.total + ' Students X ' + currencyFilter(order.online.finalPricePerStudent) + ' = ' + currencyFilter(order.online.balance);
+				if(order.online.discounts.volume){
+					emailBody += '\n' + padLeft('(' + currencyFilter(order.online.discounts.volume), totalLength) +')' + '  Discount - Volume';
+				}
+				if(order.online.discounts.multiGrade){
+					emailBody += '\n' + padLeft('(' + currencyFilter(order.online.discounts.multiGrade), totalLength) +')' + '  Discount - Grade';
+				}
+				if(order.online.discounts.periodic){
+					emailBody += '\n' + padLeft('(' + currencyFilter(order.online.discounts.periodic), totalLength) +')' + '  Discount - Periodic';
+				}
+				if(order.online.discounts.state){
+					emailBody += '\n' + padLeft('(' + currencyFilter(order.online.discounts.state), totalLength) +')' + '  Discount - State';
+				}
+				if(order.online.discounts.special){
+					emailBody += '\n' + padLeft('(' + currencyFilter(order.online.discounts.special), totalLength) +')' + '  Discount - Special';
+				}
+				emailBody += '\n' + padLeft(currencyFilter(order.online.finalPricePerStudent), totalLength) + '  Effective Price';
+				emailBody += '\n' + currencyFilter(order.online.balance) + '  Total (' + currencyFilter(order.online.finalPricePerStudent) + ' X ' + order.online.total + ' Students)';
+
 			}
 		});
 
@@ -523,20 +552,51 @@ angular.module('myApp', [
 						emailBody += ' ' + subject;
 					} 
 				});	
+				var totalLength = currencyFilter(order.paper.balance).length;
+
+				emailBody += '\n' + padLeft(currencyFilter(order.cost.paper), totalLength) + '  List Price';
 				if(order.individualReports){
-					emailBody += '\nPrinted Individual Reports: ' + order.reportsPerStudent + ' Per Student';
-				}			
-				if(order.scoreLabels){
-					emailBody += '\nAdd Printed Score Labels: Y';
+					emailBody += '\n' + padLeft(currencyFilter(order.reportsPerStudent * order.cost.isr), totalLength) + '  Printed Individual Reports';
 				}
-				emailBody += '\n' + order.paper.total + ' Students X ' + currencyFilter(order.paper.finalPricePerStudent) + ' = ' + currencyFilter(order.paper.balance);
+				if(order.scoreLabels){
+					emailBody += '\n' + padLeft(currencyFilter(order.cost.labels), totalLength) + '  Printed Score Labels';
+				}
+				if(order.paper.discounts.volume){
+					emailBody += '\n' + padLeft('(' + currencyFilter(order.paper.discounts.volume), totalLength) +')' + '  Discount - Volume';
+				}
+				if(order.paper.discounts.multiGrade){
+					emailBody += '\n' + padLeft('(' + currencyFilter(order.paper.discounts.multiGrade), totalLength) +')' + '  Discount - Grade';
+				}
+				if(order.paper.discounts.periodic){
+					emailBody += '\n' + padLeft('(' + currencyFilter(order.paper.discounts.periodic), totalLength) +')' + '  Discount - Periodic';
+				}
+				if(order.paper.discounts.state){
+					emailBody += '\n' + padLeft('(' + currencyFilter(order.paper.discounts.state), totalLength) +')' + '  Discount - State';
+				}
+				if(order.paper.discounts.special){
+					emailBody += '\n' + padLeft('(' + currencyFilter(order.paper.discounts.special), totalLength) +')' + '  Discount - Special';
+				}
+				emailBody += '\n' + padLeft(currencyFilter(order.paper.finalPricePerStudent), totalLength) + '  Effective Price';
+				emailBody += '\n' + currencyFilter(order.paper.balance) + '  Total (' + currencyFilter(order.paper.finalPricePerStudent) + ' X ' + order.paper.total + ' Students)';
+
 			}
 		});
 
 		angular.forEach(orders.periodic.orders, function(order, key) {
 			if(order.onlineTotal){
 				emailBody += '\n\n' + schoolYearFilter(order.calendarYear) + ' Periodic Order Online';
-				emailBody += '\n' + order.onlineTotal + ' Students X ' + currencyFilter(order.finalPricePerStudent) + ' = ' + currencyFilter(order.balance);
+				
+				var totalLength = currencyFilter(order.balance).length;
+
+				emailBody += '\n' + padLeft(currencyFilter(order.price), totalLength) + '  List Price';
+				if(order.discounts.state){
+					emailBody += '\n' + padLeft('(' + currencyFilter(order.discounts.state), totalLength) +')' + '  Discount - State';
+				}
+				if(order.discounts.special){
+					emailBody += '\n' + padLeft('(' + currencyFilter(order.discounts.special), totalLength) +')' + '  Discount - Special';
+				}
+				emailBody += '\n' + padLeft(currencyFilter(order.finalPricePerStudent), totalLength) + '  Effective Price';
+				emailBody += '\n' + currencyFilter(order.balance) + '  Total (' + currencyFilter(order.finalPricePerStudent) + ' X ' + order.onlineTotal + ' Students)';
 			}
 		});
 
