@@ -45320,18 +45320,7 @@ angular.module('myApp', [
 				angular.copy(lastOrder, order);
 			}
 
-			order.cost = getCost(administrationWindow, calendarYear, $scope.cost.pricing);
-
-			if(administrationWindow){
-				angular.forEach($scope.cost.pricing.summative, function(cost){
-					if(cost.year == calendarYear && cost.semester == administrationWindow){
-						order.cost = cost;
-					}
-				});
-			}
-			else{
-				order.cost = $scope.cost.pricing.periodic[calendarYear];
-			}		
+			order.cost = getCost(administrationWindow, calendarYear, $scope.cost.pricing);	
 			
 			//set window and year
 			order.administrationWindow = administrationWindow;
@@ -45373,19 +45362,17 @@ angular.module('myApp', [
 				order.overrideCost = false;
 				if($scope.formData.summary.discount.special && $scope.formData.summary.discount.special.override)
 				{
-					var cost = getCost(null, order.calendarYear, $scope.formData.summary.discount.special.pricing);
-					if(cost){
-						order.cost = cost;
-						order.overrideCost = true;
+					order.cost = $scope.formData.summary.discount.special.pricing.periodic;
+					if($scope.orders.summative.orders != null && $scope.orders.summative.orders.length > 0 && $scope.formData.summary.discount.special.pricing.periodicWithSummative){
+						order.cost = $scope.formData.summary.discount.special.pricing.periodicWithSummative;
 					}
+					order.overrideCost = true;
 				}
-
-				order.price = order.cost;
-				order.extendedPrice = order.price * order.onlineTotal;
 
 				//Discounts
 				order.discounts = {};	
 				if(!order.overrideCost) {
+					order.cost = getCost(order.administrationWindow, order.calendarYear, $scope.cost.pricing);
 					if($scope.formData.billing && $scope.formData.billing.address && $scope.formData.billing.address.state){
 						order.discounts.state = costService.getStateDiscount($scope.formData.billing.address.state, "periodic", order.calendarYear);
 					}
@@ -45393,6 +45380,9 @@ angular.module('myApp', [
 						order.discounts.special = $scope.formData.summary.discount.special.periodic.discountPer;
 					}		
 				}
+
+				order.price = order.cost;
+				order.extendedPrice = order.price * order.onlineTotal;
 
 				order.totalDiscountPerStudent = 0.0;
 				for(discountType in order.discounts){
@@ -45443,19 +45433,15 @@ angular.module('myApp', [
 				order.overrideCost = false;
 				if($scope.formData.summary.discount.special && $scope.formData.summary.discount.special.override)
 				{
-					var cost = getCost(order.administrationWindow, order.calendarYear, $scope.formData.summary.discount.special.pricing);
-					if(cost){
-						order.cost = cost;
-						order.overrideCost = true;
-					}
+					order.cost = {};
+					angular.extend(order.cost, $scope.formData.summary.discount.special.pricing.summative);
+					order.overrideCost = true;
 				}
 
 				//Online portion
-				order.online.price = order.cost.online + (order.individualReports ? (order.reportsPerStudent * order.cost.isr) : 0.0) + (order.scoreLabels ? order.cost.labels : 0.0);
-				order.online.extendedPrice = order.online.price * order.online.total;
-
 				order.online.discounts = {};
 				if(!order.overrideCost) {
+					order.cost = getCost(order.administrationWindow, order.calendarYear, $scope.cost.pricing);
 					order.online.discounts.volume = costService.getVolumeDiscount(order.online.total + order.paper.total);
 					order.online.discounts.multiGrade = costService.getMultigradeDiscount(gradeCount);
 					if(periodicOrder && periodicOrder.onlineTotal > 0){
@@ -45470,6 +45456,9 @@ angular.module('myApp', [
 					}
 				}
 
+				order.online.price = order.cost.online + (order.individualReports ? (order.reportsPerStudent * order.cost.isr) : 0.0) + (order.scoreLabels ? order.cost.labels : 0.0);
+				order.online.extendedPrice = order.online.price * order.online.total;
+
 				order.online.totalDiscountPerStudent = 0.0;
 				for(discountType in order.online.discounts){
 					order.online.totalDiscountPerStudent += order.online.discounts[discountType];
@@ -45481,11 +45470,9 @@ angular.module('myApp', [
 				order.online.balance = order.online.finalPricePerStudent * order.online.total;
 
 				//paper portion
-				order.paper.price = order.cost.paper + (order.individualReports ? (order.reportsPerStudent * order.cost.isr) : 0.0) + (order.scoreLabels ? order.cost.labels : 0.0);
-				order.paper.extendedPrice = order.paper.price * order.paper.total;
-
 				order.paper.discounts = {};
-					if(!order.overrideCost) {
+				if(!order.overrideCost) {
+					order.cost = getCost(order.administrationWindow, order.calendarYear, $scope.cost.pricing);
 					order.paper.discounts.volume = costService.getVolumeDiscount(order.paper.total + order.online.total);
 					order.paper.discounts.multiGrade = costService.getMultigradeDiscount(gradeCount);
 					if(periodicOrder && periodicOrder.onlineTotal > order.online.total){
@@ -45501,6 +45488,8 @@ angular.module('myApp', [
 					}
 				}
 
+				order.paper.price = order.cost.paper + (order.individualReports ? (order.reportsPerStudent * order.cost.isr) : 0.0) + (order.scoreLabels ? order.cost.labels : 0.0);
+				order.paper.extendedPrice = order.paper.price * order.paper.total;
 
 				order.paper.totalDiscountPerStudent = 0.0;
 				for(discountType in order.paper.discounts){
@@ -45532,7 +45521,7 @@ angular.module('myApp', [
 
 
 	$scope.$watch('orders.summative.orders', function(newValue, oldValue){
-		$scope.updateSummativeOrders();		
+		$scope.updatePeriodicOrders();		
 	}, true);
 
 	$scope.$watch('orders.periodic.orders', function(newValue, oldValue){
