@@ -15,7 +15,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "<h2>ACT Aspire Order Form</h2>\t\n" +
     "<div class=\"col-sm-12\">\n" +
     "  <p>\n" +
-    "    Thank you for your decision to order ACT Aspire! To help ensure your order is accurate please fill in all applicable boxes. This will ensure accurate order.\n" +
+    "    Thank you for your decision to order ACT Aspire! To help ensure your order is accurate please fill in all applicable boxes.\n" +
     "  </p>\n" +
     "  <p>\n" +
     "    If you have any questions on the order form below, please contact <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a> or 1-855-730-0400\n" +
@@ -176,7 +176,6 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t    <li>Is a vertically scaled, standards-based battery of achievement test that are linked to the College and Career Readiness Standard in the subject areas of: English, mathematics, reading, science and writing.</li>\t\t\t\t\n" +
     "\t\t\t    <li>Designed for Grades 3 - 10 and can be taken Online or in Paper form (paper administration requires an additional fee).</li>\n" +
     "\t\t\t    <li>Can be administered in a Spring test administration window or a Fall test administration window.</li>\n" +
-    "\t\t\t    <li>Prices advertised on this form are valid through {{cost.pricing.validThrough}}. If you have any questions regarding the product or placing an order please contact <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a> or 1-855-730-0400</li>\n" +
     "\t\t\t    <li>When ordering Summative assessments, the following discounts are available*:\n" +
     "\t\t\t    \t<ul>\n" +
     "\t\t\t    \t\t<li>Test four or more grades of students: $1.00 off</li>\n" +
@@ -185,8 +184,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t\t\t<li>Bundle Periodic to Summative order: $4.00 off (applied to Summative)</li>\n" +
     "\t\t\t    \t</ul>\n" +
     "\t\t\t    </li>\n" +
-    "\t\t\t</ul>\n" +
-    "\t\t\t<p>*ACT Aspire reserves the right to disallow a discount at any time if it is determined the orderor did not earn the discount based on actual volume of tested students. </p>\n" +
+    "\t\t\t</ul>\t\t\t\n" +
     "\t\t</div>\t\t\n" +
     "\t</div>\n" +
     "\t\t\n" +
@@ -290,9 +288,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t    <li>Includes access to Classroom quizzes (designed for grades 3 – 8) as well as Interim Assessments (designed for grades 3 – 10)</li>\n" +
     "\t\t\t    <li>Is a subscription to access a series of interim tests and classroom quizzes in the subject areas of: English, mathematics, reading, science and writing. The subscription is effective from September through June of each school year.</li>\n" +
     "\t\t\t    <li>Can be administered to students throughout the year and provides immediate performance analysis and score reporting.</li>\n" +
-    "\t\t\t\t<li>Can be bundled with ACT Aspire Summative test at a per-student discount off of the Summative test (discount will be automatically applied. Refer to Order Summary below).</li>\n" +
-    "\t\t\t\t<li>Prices as advertised on this form are valid through {{cost.pricing.validThrough}}. If you have any questions regarding the product or placing an order please contact <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a> or 1-855-730-0400.</li>\n" +
-    "\t\t\t\t<li>Periodic subscriptions are invoiced for the ordered volume and will be reconciled to the actual volume of students tested only when a significant discrepancy arises.</li>\n" +
+    "\t\t\t\t<li>Can be bundled with ACT Aspire Summative test at a per-student discount off of the Summative test (discount will be automatically applied. Refer to Order Summary below).</li>\t\t\t\t\n" +
     "\t\t\t</ul>\n" +
     "\t\t</div>\t\t\n" +
     "\t</div>\n" +
@@ -496,6 +492,9 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t<div class=\"col-sm-4\">\n" +
     "\t  \t\t<button type=\"button\" class=\"btn btn-default\" ng-click=\"saveDraft()\">Save Draft</button>\n" +
     "\t    </div>\n" +
+    "\t</div>\n" +
+    "\t<div class=\"row\">\n" +
+    "\t<p>*ACT Aspire reserves the right to disallow a discount at any time if it is determined the orderor did not earn the discount based on actual volume of tested students. </p>\n" +
     "\t</div>\n" +
     "</form>\n" +
     "\n"

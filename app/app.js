@@ -378,7 +378,7 @@ angular.module('myApp', [
 
 .factory('CostService', ['$http', function ($http) {
 	var cost = {};
-	$http.get('json/cost.json', { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
+	$http.get('json/cost.json?'+ new Date().getTime(), { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
     	cost.pricing = response.data.pricing;
 		cost.discounts = response.data.discounts;
 		cost.periodicCalendarYears = Object.keys(response.data.pricing.periodic);
@@ -391,7 +391,7 @@ angular.module('myApp', [
     	cost.salesTax = response.data;
 	});*/
 
-	$http.get('json/coupons.json', { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
+	$http.get('json/coupons.json?'+ new Date().getTime(), { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
 	    cost.coupons = response.data.coupons;
 	});
 
@@ -465,7 +465,7 @@ angular.module('myApp', [
 	};
 
 	var checkMaxUses = function(couponCode, discountAmount){
-		$http.get('json/couponUses.json', { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
+		$http.get('json/couponUses.json?'+ new Date().getTime(), { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
     		var couponUses = response.data;
     		var upperCaseCouponCode = couponCode.toUpperCase();
     		if(couponUses[upperCaseCouponCode] && couponUses[upperCaseCouponCode].length >= discountAmount.maxUses){
@@ -507,13 +507,6 @@ angular.module('myApp', [
 
 .factory('EmailService', ['$http', 'currencyFilter', 'dateFilter', 'schoolYearFilter', '$state', '$cookies', function ($http, currencyFilter, dateFilter, schoolYearFilter, $state, $cookies) {
 
-	var padLeft = function(number, totalLength){
-		while(number.length <= totalLength){
-			number = ' ' + number;
-		}
-		return number;
-	};
-
 	var buildEmail = function(formData, orders){
 		var emailBody = 'Dear ' + formData.customer.firstName + ' ' + formData.customer.lastName + 
 			',\n\nThank you for your ACT Aspire Order' +
@@ -540,77 +533,76 @@ angular.module('myApp', [
 
 		angular.forEach(orders.summative.orders, function(order, key) {
 			if(order.online.total){
-				emailBody += '\n\n' + order.administrationWindow + ' ' + order.calendarYear + ' Summative Order Online:';
+				emailBody += '\n\n' + order.administrationWindow + ' ' + order.calendarYear + ' Summative Order Online (';
 				angular.forEach(order.subjects, function(checked, subject){
 					if(checked){
-						emailBody += ' ' + subject;
+						emailBody += subject + ', ';
 					} 
 				});
+				emailBody = emailBody.substring(0, emailBody.length - 2);
 
-				var totalLength = currencyFilter(order.online.balance).length;
-
-				emailBody += '\n' + padLeft(currencyFilter(order.cost.online), totalLength) + '  List Price';
+				emailBody += ')\n' + currencyFilter(order.cost.online) + '\t\tList Price';
 				if(order.individualReports){
-					emailBody += '\n' + padLeft(currencyFilter(order.reportsPerStudent * order.cost.isr), totalLength) + '  Printed Individual Reports';
+					emailBody += '\n' + currencyFilter(order.reportsPerStudent * order.cost.isr) + '\t\tPrinted Individual Reports';
 				}
 				if(order.scoreLabels){
-					emailBody += '\n' + padLeft(currencyFilter(order.cost.labels), totalLength) + '  Printed Score Labels';
+					emailBody += '\n' + currencyFilter(order.cost.labels) + '\t\tPrinted Score Labels';
 				}
 				if(order.online.discounts.volume){
-					emailBody += '\n' + padLeft('(' + currencyFilter(order.online.discounts.volume), totalLength) +')' + '  Discount - Volume';
+					emailBody += '\n(' + currencyFilter(order.online.discounts.volume) + ')\t\tDiscount - Volume';
 				}
 				if(order.online.discounts.multiGrade){
-					emailBody += '\n' + padLeft('(' + currencyFilter(order.online.discounts.multiGrade), totalLength) +')' + '  Discount - Grade';
+					emailBody += '\n(' + currencyFilter(order.online.discounts.multiGrade) + ')\t\tDiscount - 4 or more Grades';
 				}
 				if(order.online.discounts.periodic){
-					emailBody += '\n' + padLeft('(' + currencyFilter(order.online.discounts.periodic), totalLength) +')' + '  Discount - Periodic';
+					emailBody += '\n(' + currencyFilter(order.online.discounts.periodic) + ')\t\tDiscount - Bundle';
 				}
 				if(order.online.discounts.state){
-					emailBody += '\n' + padLeft('(' + currencyFilter(order.online.discounts.state), totalLength) +')' + '  Discount - State';
+					emailBody += '\n(' + currencyFilter(order.online.discounts.state) + ')\t\tDiscount - State';
 				}
 				if(order.online.discounts.special){
-					emailBody += '\n' + padLeft('(' + currencyFilter(order.online.discounts.special), totalLength) +')' + '  Discount - Special';
+					emailBody += '\n(' + currencyFilter(order.online.discounts.special) + ')\t\tDiscount - Coupon Code';
 				}
-				emailBody += '\n' + padLeft(currencyFilter(order.online.finalPricePerStudent), totalLength) + '  Effective Price';
-				emailBody += '\n' + currencyFilter(order.online.balance) + '  Total (' + currencyFilter(order.online.finalPricePerStudent) + ' X ' + order.online.total + ' Students)';
+				emailBody += '\n----------\n' + currencyFilter(order.online.finalPricePerStudent) + '\t\tEffective Price';
+				emailBody += '\n----------\n' + currencyFilter(order.online.balance) + '\t\tTotal (' + currencyFilter(order.online.finalPricePerStudent) + ' X ' + order.online.total + ' Students)\n==========';
 
 			}
 		});
 
 		angular.forEach(orders.summative.orders, function(order, key) {
 			if(order.paper.total){
-				emailBody += '\n\n' + order.administrationWindow + ' ' + order.calendarYear + ' Summative Order Paper:';
+				emailBody += '\n\n' + order.administrationWindow + ' ' + order.calendarYear + ' Summative Order Paper (';
 				angular.forEach(order.subjects, function(checked, subject){
 					if(checked){
-						emailBody += ' ' + subject;
+						emailBody += subject + ', ';
 					} 
-				});	
-				var totalLength = currencyFilter(order.paper.balance).length;
+				});
+				emailBody = emailBody.substring(0, emailBody.length - 2);
 
-				emailBody += '\n' + padLeft(currencyFilter(order.cost.paper), totalLength) + '  List Price';
+				emailBody += ')\n' + currencyFilter(order.cost.paper) + '\t\tList Price';
 				if(order.individualReports){
-					emailBody += '\n' + padLeft(currencyFilter(order.reportsPerStudent * order.cost.isr), totalLength) + '  Printed Individual Reports';
+					emailBody += '\n' + currencyFilter(order.reportsPerStudent * order.cost.isr) + '\t\tPrinted Individual Reports';
 				}
 				if(order.scoreLabels){
-					emailBody += '\n' + padLeft(currencyFilter(order.cost.labels), totalLength) + '  Printed Score Labels';
+					emailBody += '\n' + currencyFilter(order.cost.labels) + '\t\tPrinted Score Labels';
 				}
 				if(order.paper.discounts.volume){
-					emailBody += '\n' + padLeft('(' + currencyFilter(order.paper.discounts.volume), totalLength) +')' + '  Discount - Volume';
+					emailBody += '\n(' + currencyFilter(order.paper.discounts.volume) + ')\t\tDiscount - Volume';
 				}
 				if(order.paper.discounts.multiGrade){
-					emailBody += '\n' + padLeft('(' + currencyFilter(order.paper.discounts.multiGrade), totalLength) +')' + '  Discount - Grade';
+					emailBody += '\n(' + currencyFilter(order.paper.discounts.multiGrade) + ')\t\tDiscount - 4 or more Grades';
 				}
 				if(order.paper.discounts.periodic){
-					emailBody += '\n' + padLeft('(' + currencyFilter(order.paper.discounts.periodic), totalLength) +')' + '  Discount - Periodic';
+					emailBody += '\n(' + currencyFilter(order.paper.discounts.periodic) + ')\t\tDiscount - Bundle';
 				}
 				if(order.paper.discounts.state){
-					emailBody += '\n' + padLeft('(' + currencyFilter(order.paper.discounts.state), totalLength) +')' + '  Discount - State';
+					emailBody += '\n(' + currencyFilter(order.paper.discounts.state) + ')\t\tDiscount - State';
 				}
 				if(order.paper.discounts.special){
-					emailBody += '\n' + padLeft('(' + currencyFilter(order.paper.discounts.special), totalLength) +')' + '  Discount - Special';
+					emailBody += '\n(' + currencyFilter(order.paper.discounts.special) + ')\t\tDiscount - Coupon Code';
 				}
-				emailBody += '\n' + padLeft(currencyFilter(order.paper.finalPricePerStudent), totalLength) + '  Effective Price';
-				emailBody += '\n' + currencyFilter(order.paper.balance) + '  Total (' + currencyFilter(order.paper.finalPricePerStudent) + ' X ' + order.paper.total + ' Students)';
+				emailBody += '\n----------\n' + currencyFilter(order.paper.finalPricePerStudent) + '\t\tEffective Price';
+				emailBody += '\n----------\n' + currencyFilter(order.paper.balance) + '\t\tTotal (' + currencyFilter(order.paper.finalPricePerStudent) + ' X ' + order.paper.total + ' Students)\n==========';
 
 			}
 		});
@@ -618,23 +610,21 @@ angular.module('myApp', [
 		angular.forEach(orders.periodic.orders, function(order, key) {
 			if(order.onlineTotal){
 				emailBody += '\n\n' + schoolYearFilter(order.calendarYear) + ' Periodic Order Online';
-				
-				var totalLength = currencyFilter(order.balance).length;
 
-				emailBody += '\n' + padLeft(currencyFilter(order.price), totalLength) + '  List Price';
+				emailBody += '\n' + currencyFilter(order.price) + '\t\tList Price';
 				if(order.discounts.state){
-					emailBody += '\n' + padLeft('(' + currencyFilter(order.discounts.state), totalLength) +')' + '  Discount - State';
+					emailBody += '\n(' + currencyFilter(order.discounts.state) + ')\t\tDiscount - State';
 				}
 				if(order.discounts.special){
-					emailBody += '\n' + padLeft('(' + currencyFilter(order.discounts.special), totalLength) +')' + '  Discount - Special';
+					emailBody += '\n(' + currencyFilter(order.discounts.special) + ')\t\tDiscount - Coupon Code';
 				}
-				emailBody += '\n' + padLeft(currencyFilter(order.finalPricePerStudent), totalLength) + '  Effective Price';
-				emailBody += '\n' + currencyFilter(order.balance) + '  Total (' + currencyFilter(order.finalPricePerStudent) + ' X ' + order.onlineTotal + ' Students)';
+				emailBody += '\n----------\n' + currencyFilter(order.finalPricePerStudent) + '\t\tEffective Price';
+				emailBody += '\n----------\n' + currencyFilter(order.balance) + '\t\tTotal (' + currencyFilter(order.finalPricePerStudent) + ' X ' + order.onlineTotal + ' Students)\n==========';
 			}
 		});
 
 		if(formData.summary.discount.special && formData.summary.discount.special.code && !formData.summary.discount.special.error){
-			emailBody += '\n\nDiscount Code: ' + formData.summary.discount.special.code;
+			emailBody += '\n\nCoupon Code: ' + formData.summary.discount.special.code;
 		}
 		
 		emailBody += '\n\nTotal: ' + currencyFilter(formData.summary.total);
@@ -913,7 +903,7 @@ angular.module('myApp', [
 		postData.csvFileName = postData.csvFileName.replace(/[/\\\\]/g, '');;
 
 		if(formData.summary.discount.special && formData.summary.discount.special.code && !formData.summary.discount.special.error){
-			$http.get('json/couponUses.json', { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
+			$http.get('json/couponUses.json?'+ new Date().getTime(), { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
 	    		var couponUses = response.data;
 	    		if(!couponUses){
 	    			couponUses = {};
