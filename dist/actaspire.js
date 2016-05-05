@@ -45865,8 +45865,18 @@ angular.module('myApp', [
 		return fileContent += formData.comments + rowDelim;
 	};
 
+	var revRecDate = function(year, administrationWindow)
+	{
+		if('Spring' == administrationWindow) {
+			return '1/1/' + year;
+		}
+		else {
+			return '7/1/' + year;
+		}
+	}
+
 	var buildCsvFile = function(formData, orders, cost){
-        var fileContent = 'NS Name,Internal ID,Date,line ,School / Customer,Grade,Quantity,Item,Test Administration,Test Admin Year,Test Mode,Item Rate,Amount,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,Test Coordinator Name,Test Coordinator Email,Test Coordinator Phone,Backup Coordinator Name,Backup Coordinator Email,Backup Coordinator Phone,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions,Discount Code,Memo\n';
+        var fileContent = 'NS Name,Internal ID,Date,line ,School / Customer,Grade,Quantity,Item,Test Administration,Test Admin Year,Test Mode,Rev Rec,Rev Rec Date,Item Rate,Amount,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,Test Coordinator Name,Test Coordinator Email,Test Coordinator Phone,Backup Coordinator Name,Backup Coordinator Email,Backup Coordinator Phone,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions,Discount Code,Memo\n';
 
         angular.forEach(orders.summative.orders, function(order, key) {
         	if(order.online.total){
@@ -45882,6 +45892,8 @@ angular.module('myApp', [
 							+ order.administrationWindow + colDelim
 							+ order.calendarYear + colDelim
 							+ 'Online' + colDelim
+							+ 'Rev Rec - Summative' + colDelim
+							+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 							+ (order.cost.online - order.online.totalDiscountPerStudent) + colDelim
 							+ ((order.cost.online - order.online.totalDiscountPerStudent) * grade.online) + colDelim
 							+ yesNo(order.subjects.English) + colDelim
@@ -45904,6 +45916,8 @@ angular.module('myApp', [
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Online' + colDelim
+						+ colDelim
+						 + colDelim
 						+ (order.cost.isr) + colDelim
 						+ ((order.cost.isr) * order.online.total * order.reportsPerStudent) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
@@ -45925,6 +45939,8 @@ angular.module('myApp', [
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Online' + colDelim
+						+ colDelim
+						+ colDelim
 						+ (order.cost.labels) + colDelim
 						+ ((order.cost.labels) * order.online.total) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
@@ -45952,6 +45968,8 @@ angular.module('myApp', [
 							+ order.administrationWindow + colDelim
 							+ order.calendarYear + colDelim
 							+ 'Paper' + colDelim
+							+ 'Rev Rec - Summative' + colDelim
+							+ revRecDate(order.calendarYear, order.administrationWindow)+ colDelim
 							+ (order.cost.paper - order.paper.totalDiscountPerStudent) + colDelim
 							+ ((order.cost.paper - order.paper.totalDiscountPerStudent) * grade.paper) + colDelim
 							+ yesNo(order.subjects.English) + colDelim
@@ -45975,6 +45993,8 @@ angular.module('myApp', [
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Paper' + colDelim
+						+ colDelim
+						+ colDelim
 						+ (order.cost.isr) + colDelim
 						+ ((order.cost.isr) * order.paper.total * order.reportsPerStudent) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
@@ -45996,6 +46016,8 @@ angular.module('myApp', [
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Paper' + colDelim
+						+ colDelim
+						+ colDelim
 						+ (order.cost.labels) + colDelim
 						+ ((order.cost.labels) * order.paper.total) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
@@ -46022,6 +46044,8 @@ angular.module('myApp', [
 							+ 'School Year' + colDelim
 							+ schoolYearFilter(order.calendarYear) + colDelim
 							+ 'Online' + colDelim
+							+ 'Rev Rec - Periodic' + colDelim
+							+ revRecDate(order.calendarYear)+ colDelim
 							+ (order.cost - order.totalDiscountPerStudent) + colDelim
 							+ ((order.cost - order.totalDiscountPerStudent) * grade.online) + colDelim
 							+ yesNo(true) + colDelim
