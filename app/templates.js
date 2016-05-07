@@ -503,8 +503,8 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
   );
 
 
-  $templateCache.put('app/form-training.html',
-    "<div ng-show=\"$state.is('form.training')\">\n" +
+  $templateCache.put('app/form-isr.html',
+    "<div ng-show=\"$state.is('form.isr')\">\n" +
     "\t<h2>ACT Aspire Training Order Form</h2>\t\n" +
     "\n" +
     "\t<form id=\"trainingForm\" name=\"trainingForm\" ng-submit=\"processForm()\"> \n" +

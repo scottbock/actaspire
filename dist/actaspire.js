@@ -45202,13 +45202,13 @@ angular.module('myApp', [
 			templateUrl: 'app/confirmation.html'
 		})
 
-		.state('form.training', {
-			url: '/training',
-			templateUrl: 'app/form-training.html',
+		.state('form.isr', {
+			url: '/isr',
+			templateUrl: 'app/form-isr.html',
 			controller: 'trainingController'
 		})
 
-		.state('form.training.confirmation', {
+		.state('form.isr.confirmation', {
 			url: '/confirmation',
 			templateUrl: 'app/confirmation.html'
 		})
@@ -46814,8 +46814,8 @@ angular.module('myApp', [
   );
 
 
-  $templateCache.put('app/form-training.html',
-    "<div ng-show=\"$state.is('form.training')\">\n" +
+  $templateCache.put('app/form-isr.html',
+    "<div ng-show=\"$state.is('form.isr')\">\n" +
     "\t<h2>ACT Aspire Training Order Form</h2>\t\n" +
     "\n" +
     "\t<form id=\"trainingForm\" name=\"trainingForm\" ng-submit=\"processForm()\"> \n" +

@@ -27,13 +27,13 @@ angular.module('myApp', [
 			templateUrl: 'app/confirmation.html'
 		})
 
-		.state('form.training', {
-			url: '/training',
-			templateUrl: 'app/form-training.html',
+		.state('form.isr', {
+			url: '/isr',
+			templateUrl: 'app/form-isr.html',
 			controller: 'trainingController'
 		})
 
-		.state('form.training.confirmation', {
+		.state('form.isr.confirmation', {
 			url: '/confirmation',
 			templateUrl: 'app/confirmation.html'
 		})
