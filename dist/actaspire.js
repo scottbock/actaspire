@@ -45916,8 +45916,8 @@ angular.module('myApp', [
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Online' + colDelim
-						+ colDelim
-						 + colDelim
+						+ 'Rev Rec - ISR' + colDelim
+						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 						+ (order.cost.isr) + colDelim
 						+ ((order.cost.isr) * order.online.total * order.reportsPerStudent) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
@@ -45939,8 +45939,8 @@ angular.module('myApp', [
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Online' + colDelim
-						+ colDelim
-						+ colDelim
+						+ 'Rev Rec - Score Labels' + colDelim
+						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 						+ (order.cost.labels) + colDelim
 						+ ((order.cost.labels) * order.online.total) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
@@ -45993,8 +45993,8 @@ angular.module('myApp', [
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Paper' + colDelim
-						+ colDelim
-						+ colDelim
+						+ 'Rev Rec - ISR' + colDelim
+						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim	
 						+ (order.cost.isr) + colDelim
 						+ ((order.cost.isr) * order.paper.total * order.reportsPerStudent) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
@@ -46016,8 +46016,8 @@ angular.module('myApp', [
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Paper' + colDelim
-						+ colDelim
-						+ colDelim
+						+ 'Rev Rec - Score Labels' + colDelim
+						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 						+ (order.cost.labels) + colDelim
 						+ ((order.cost.labels) * order.paper.total) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
