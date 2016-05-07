@@ -46325,491 +46325,490 @@ angular.module('myApp', [
   $templateCache.put('app/form-customer.html',
     "<div ng-show=\"$state.is('form.customer')\">\n" +
     "\t<h2>ACT Aspire Order Form</h2>\t\n" +
-    "\t<div class=\"col-sm-12\">\n" +
-    "\t  <p>\n" +
-    "\t    Thank you for your decision to order ACT Aspire! To help ensure your order is accurate please fill in all applicable boxes. This will ensure accurate order.\n" +
-    "\t  </p>\n" +
-    "\t  <p>\n" +
-    "\t    If you have any questions on the order form below, please contact <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a> or 1-855-730-0400\n" +
-    "\t  </p>\n" +
-    "\t  <p>\n" +
-    "\t    Pricing valid through {{cost.pricing.validThrough}}\n" +
-    "\t  </p>\n" +
+    "<div class=\"col-sm-12\">\n" +
+    "  <p>\n" +
+    "    Thank you for your decision to order ACT Aspire! To help ensure your order is accurate please fill in all applicable boxes.\n" +
+    "  </p>\n" +
+    "  <p>\n" +
+    "    If you have any questions on the order form below, please contact <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a> or 1-855-730-0400\n" +
+    "  </p>\n" +
+    "  <p>\n" +
+    "    Pricing valid through {{cost.pricing.validThrough}}\n" +
+    "  </p>\n" +
+    "</div>\n" +
+    "<!-- use ng-submit to catch the form submission and use our Angular function -->\n" +
+    "<form id=\"customerForm\" name=\"customerForm\" ng-submit=\"processForm()\"> \n" +
+    "\n" +
+    "\t<h3>1. Contact Information</h3>\n" +
+    "\n" +
+    "\t<div class=\"row\"><div class=\"col-sm-12\"><h4>Date: {{date | date:'yyyy-MM-dd'}}</h4></div></div>\n" +
+    "\n" +
+    "\t<div class=\"row\">\n" +
+    "\t    <div class=\"form-group col-sm-3 required\">\n" +
+    "\t        <label for=\"firstName\" class=\"control-label\">First Name</label>\n" +
+    "\t        <input type=\"text\" class=\"form-control\" name=\"firstName\" ng-model=\"formData.customer.firstName\" required=\"required\">\n" +
+    "\t    </div>\n" +
+    "\n" +
+    "\t    <div class=\"form-group col-sm-3 required\">\n" +
+    "\t        <label for=\"lastName\" class=\"control-label\">Last Name</label>\n" +
+    "\t        <input type=\"text\" class=\"form-control\" name=\"lastName\" ng-model=\"formData.customer.lastName\" required=\"required\">\n" +
+    "\t    </div>\n" +
+    "\n" +
+    "\t    <div class=\"form-group col-sm-6 required\">\n" +
+    "\t        <label for=\"organization\" class=\"control-label\">School / District / Organization</label>\n" +
+    "\t        <input type=\"text\" class=\"form-control\" name=\"organization\" ng-model=\"formData.customer.organization\" required=\"required\">\n" +
+    "\t    </div>\n" +
     "\t</div>\n" +
-    "\t<!-- use ng-submit to catch the form submission and use our Angular function -->\n" +
-    "\t<form id=\"customerForm\" name=\"customerForm\" ng-submit=\"processForm()\"> \n" +
     "\n" +
-    "\t\t<h3>1. Contact Information</h3>\n" +
+    "\t<div class=\"row\">\n" +
+    "\t    <div class=\"form-group col-sm-6 required\">\n" +
+    "\t        <label for=\"jobTitle\" class=\"control-label\">Job Title</label>\n" +
+    "\t        <input type=\"text\" class=\"form-control\" name=\"jobTitle\" ng-model=\"formData.customer.jobTitle\" required=\"required\">\n" +
+    "\t    </div>\n" +
     "\n" +
-    "\t\t<div class=\"row\"><div class=\"col-sm-12\"><h4>Date: {{date | date:'yyyy-MM-dd'}}</h4></div></div>\n" +
+    "\t    <div class=\"form-group col-sm-4 required\">\n" +
+    "\t        <label for=\"email\" class=\"control-label\">Email</label>\n" +
+    "\t        <input type=\"email\" class=\"form-control\" name=\"email\" ng-model=\"formData.customer.email\" required=\"required\">\n" +
+    "\t    </div>\n" +
+    "\t</div>\n" +
     "\n" +
-    "\t\t<div class=\"row\">\n" +
-    "\t\t    <div class=\"form-group col-sm-3 required\">\n" +
-    "\t\t        <label for=\"firstName\" class=\"control-label\">First Name</label>\n" +
-    "\t\t        <input type=\"text\" class=\"form-control\" name=\"firstName\" ng-model=\"formData.customer.firstName\" required=\"required\">\n" +
-    "\t\t    </div>\n" +
-    "\n" +
-    "\t\t    <div class=\"form-group col-sm-3 required\">\n" +
-    "\t\t        <label for=\"lastName\" class=\"control-label\">Last Name</label>\n" +
-    "\t\t        <input type=\"text\" class=\"form-control\" name=\"lastName\" ng-model=\"formData.customer.lastName\" required=\"required\">\n" +
-    "\t\t    </div>\n" +
-    "\n" +
-    "\t\t    <div class=\"form-group col-sm-6 required\">\n" +
-    "\t\t        <label for=\"organization\" class=\"control-label\">School / District / Organization</label>\n" +
-    "\t\t        <input type=\"text\" class=\"form-control\" name=\"organization\" ng-model=\"formData.customer.organization\" required=\"required\">\n" +
-    "\t\t    </div>\n" +
+    "\t<div class=\"row\">\n" +
+    "\t\t<div class=\"col-sm-6 form-group\">\n" +
+    "\t\t    <label class=\"checkbox-inline\">\n" +
+    "\t\t    \t<input type=\"checkbox\" ng-model=\"formData.customer.groupOrder\">\n" +
+    "\t\t    \tAre you part of a group order?\n" +
+    "\t\t    </label>\n" +
+    "\t\t    <p><a href=\"http://www.discoveractaspire.org/order/\" target=\"_blank\">Not sure? Find more information about Group Orders</a></p>\n" +
     "\t\t</div>\n" +
     "\n" +
-    "\t\t<div class=\"row\">\n" +
-    "\t\t    <div class=\"form-group col-sm-6 required\">\n" +
-    "\t\t        <label for=\"jobTitle\" class=\"control-label\">Job Title</label>\n" +
-    "\t\t        <input type=\"text\" class=\"form-control\" name=\"jobTitle\" ng-model=\"formData.customer.jobTitle\" required=\"required\">\n" +
-    "\t\t    </div>\n" +
+    "\t    <div class=\"form-group col-sm-6 required\" ng-show=\"formData.customer.groupOrder\">\n" +
+    "\t        <label for=\"groupContact\" class=\"control-label\">Group Owner Name</label>\n" +
+    "\t        <input type=\"text\" class=\"form-control\" name=\"groupContact\" ng-model=\"formData.customer.groupContact\" ng-required=\"formData.customer.groupOrder\">\n" +
+    "\t    </div>\n" +
+    "\t</div>\n" +
     "\n" +
-    "\t\t    <div class=\"form-group col-sm-4 required\">\n" +
-    "\t\t        <label for=\"email\" class=\"control-label\">Email</label>\n" +
-    "\t\t        <input type=\"email\" class=\"form-control\" name=\"email\" ng-model=\"formData.customer.email\" required=\"required\">\n" +
-    "\t\t    </div>\n" +
+    "\t<div class=\"panel panel-default\">\n" +
+    "\t    <div class=\"panel-heading\">Contact Information</div>\n" +
+    "\t    <div class=\"panel-body\">\n" +
+    "\t        <div class=\"row\">\n" +
+    "\t            <div class=\"form-group col-sm-4 required\">\n" +
+    "\t                <label for=\"implementationName\" class=\"control-label\">Test Coordinator Contact Name</label>\n" +
+    "\t                <input type=\"text\" class=\"form-control\" name=\"implementationName\" ng-model=\"formData.implementationContact.name\" required=\"required\">\n" +
+    "\t            </div>\n" +
+    "\n" +
+    "\t            <div class=\"form-group col-sm-4 required\">\n" +
+    "\t                <label for=\"implementationEmail\" class=\"control-label\">Test Coordinator Contact Email</label>\n" +
+    "\t                <input type=\"email\" class=\"form-control\" name=\"implementationEmail\" ng-model=\"formData.implementationContact.email\" required=\"required\">\n" +
+    "\t            </div>\n" +
+    "\n" +
+    "\t            <div class=\"form-group col-sm-4 required\">\n" +
+    "\t                <label for=\"implementationPhone\" class=\"control-label\">Test Coordinator Contact Phone</label>\n" +
+    "\t                <input type=\"tel\" class=\"form-control\" name=\"implementationPhone\" ng-model=\"formData.implementationContact.phone\" required=\"required\">\n" +
+    "\t            </div>\n" +
+    "\t        </div>\n" +
+    "\t        <div class=\"row\">\n" +
+    "\t            <div class=\"form-group col-sm-4 required\">\n" +
+    "\t                <label for=\"backupName\" class=\"control-label\">Backup Contact Name</label>\n" +
+    "\t                <input type=\"text\" class=\"form-control\" name=\"backupName\" ng-model=\"formData.backupContact.name\" required=\"required\">\n" +
+    "\t            </div>\n" +
+    "\n" +
+    "\t            <div class=\"form-group col-sm-4 required\">\n" +
+    "\t                <label for=\"backupEmail\" class=\"control-label\">Backup Contact Email</label>\n" +
+    "\t                <input type=\"email\" class=\"form-control\" name=\"backupEmail\" ng-model=\"formData.backupContact.email\" required=\"required\">\n" +
+    "\t            </div>\n" +
+    "\n" +
+    "\t            <div class=\"form-group col-sm-4 required\">\n" +
+    "\t                <label for=\"backupPhone\" class=\"control-label\">Backup Contact Phone</label>\n" +
+    "\t                <input type=\"tel\" class=\"form-control\" name=\"backupPhone\" ng-model=\"formData.backupContact.phone\" required=\"required\">\n" +
+    "\t            </div>\n" +
+    "\t        </div>        \n" +
+    "\t    </div>\n" +
+    "\t</div>\n" +
+    "\n" +
+    "\t<div class=\"panel panel-default\">\n" +
+    "\t    <div class=\"panel-heading\">Billing Information</div>\n" +
+    "\t    <div class=\"panel-body\">\n" +
+    "\t    \t<div class=\"row\">\n" +
+    "\t\t\t    <div class=\"col-sm-12\">\n" +
+    "\t\t\t\t    <p>If you are tax exempt, please email a copy of your exemption certificate to <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a></p>\n" +
+    "\t\t\t    </div>\n" +
+    "\t\t\t</div>\n" +
+    "\t        <div class=\"row\">\n" +
+    "\t            <div class=\"form-group col-sm-4 required\">\n" +
+    "\t                <label for=\"billingName\" class=\"control-label\">Billing Contact Name</label>\n" +
+    "\t                <input type=\"text\" class=\"form-control\" name=\"billingName\" ng-model=\"formData.billingContact.name\" required=\"required\">\n" +
+    "\t            </div>\n" +
+    "\n" +
+    "\t            <div class=\"form-group col-sm-4 required\">\n" +
+    "\t                <label for=\"billingEmail\" class=\"control-label\">Billing Contact Email</label>\n" +
+    "\t                <input type=\"email\" class=\"form-control\" name=\"billingEmail\" ng-model=\"formData.billingContact.email\" required=\"required\">\n" +
+    "\t            </div>\n" +
+    "\n" +
+    "\t            <div class=\"form-group col-sm-4 required\">\n" +
+    "\t                <label for=\"billingPhone\" class=\"control-label\">Billing Contact Phone</label>\n" +
+    "\t                <input type=\"tel\" class=\"form-control\" name=\"billingPhone\" ng-model=\"formData.billingContact.phone\" required=\"required\">\n" +
+    "\t            </div>\n" +
+    "\t        </div>    \n" +
+    "\t        <div class=\"row\">\n" +
+    "\t            <div class=\"form-group col-sm-12 required\">\n" +
+    "\t                <label for=\"billingAddress\" class=\"control-label\">Billing Address Line 1</label>\n" +
+    "\t                <input type=\"text\" class=\"form-control\" name=\"billingAddress\" ng-model=\"formData.billing.address.line1\" required=\"required\">\n" +
+    "\t            </div>\n" +
+    "\t        </div>\n" +
+    "\t        <div class=\"row\">\n" +
+    "\t            <div class=\"form-group col-sm-12\">\n" +
+    "\t                <label for=\"billingAddress\" class=\"control-label\">Billing Address Line 2</label>\n" +
+    "\t                <input type=\"text\" class=\"form-control\" name=\"billingAddress\" ng-model=\"formData.billing.address.line2\">\n" +
+    "\t            </div>\n" +
+    "\t        </div>        \n" +
+    "\t        <div class=\"row\">\n" +
+    "\t            <div class=\"form-group col-sm-4 required\">\n" +
+    "\t                <label for=\"city\" class=\"control-label\">City</label>\n" +
+    "\t                <input type=\"text\" class=\"form-control\" name=\"city\" ng-model=\"formData.billing.address.city\" required=\"required\">\n" +
+    "\t            </div>\n" +
+    "\n" +
+    "\t            <div class=\"form-group col-sm-4 required\">\n" +
+    "\t                <label for=\"state\" class=\"control-label\">State</label>\n" +
+    "\t        \t\t<select class=\"form-control\" name=\"state\" ng-model=\"formData.billing.address.state\" ng-options=\"key as value for (key , value) in states\" required=\"required\"></select>\n" +
+    "\t            </div>\n" +
+    "\n" +
+    "\t            <div class=\"form-group col-sm-4 required\">\n" +
+    "\t                <label for=\"zip\" class=\"control-label\">Zip</label>\n" +
+    "\t                <input type=\"text\" class=\"form-control\" name=\"zip\" ng-model=\"formData.billing.address.zip\" required=\"required\">\n" +
+    "\t            </div>\n" +
+    "\t        </div>    \n" +
+    "\t    </div>\n" +
+    "\t</div>\n" +
+    "\n" +
+    "\t<h3>2. Summative Order Data</h3>\n" +
+    "\t<div class=\"row\">\n" +
+    "\t\t<div class=\"col-sm-12\">\n" +
+    "\t  \t\t<h5>ACT Aspire Summative Test</h5>\n" +
+    "\t  \t\t<ul>\n" +
+    "\t\t\t    <li>Is a vertically scaled, standards-based battery of achievement test that are linked to the College and Career Readiness Standard in the subject areas of: English, mathematics, reading, science and writing.</li>\t\t\t\t\n" +
+    "\t\t\t    <li>Designed for Grades 3 - 10 and can be taken Online or in Paper form (paper administration requires an additional fee).</li>\n" +
+    "\t\t\t    <li>Can be administered in a Spring test administration window or a Fall test administration window.</li>\n" +
+    "\t\t\t    <li>When ordering Summative assessments, the following discounts are available*:\n" +
+    "\t\t\t    \t<ul>\n" +
+    "\t\t\t    \t\t<li>Test four or more grades of students: $1.00 off</li>\n" +
+    "\t\t\t\t\t\t<li>Test 400 to 1,000 students: $1.00 off</li>\n" +
+    "\t\t\t\t\t\t<li>Test over 1,000 students: $2.00 off</li>\n" +
+    "\t\t\t\t\t\t<li>Bundle Periodic to Summative order: $4.00 off (applied to Summative)</li>\n" +
+    "\t\t\t    \t</ul>\n" +
+    "\t\t\t    </li>\n" +
+    "\t\t\t</ul>\t\t\t\n" +
+    "\t\t</div>\t\t\n" +
+    "\t</div>\n" +
+    "\t\t\n" +
+    "\t<div class=\"panel panel-default\" ng-repeat=\"order in orders.summative.orders\">\n" +
+    "\t\t<div class=\"panel-heading\">\n" +
+    "\t\t\t{{order.administrationWindow}} {{order.calendarYear}} Summative Order\n" +
+    "\t\t\t<button type=\"button\" class=\"pull-right btn btn-default btn-xs\" aria-label=\"Remove\" ng-click=\"removeOrder(orders.summative.orders, order)\">\n" +
+    "\t\t\t\t<span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>\n" +
+    "\t\t\t</button>\n" +
     "\t\t</div>\n" +
-    "\n" +
+    "\t\t<div class=\"panel-body\">\n" +
+    "\t\t<h5>Subjects</h5>\n" +
     "\t\t<div class=\"row\">\n" +
-    "\t\t\t<div class=\"col-sm-6 form-group\">\n" +
+    "\t    \t<div class=\"col-sm-2 form-group\" ng-repeat=\"(subject,enabled) in order.subjects\">\n" +
+    "\t            <label class=\"checkbox-inline\">\n" +
+    "\t            \t<input type=\"checkbox\" ng-model=\"order.subjects[subject]\">\n" +
+    "\t            \t{{subject}}\n" +
+    "\t            </label>\n" +
+    "\t        </div>\n" +
+    "\t    </div>\n" +
+    "\t    <h5>Printed Student Reports</h5>\n" +
+    "\t    <div class=\"row\">\n" +
+    "\t    \t<div class=\"col-sm-6 form-group\">\n" +
     "\t\t\t    <label class=\"checkbox-inline\">\n" +
-    "\t\t\t    \t<input type=\"checkbox\" ng-model=\"formData.customer.groupOrder\">\n" +
-    "\t\t\t    \tAre you part of a group order?\n" +
+    "\t\t\t    \t<input type=\"checkbox\" ng-model=\"order.individualReports\">\n" +
+    "\t\t\t    \tAdd Printed Individual Student Reports\n" +
     "\t\t\t    </label>\n" +
-    "\t\t\t    <p><a href=\"http://www.discoveractaspire.org/order/\" target=\"_blank\">Not sure? Find more information about Group Orders</a></p>\n" +
+    "\t\t    </div>\n" +
+    "\t     \t<div class=\"col-sm-6 form-group\">\n" +
+    "\t\t\t    <label class=\"checkbox-inline\">\n" +
+    "\t\t\t    \t<input type=\"checkbox\" ng-model=\"order.scoreLabels\">\n" +
+    "\t\t\t    \tAdd Printed Score Labels ({{order.cost.labels | currency}})\n" +
+    "\t\t\t    </label>\n" +
+    "\t\t    </div>\n" +
+    "\t\t</div>\n" +
+    "\t\t<div class=\"row\" ng-show=\"order.individualReports\">\n" +
+    "\t    \t<div class=\"col-sm-6 form-group\">\n" +
+    "\t\t\t\t<label>\n" +
+    "\t\t\t\t\t<input type=\"radio\" ng-model=\"order.reportsPerStudent\" value=\"1\">\n" +
+    "\t\t\t\t\t1 Report Per Student ({{order.cost.isr | currency}})\n" +
+    "\t\t\t\t</label>\n" +
+    "\t\t\t\t<label>\n" +
+    "\t\t\t\t\t<input type=\"radio\" ng-model=\"order.reportsPerStudent\" value=\"2\">\n" +
+    "\t\t\t\t\t2 Reports Per Student ({{order.cost.isr * 2 | currency}})\n" +
+    "\t\t\t\t</label>\t\t\t\n" +
+    "\t\t    </div>\n" +
+    "\t    </div>\n" +
+    "\n" +
+    "\t\t<table class=\"table table-striped\">\n" +
+    "\t\t\t<thead>\n" +
+    "\t\t\t\t<th></th>\n" +
+    "\t\t\t\t<th>Online Test</th>\n" +
+    "\t\t\t\t<th>Paper Test</th>\n" +
+    "\t\t\t\t<th>Total Student Estimate</th>\n" +
+    "\t\t\t</thead>\n" +
+    "\t\t\t<tr ng-repeat=\"grade in [3,4,5,6,7,8,9,10]\">\n" +
+    "\t\t\t\t<td>Grade {{grade}}</td>\n" +
+    "\t\t\t\t<td><input type=\"number\" ng-model=\"order.grade[grade].online\" name=\"\" min=\"0\"></td>\n" +
+    "\t\t\t\t<td><input type=\"number\" ng-model=\"order.grade[grade].paper\" name=\"\" min=\"0\"></td>\n" +
+    "\t\t\t\t<td>{{order.grade[grade].online + order.grade[grade].paper}}</td>\n" +
+    "\t\t\t</tr>\n" +
+    "\t\t\t<tr>\n" +
+    "\t\t\t\t<td>Total</td>\n" +
+    "\t\t\t\t<td>{{order.online.total}}</td>\n" +
+    "\t\t\t\t<td>{{order.paper.total}}</td>\n" +
+    "\t\t\t\t<td>{{order.paper.total + order.online.total}}</td>\n" +
+    "\t\t\t</tr>\n" +
+    "\t\t</table>\n" +
+    "\t</div>\n" +
+    "\t</div>\n" +
+    "\n" +
+    "\t<div class=\"row\">\n" +
+    "\t\t<div class=\"form-group col-sm-7\">\n" +
+    "\t\t\t<label for=\"calendarYear\" class=\"control-label\">What administrative window and year would you like to order?</label>\n" +
+    "\t\t\t<select class=\"form-control\" name=\"calendarYear\" ng-model=\"summative.calendarYear\">\n" +
+    "\t\t\t\t<option value=\"\">---Please select---</option>\n" +
+    "\t      \t\t<option ng-repeat=\"item in cost.pricing.summative\" value=\"{{item.semester}} {{item.year}}\">{{item.semester}} {{item.year}}</option>\n" +
+    "\t\t\t </select>\n" +
+    "\t\t</div>\n" +
+    "\t\t<div class=\"form-group col-sm-2\">\n" +
+    "\t\t\t<label class=\"control-label\">&nbsp;</label>\n" +
+    "\t\t\t<div>\n" +
+    "\t\t\t\t<button type=\"button\" ng-model=\"addSummativeOrderButton\" ng-click=\"addOrder(orders.summative.orders, summative.calendarYear, summative.error)\" class=\"btn btn-primary\" ng-disabled=\"!summative.calendarYear\">Order Assessments</button>\n" +
     "\t\t\t</div>\n" +
-    "\n" +
-    "\t\t    <div class=\"form-group col-sm-6 required\" ng-show=\"formData.customer.groupOrder\">\n" +
-    "\t\t        <label for=\"groupContact\" class=\"control-label\">Group Owner Name</label>\n" +
-    "\t\t        <input type=\"text\" class=\"form-control\" name=\"groupContact\" ng-model=\"formData.customer.groupContact\" ng-required=\"formData.customer.groupOrder\">\n" +
-    "\t\t    </div>\n" +
     "\t\t</div>\n" +
-    "\n" +
-    "\t\t<div class=\"panel panel-default\">\n" +
-    "\t\t    <div class=\"panel-heading\">Contact Information</div>\n" +
-    "\t\t    <div class=\"panel-body\">\n" +
-    "\t\t        <div class=\"row\">\n" +
-    "\t\t            <div class=\"form-group col-sm-4 required\">\n" +
-    "\t\t                <label for=\"implementationName\" class=\"control-label\">Test Coordinator Contact Name</label>\n" +
-    "\t\t                <input type=\"text\" class=\"form-control\" name=\"implementationName\" ng-model=\"formData.implementationContact.name\" required=\"required\">\n" +
-    "\t\t            </div>\n" +
-    "\n" +
-    "\t\t            <div class=\"form-group col-sm-4 required\">\n" +
-    "\t\t                <label for=\"implementationEmail\" class=\"control-label\">Test Coordinator Contact Email</label>\n" +
-    "\t\t                <input type=\"email\" class=\"form-control\" name=\"implementationEmail\" ng-model=\"formData.implementationContact.email\" required=\"required\">\n" +
-    "\t\t            </div>\n" +
-    "\n" +
-    "\t\t            <div class=\"form-group col-sm-4 required\">\n" +
-    "\t\t                <label for=\"implementationPhone\" class=\"control-label\">Test Coordinator Contact Phone</label>\n" +
-    "\t\t                <input type=\"tel\" class=\"form-control\" name=\"implementationPhone\" ng-model=\"formData.implementationContact.phone\" required=\"required\">\n" +
-    "\t\t            </div>\n" +
-    "\t\t        </div>\n" +
-    "\t\t        <div class=\"row\">\n" +
-    "\t\t            <div class=\"form-group col-sm-4 required\">\n" +
-    "\t\t                <label for=\"backupName\" class=\"control-label\">Backup Contact Name</label>\n" +
-    "\t\t                <input type=\"text\" class=\"form-control\" name=\"backupName\" ng-model=\"formData.backupContact.name\" required=\"required\">\n" +
-    "\t\t            </div>\n" +
-    "\n" +
-    "\t\t            <div class=\"form-group col-sm-4 required\">\n" +
-    "\t\t                <label for=\"backupEmail\" class=\"control-label\">Backup Contact Email</label>\n" +
-    "\t\t                <input type=\"email\" class=\"form-control\" name=\"backupEmail\" ng-model=\"formData.backupContact.email\" required=\"required\">\n" +
-    "\t\t            </div>\n" +
-    "\n" +
-    "\t\t            <div class=\"form-group col-sm-4 required\">\n" +
-    "\t\t                <label for=\"backupPhone\" class=\"control-label\">Backup Contact Phone</label>\n" +
-    "\t\t                <input type=\"tel\" class=\"form-control\" name=\"backupPhone\" ng-model=\"formData.backupContact.phone\" required=\"required\">\n" +
-    "\t\t            </div>\n" +
-    "\t\t        </div>        \n" +
-    "\t\t    </div>\n" +
+    "\t</div>\n" +
+    "\t<div class=\"row\">\n" +
+    "\t\t<div class=\"alert alert-danger\" role=\"alert\" ng-show=\"summative.error\">\n" +
+    "\t\t\t<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
+    "\t\t\t<span class=\"sr-only\">Error:</span>\n" +
+    "\t\t\t{{summative.error}}\n" +
     "\t\t</div>\n" +
+    "\t</div> \t\n" +
     "\n" +
-    "\t\t<div class=\"panel panel-default\">\n" +
-    "\t\t    <div class=\"panel-heading\">Billing Information</div>\n" +
-    "\t\t    <div class=\"panel-body\">\n" +
-    "\t\t    \t<div class=\"row\">\n" +
-    "\t\t\t\t    <div class=\"col-sm-12\">\n" +
-    "\t\t\t\t\t    <p>If you are tax exempt, please email a copy of your exemption certificate to <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a></p>\n" +
-    "\t\t\t\t    </div>\n" +
-    "\t\t\t\t</div>\n" +
-    "\t\t        <div class=\"row\">\n" +
-    "\t\t            <div class=\"form-group col-sm-4 required\">\n" +
-    "\t\t                <label for=\"billingName\" class=\"control-label\">Billing Contact Name</label>\n" +
-    "\t\t                <input type=\"text\" class=\"form-control\" name=\"billingName\" ng-model=\"formData.billingContact.name\" required=\"required\">\n" +
-    "\t\t            </div>\n" +
+    "\t<h3>3. Periodic Order Data</h3>\n" +
+    "\t<div class=\"row\">\n" +
+    "\t\t<div class=\"col-sm-12\">\n" +
+    "\t  \t\t<h5>ACT Aspire Periodic</h5>\n" +
+    "\t  \t\t<ul>\n" +
+    "\t\t\t    <li>Is a complement to the ACT Aspire Summative test, offered via ACT Aspire’s Online platform.</li>\n" +
+    "\t\t\t    <li>Includes access to Classroom quizzes (designed for grades 3 – 8) as well as Interim Assessments (designed for grades 3 – 10)</li>\n" +
+    "\t\t\t    <li>Is a subscription to access a series of interim tests and classroom quizzes in the subject areas of: English, mathematics, reading, science and writing. The subscription is effective from September through June of each school year.</li>\n" +
+    "\t\t\t    <li>Can be administered to students throughout the year and provides immediate performance analysis and score reporting.</li>\n" +
+    "\t\t\t\t<li>Can be bundled with ACT Aspire Summative test at a per-student discount off of the Summative test (discount will be automatically applied. Refer to Order Summary below).</li>\t\t\t\t\n" +
+    "\t\t\t</ul>\n" +
+    "\t\t</div>\t\t\n" +
+    "\t</div>\n" +
     "\n" +
-    "\t\t            <div class=\"form-group col-sm-4 required\">\n" +
-    "\t\t                <label for=\"billingEmail\" class=\"control-label\">Billing Contact Email</label>\n" +
-    "\t\t                <input type=\"email\" class=\"form-control\" name=\"billingEmail\" ng-model=\"formData.billingContact.email\" required=\"required\">\n" +
-    "\t\t            </div>\n" +
-    "\n" +
-    "\t\t            <div class=\"form-group col-sm-4 required\">\n" +
-    "\t\t                <label for=\"billingPhone\" class=\"control-label\">Billing Contact Phone</label>\n" +
-    "\t\t                <input type=\"tel\" class=\"form-control\" name=\"billingPhone\" ng-model=\"formData.billingContact.phone\" required=\"required\">\n" +
-    "\t\t            </div>\n" +
-    "\t\t        </div>    \n" +
-    "\t\t        <div class=\"row\">\n" +
-    "\t\t            <div class=\"form-group col-sm-12 required\">\n" +
-    "\t\t                <label for=\"billingAddress\" class=\"control-label\">Billing Address Line 1</label>\n" +
-    "\t\t                <input type=\"text\" class=\"form-control\" name=\"billingAddress\" ng-model=\"formData.billing.address.line1\" required=\"required\">\n" +
-    "\t\t            </div>\n" +
-    "\t\t        </div>\n" +
-    "\t\t        <div class=\"row\">\n" +
-    "\t\t            <div class=\"form-group col-sm-12\">\n" +
-    "\t\t                <label for=\"billingAddress\" class=\"control-label\">Billing Address Line 2</label>\n" +
-    "\t\t                <input type=\"text\" class=\"form-control\" name=\"billingAddress\" ng-model=\"formData.billing.address.line2\">\n" +
-    "\t\t            </div>\n" +
-    "\t\t        </div>        \n" +
-    "\t\t        <div class=\"row\">\n" +
-    "\t\t            <div class=\"form-group col-sm-4 required\">\n" +
-    "\t\t                <label for=\"city\" class=\"control-label\">City</label>\n" +
-    "\t\t                <input type=\"text\" class=\"form-control\" name=\"city\" ng-model=\"formData.billing.address.city\" required=\"required\">\n" +
-    "\t\t            </div>\n" +
-    "\n" +
-    "\t\t            <div class=\"form-group col-sm-4 required\">\n" +
-    "\t\t                <label for=\"state\" class=\"control-label\">State</label>\n" +
-    "\t\t        \t\t<select class=\"form-control\" name=\"state\" ng-model=\"formData.billing.address.state\" ng-options=\"key as value for (key , value) in states\" required=\"required\"></select>\n" +
-    "\t\t            </div>\n" +
-    "\n" +
-    "\t\t            <div class=\"form-group col-sm-4 required\">\n" +
-    "\t\t                <label for=\"zip\" class=\"control-label\">Zip</label>\n" +
-    "\t\t                <input type=\"text\" class=\"form-control\" name=\"zip\" ng-model=\"formData.billing.address.zip\" required=\"required\">\n" +
-    "\t\t            </div>\n" +
-    "\t\t        </div>    \n" +
-    "\t\t    </div>\n" +
+    "\t<div class=\"panel panel-default\" ng-repeat=\"order in orders.periodic.orders\">\n" +
+    "\t\t<div class=\"panel-heading\">\n" +
+    "\t\t\t{{order.calendarYear | schoolYear}} Periodic Order\n" +
+    "\t\t\t<button type=\"button\" class=\"pull-right btn btn-default btn-xs\" aria-label=\"Remove\" ng-click=\"removeOrder(orders.periodic.orders, order)\">\n" +
+    "\t\t\t\t<span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>\n" +
+    "\t\t\t</button>\n" +
     "\t\t</div>\n" +
+    "\t\t<table class=\"table table-striped\">\n" +
+    "\t\t\t<thead>\n" +
+    "\t\t\t\t<th></th>\n" +
+    "\t\t\t\t<th>Online Test</th>\n" +
+    "\t\t\t</thead>\n" +
+    "\t\t\t<tr ng-repeat=\"grade in [3,4,5,6,7,8,9,10]\">\n" +
+    "\t\t\t\t<td>Grade {{grade}}</td>\n" +
+    "\t\t\t\t<td><input type=\"number\" ng-model=\"order.grade[grade].online\" name=\"\" min=\"0\"></td>\n" +
+    "\t\t\t</tr>\n" +
+    "\t\t\t<tr>\n" +
+    "\t\t\t\t<td>Total</td>\n" +
+    "\t\t\t\t<td>{{order.onlineTotal}}</td>\n" +
+    "\t\t\t</tr>\n" +
+    "\t\t</table>\n" +
+    "\t</div>\n" +
     "\n" +
-    "\t\t<h3>2. Summative Order Data</h3>\n" +
-    "\t\t<div class=\"row\">\n" +
-    "\t\t\t<div class=\"col-sm-12\">\n" +
-    "\t\t  \t\t<h5>ACT Aspire Summative Test</h5>\n" +
-    "\t\t  \t\t<ul>\n" +
-    "\t\t\t\t    <li>Is a vertically scaled, standards-based battery of achievement test that are linked to the College and Career Readiness Standard in the subject areas of: English, mathematics, reading, science and writing.</li>\t\t\t\t\n" +
-    "\t\t\t\t    <li>Designed for Grades 3 - 10 and can be taken Online or in Paper form (paper administration requires an additional fee).</li>\n" +
-    "\t\t\t\t    <li>Can be administered in a Spring test administration window or a Fall test administration window.</li>\n" +
-    "\t\t\t\t    <li>Prices advertised on this form are valid through {{cost.pricing.validThrough}}. If you have any questions regarding the product or placing an order please contact <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a> or 1-855-730-0400</li>\n" +
-    "\t\t\t\t    <li>When ordering Summative assessments, the following discounts are available*:\n" +
-    "\t\t\t\t    \t<ul>\n" +
-    "\t\t\t\t    \t\t<li>Test four or more grades of students: $1.00 off</li>\n" +
-    "\t\t\t\t\t\t\t<li>Test 400 to 1,000 students: $1.00 off</li>\n" +
-    "\t\t\t\t\t\t\t<li>Test over 1,000 students: $2.00 off</li>\n" +
-    "\t\t\t\t\t\t\t<li>Bundle Periodic to Summative order: $4.00 off (applied to Summative)</li>\n" +
-    "\t\t\t\t    \t</ul>\n" +
-    "\t\t\t\t    </li>\n" +
-    "\t\t\t\t</ul>\n" +
-    "\t\t\t\t<p>*ACT Aspire reserves the right to disallow a discount at any time if it is determined the orderor did not earn the discount based on actual volume of tested students. </p>\n" +
-    "\t\t\t</div>\t\t\n" +
+    "\t<div class=\"row\">\n" +
+    "\t\t<div class=\"form-group col-sm-7\">\n" +
+    "\t\t\t<label for=\"schoolYear\" class=\"control-label\">What school year would you like to order?</label>\n" +
+    "\t\t\t<select class=\"form-control\" name=\"schoolYear\" ng-model=\"periodic.schoolYear\">\n" +
+    "\t\t\t\t<option value=\"\">---Please select---</option>\n" +
+    "\t      \t\t<option ng-repeat=\"item in cost.periodicCalendarYears\" value=\"{{item}}\">{{item | schoolYear}}</option>\n" +
+    "\t\t\t </select>\n" +
     "\t\t</div>\n" +
-    "\t\t\t\n" +
-    "\t\t<div class=\"panel panel-default\" ng-repeat=\"order in orders.summative.orders\">\n" +
-    "\t\t\t<div class=\"panel-heading\">\n" +
-    "\t\t\t\t{{order.administrationWindow}} {{order.calendarYear}} Summative Order\n" +
-    "\t\t\t\t<button type=\"button\" class=\"pull-right btn btn-default btn-xs\" aria-label=\"Remove\" ng-click=\"removeOrder(orders.summative.orders, order)\">\n" +
-    "\t\t\t\t\t<span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>\n" +
-    "\t\t\t\t</button>\n" +
+    "\t\t<div class=\"form-group col-sm-2\">\n" +
+    "\t\t\t<label class=\"control-label\">&nbsp;</label>\n" +
+    "\t\t\t<div>\n" +
+    "\t\t\t\t<button type=\"button\" ng-model=\"addPeriodicOrderButton\" ng-click=\"addOrder(orders.periodic.orders, periodic.schoolYear)\"  class=\"btn btn-primary\" ng-disabled=\"!periodic.schoolYear\">Order Assessments</button>\n" +
     "\t\t\t</div>\n" +
-    "\t\t\t<div class=\"panel-body\">\n" +
-    "\t\t\t<h5>Subjects</h5>\n" +
+    "\t\t</div>\n" +
+    "\t</div>\n" +
+    "\t<div class=\"row\">\n" +
+    "\t\t<div class=\"alert alert-danger\" role=\"alert\" ng-show=\"periodic.error\">\n" +
+    "\t\t\t<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
+    "\t\t\t<span class=\"sr-only\">Error:</span>\n" +
+    "\t\t\t{{periodic.error}}\n" +
+    "\t\t</div>\n" +
+    "\t</div> \t\n" +
+    "\n" +
+    "\t<h3>4. Order Summary</h3>\n" +
+    "\t<div class=\"panel panel-default\">\n" +
+    "\t\t<div class=\"panel-heading\">\n" +
+    "\t\t\tOrder Summary\n" +
+    "\t\t</div>\n" +
+    "\t\t<div class=\"panel-body\">\n" +
     "\t\t\t<div class=\"row\">\n" +
-    "\t\t    \t<div class=\"col-sm-2 form-group\" ng-repeat=\"(subject,enabled) in order.subjects\">\n" +
-    "\t\t            <label class=\"checkbox-inline\">\n" +
-    "\t\t            \t<input type=\"checkbox\" ng-model=\"order.subjects[subject]\">\n" +
-    "\t\t            \t{{subject}}\n" +
-    "\t\t            </label>\n" +
-    "\t\t        </div>\n" +
-    "\t\t    </div>\n" +
-    "\t\t    <h5>Printed Student Reports</h5>\n" +
-    "\t\t    <div class=\"row\">\n" +
-    "\t\t    \t<div class=\"col-sm-6 form-group\">\n" +
+    "\t\t\t\t<div class=\"col-sm-6 form-group\">\n" +
     "\t\t\t\t    <label class=\"checkbox-inline\">\n" +
-    "\t\t\t\t    \t<input type=\"checkbox\" ng-model=\"order.individualReports\">\n" +
-    "\t\t\t\t    \tAdd Printed Individual Student Reports\n" +
+    "\t\t\t\t    \t<input type=\"checkbox\" ng-model=\"formData.hasDiscountCode\">\n" +
+    "\t\t\t\t    \tDo you have a discount coupon code?\n" +
     "\t\t\t\t    </label>\n" +
-    "\t\t\t    </div>\n" +
-    "\t\t     \t<div class=\"col-sm-6 form-group\">\n" +
-    "\t\t\t\t    <label class=\"checkbox-inline\">\n" +
-    "\t\t\t\t    \t<input type=\"checkbox\" ng-model=\"order.scoreLabels\">\n" +
-    "\t\t\t\t    \tAdd Printed Score Labels ({{order.cost.labels | currency}})\n" +
-    "\t\t\t\t    </label>\n" +
-    "\t\t\t    </div>\n" +
+    "\t\t\t\t</div>\n" +
+    "\t\t\t\t<div class=\"form-group col-sm-4\" ng-show=\"formData.hasDiscountCode\">\n" +
+    "\t\t\t\t\t<label for=\"discountCode\" class=\"control-label\">Discount Code</label>\n" +
+    "\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"discountCode\" ng-model=\"discountCode\">\n" +
+    "\t\t\t\t</div>\n" +
+    "\t\t\t\t<div class=\"col-sm-2\" ng-show=\"formData.hasDiscountCode\">\n" +
+    "\t\t\t\t\t<label class=\"control-label\">&nbsp;</label>\n" +
+    "\t\t\t\t\t<div>\n" +
+    "\t\t\t\t\t\t<button type=\"button\" ng-click=\"addDiscountCode(discountCode); discountCode = '';\" class=\"btn btn-default\">Add</button>\n" +
+    "\t\t\t\t\t</div>\n" +
+    "\t\t\t\t</div>\n" +
     "\t\t\t</div>\n" +
-    "\t\t\t<div class=\"row\" ng-show=\"order.individualReports\">\n" +
-    "\t\t    \t<div class=\"col-sm-6 form-group\">\n" +
-    "\t\t\t\t\t<label>\n" +
-    "\t\t\t\t\t\t<input type=\"radio\" ng-model=\"order.reportsPerStudent\" value=\"1\">\n" +
-    "\t\t\t\t\t\t1 Report Per Student ({{order.cost.isr | currency}})\n" +
-    "\t\t\t\t\t</label>\n" +
-    "\t\t\t\t\t<label>\n" +
-    "\t\t\t\t\t\t<input type=\"radio\" ng-model=\"order.reportsPerStudent\" value=\"2\">\n" +
-    "\t\t\t\t\t\t2 Reports Per Student ({{order.cost.isr * 2 | currency}})\n" +
-    "\t\t\t\t\t</label>\t\t\t\n" +
-    "\t\t\t    </div>\n" +
-    "\t\t    </div>\n" +
-    "\n" +
-    "\t\t\t<table class=\"table table-striped\">\n" +
-    "\t\t\t\t<thead>\n" +
-    "\t\t\t\t\t<th></th>\n" +
-    "\t\t\t\t\t<th>Online Test</th>\n" +
-    "\t\t\t\t\t<th>Paper Test</th>\n" +
-    "\t\t\t\t\t<th>Total Student Estimate</th>\n" +
-    "\t\t\t\t</thead>\n" +
-    "\t\t\t\t<tr ng-repeat=\"grade in [3,4,5,6,7,8,9,10]\">\n" +
-    "\t\t\t\t\t<td>Grade {{grade}}</td>\n" +
-    "\t\t\t\t\t<td><input type=\"number\" ng-model=\"order.grade[grade].online\" name=\"\" min=\"0\"></td>\n" +
-    "\t\t\t\t\t<td><input type=\"number\" ng-model=\"order.grade[grade].paper\" name=\"\" min=\"0\"></td>\n" +
-    "\t\t\t\t\t<td>{{order.grade[grade].online + order.grade[grade].paper}}</td>\n" +
-    "\t\t\t\t</tr>\n" +
-    "\t\t\t\t<tr>\n" +
-    "\t\t\t\t\t<td>Total</td>\n" +
+    "\t\t\t<div class=\"row\" ng-show=\"formData.hasDiscountCode\">\t\n" +
+    "\t\t\t\t<div class=\"col-sm-offset-6 col-sm-6\" ng-show=\"!formData.summary.discount.special.error\">\n" +
+    "\t\t\t\t\t<p class=\"coupon-code\">{{formData.summary.discount.special.code}}</p>\n" +
+    "\t\t\t\t</div>\n" +
+    "\t\t\t\t<div class=\"col-sm-offset-6 col-sm-6 alert alert-danger\" role=\"alert\" ng-show=\"formData.summary.discount.special.error\">\n" +
+    "\t\t\t\t\t<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
+    "\t\t\t\t\t<span class=\"sr-only\">Error:</span>\n" +
+    "\t\t\t\t\t{{formData.summary.discount.special.error}}\n" +
+    "\t\t\t\t</div>\n" +
+    "\t\t\t</div> \t\n" +
+    "\t\t</div>\n" +
+    "\t\t<table class=\"table table-striped table-condensed\">\n" +
+    "\t\t\t<thead>\n" +
+    "\t\t\t\t<th>Product Ordered</th>\n" +
+    "\t\t\t\t<th>Total Student</th>\n" +
+    "\t\t\t\t<th>Price</th>\n" +
+    "\t\t\t\t<th>Extended Price</th>\n" +
+    "\t\t\t\t<th>Discounts</th>\n" +
+    "\t\t\t\t<th>Total Discount</th>\n" +
+    "\t\t\t\t<th>Order Balance</th>\n" +
+    "\t\t\t</thead>\n" +
+    "\t\t\t<tbody>\n" +
+    "\t\t\t\t<tr ng-repeat=\"order in orders.summative.orders | filter:notZero('online')\">\n" +
+    "\t\t\t\t\t<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Order Online</td>\n" +
     "\t\t\t\t\t<td>{{order.online.total}}</td>\n" +
-    "\t\t\t\t\t<td>{{order.paper.total}}</td>\n" +
-    "\t\t\t\t\t<td>{{order.paper.total + order.online.total}}</td>\n" +
+    "\t\t\t\t\t<td>\n" +
+    "\t\t\t\t\t\t<div ng-show=\"order.individualReports || order.scoreLabels\">\n" +
+    "\t\t\t\t\t\t\t<div>{{order.cost.online | currency}}</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.individualReports\">{{order.reportsPerStudent * order.cost.isr | currency}} (ISR)</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.scoreLabels\">{{order.cost.labels | currency}} (Labels)</div>\n" +
+    "\t\t\t\t\t\t\t<hr />\n" +
+    "\t\t\t\t\t\t</div>\n" +
+    "\t\t\t\t\t\t<div>{{order.online.price  | currency}}</div>\n" +
+    "\t\t\t\t\t</td>\n" +
+    "\t\t\t\t\t<td>{{order.online.extendedPrice | currency}}</td>\n" +
+    "\t\t\t\t\t<td>\n" +
+    "\t\t\t\t\t\t<span ng-show=\"order.online.totalDiscountPerStudent\">\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.online.discounts.volume\">{{order.online.discounts.volume | currency}} (Volume)</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.online.discounts.multiGrade\">{{order.online.discounts.multiGrade | currency}} (Multi-Grade)</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.online.discounts.periodic\">{{order.online.discounts.periodic | currency}} ({{order.online.periodicNumberApplied }} Periodic @ {{cost.discounts.periodic.discountPer | currency}})</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.online.discounts.state\">{{order.online.discounts.state | currency}} (State)</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.online.discounts.special\">{{order.online.discounts.special | currency}} (Special)</div>\n" +
+    "\t\t\t\t\t\t\t<hr />\n" +
+    "\t\t\t\t\t\t</span>\n" +
+    "\t\t\t\t\t\t<div>{{order.online.totalDiscountPerStudent | currency}} (Total Discount)</div>\n" +
+    "\t\t\t\t\t</td>\t\n" +
+    "\t\t\t\t\t<td>{{order.online.totalDiscount | currency}}</td>\n" +
+    "\t\t\t\t\t<td>{{order.online.balance | currency}}</td>\t\t\t\t\n" +
     "\t\t\t\t</tr>\n" +
-    "\t\t\t</table>\n" +
-    "\t\t</div>\n" +
-    "\t\t</div>\n" +
-    "\n" +
-    "\t\t<div class=\"row\">\n" +
-    "\t\t\t<div class=\"form-group col-sm-7\">\n" +
-    "\t\t\t\t<label for=\"calendarYear\" class=\"control-label\">What administrative window and year would you like to order?</label>\n" +
-    "\t\t\t\t<select class=\"form-control\" name=\"calendarYear\" ng-model=\"summative.calendarYear\">\n" +
-    "\t\t\t\t\t<option value=\"\">---Please select---</option>\n" +
-    "\t\t      \t\t<option ng-repeat=\"item in cost.pricing.summative\" value=\"{{item.semester}} {{item.year}}\">{{item.semester}} {{item.year}}</option>\n" +
-    "\t\t\t\t </select>\n" +
-    "\t\t\t</div>\n" +
-    "\t\t\t<div class=\"form-group col-sm-2\">\n" +
-    "\t\t\t\t<label class=\"control-label\">&nbsp;</label>\n" +
-    "\t\t\t\t<div>\n" +
-    "\t\t\t\t\t<button type=\"button\" ng-model=\"addSummativeOrderButton\" ng-click=\"addOrder(orders.summative.orders, summative.calendarYear, summative.error)\" class=\"btn btn-primary\" ng-disabled=\"!summative.calendarYear\">Order Assessments</button>\n" +
-    "\t\t\t\t</div>\n" +
-    "\t\t\t</div>\n" +
-    "\t\t</div>\n" +
-    "\t\t<div class=\"row\">\n" +
-    "\t\t\t<div class=\"alert alert-danger\" role=\"alert\" ng-show=\"summative.error\">\n" +
-    "\t\t\t\t<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
-    "\t\t\t\t<span class=\"sr-only\">Error:</span>\n" +
-    "\t\t\t\t{{summative.error}}\n" +
-    "\t\t\t</div>\n" +
-    "\t\t</div> \t\n" +
-    "\n" +
-    "\t\t<h3>3. Periodic Order Data</h3>\n" +
-    "\t\t<div class=\"row\">\n" +
-    "\t\t\t<div class=\"col-sm-12\">\n" +
-    "\t\t  \t\t<h5>ACT Aspire Periodic</h5>\n" +
-    "\t\t  \t\t<ul>\n" +
-    "\t\t\t\t    <li>Is a complement to the ACT Aspire Summative test, offered via ACT Aspire’s Online platform.</li>\n" +
-    "\t\t\t\t    <li>Includes access to Classroom quizzes (designed for grades 3 – 8) as well as Interim Assessments (designed for grades 3 – 10)</li>\n" +
-    "\t\t\t\t    <li>Is a subscription to access a series of interim tests and classroom quizzes in the subject areas of: English, mathematics, reading, science and writing. The subscription is effective from September through June of each school year.</li>\n" +
-    "\t\t\t\t    <li>Can be administered to students throughout the year and provides immediate performance analysis and score reporting.</li>\n" +
-    "\t\t\t\t\t<li>Can be bundled with ACT Aspire Summative test at a per-student discount off of the Summative test (discount will be automatically applied. Refer to Order Summary below).</li>\n" +
-    "\t\t\t\t\t<li>Prices as advertised on this form are valid through {{cost.pricing.validThrough}}. If you have any questions regarding the product or placing an order please contact <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a> or 1-855-730-0400.</li>\n" +
-    "\t\t\t\t\t<li>Periodic subscriptions are invoiced for the ordered volume and will be reconciled to the actual volume of students tested only when a significant discrepancy arises.</li>\n" +
-    "\t\t\t\t</ul>\n" +
-    "\t\t\t</div>\t\t\n" +
-    "\t\t</div>\n" +
-    "\n" +
-    "\t\t<div class=\"panel panel-default\" ng-repeat=\"order in orders.periodic.orders\">\n" +
-    "\t\t\t<div class=\"panel-heading\">\n" +
-    "\t\t\t\t{{order.calendarYear | schoolYear}} Periodic Order\n" +
-    "\t\t\t\t<button type=\"button\" class=\"pull-right btn btn-default btn-xs\" aria-label=\"Remove\" ng-click=\"removeOrder(orders.periodic.orders, order)\">\n" +
-    "\t\t\t\t\t<span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>\n" +
-    "\t\t\t\t</button>\n" +
-    "\t\t\t</div>\n" +
-    "\t\t\t<table class=\"table table-striped\">\n" +
-    "\t\t\t\t<thead>\n" +
-    "\t\t\t\t\t<th></th>\n" +
-    "\t\t\t\t\t<th>Online Test</th>\n" +
-    "\t\t\t\t</thead>\n" +
-    "\t\t\t\t<tr ng-repeat=\"grade in [3,4,5,6,7,8,9,10]\">\n" +
-    "\t\t\t\t\t<td>Grade {{grade}}</td>\n" +
-    "\t\t\t\t\t<td><input type=\"number\" ng-model=\"order.grade[grade].online\" name=\"\" min=\"0\"></td>\n" +
+    "\t\t\t\t<tr ng-repeat=\"order in orders.summative.orders | filter:notZero('paper')\">\n" +
+    "\t\t\t\t\t<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Order Paper</td>\n" +
+    "\t\t\t\t\t<td>{{order.paper.total}}</td>\n" +
+    "\t\t\t\t\t<td>\n" +
+    "\t\t\t\t\t\t<div ng-show=\"order.individualReports || order.scoreLabels\">\n" +
+    "\t\t\t\t\t\t\t<div>{{order.cost.paper | currency}}</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.individualReports\">{{order.reportsPerStudent * order.cost.isr | currency}} (ISR)</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.scoreLabels\">{{order.cost.labels | currency}} (Labels)</div>\n" +
+    "\t\t\t\t\t\t\t<hr />\n" +
+    "\t\t\t\t\t\t</div>\n" +
+    "\t\t\t\t\t\t<div>{{order.paper.price  | currency}}</div>\n" +
+    "\t\t\t\t\t</td>\n" +
+    "\t\t\t\t\t<td>{{order.paper.extendedPrice | currency}}</td>\n" +
+    "\t\t\t\t\t<td>\n" +
+    "\t\t\t\t\t\t<span ng-show=\"order.paper.totalDiscountPerStudent\">\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.volume\">{{order.paper.discounts.volume | currency}} (Volume)</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.multiGrade\">{{order.paper.discounts.multiGrade | currency}} (Multi-Grade)</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.periodic\">{{order.paper.discounts.periodic | currency}} ({{order.paper.periodicNumberApplied }} Periodic @ {{cost.discounts.periodic.discountPer | currency}})</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.state\">{{order.paper.discounts.state | currency}} (State)</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.special\">{{order.paper.discounts.special | currency}} (Special)</div>\n" +
+    "\t\t\t\t\t\t\t<hr />\n" +
+    "\t\t\t\t\t\t</span>\n" +
+    "\t\t\t\t\t\t<div>{{order.paper.totalDiscountPerStudent | currency}} (Total Discount)</div>\n" +
+    "\t\t\t\t\t</td>\t\n" +
+    "\t\t\t\t\t<td>{{order.paper.totalDiscount | currency}}</td>\n" +
+    "\t\t\t\t\t<td>{{order.paper.balance | currency}}</td>\t\t\t\t\n" +
+    "\t\t\t\t</tr>\n" +
+    "\t\t\t\t<tr ng-repeat=\"order in orders.periodic.orders\">\n" +
+    "\t\t\t\t\t<td>{{order.administrationWindow}} {{order.calendarYear | schoolYear}} Periodic Order Online</td>\n" +
+    "\t\t\t\t\t<td>{{order.onlineTotal}}</td>\n" +
+    "\t\t\t\t\t<td>{{order.price  | currency}}</td>\n" +
+    "\t\t\t\t\t<td>{{order.extendedPrice | currency}}</td>\n" +
+    "\t\t\t\t\t<td>\n" +
+    "\t\t\t\t\t\t<span ng-show=\"order.totalDiscountPerStudent\">\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.discounts.state\">{{order.discounts.state | currency}} (State)</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.discounts.special\">{{order.discounts.special | currency}} (Special)</div>\n" +
+    "\t\t\t\t\t\t\t<hr />\n" +
+    "\t\t\t\t\t\t</span>\n" +
+    "\t\t\t\t\t\t<div>{{order.totalDiscountPerStudent | currency}} (Total Discount)</div>\n" +
+    "\t\t\t\t\t</td>\t\n" +
+    "\t\t\t\t\t<td>{{order.totalDiscount | currency}}</td>\n" +
+    "\t\t\t\t\t<td>{{order.balance | currency}}</td>\t\t\t\t\t\t\n" +
     "\t\t\t\t</tr>\n" +
     "\t\t\t\t<tr>\n" +
-    "\t\t\t\t\t<td>Total</td>\n" +
-    "\t\t\t\t\t<td>{{order.onlineTotal}}</td>\n" +
+    "\t\t\t\t\t<td colspan=\"7\">\n" +
+    "\t\t\t\t\t\t<h4>Total: {{formData.summary.total | currency}} <span ng-show=\"formData.summary.tax\"> + {{formData.summary.tax | currency}} ({{formData.summary.taxRate}} Sales Tax) = {{formData.summary.totalWithTax | currency}}</span></h4>\n" +
+    "\t\t\t\t\t</td>\n" +
     "\t\t\t\t</tr>\n" +
-    "\t\t\t</table>\n" +
-    "\t\t</div>\n" +
+    "\t\t\t</tbody>\n" +
+    "\t\t</table>\n" +
+    "\t</div>\n" +
     "\n" +
-    "\t\t<div class=\"row\">\n" +
-    "\t\t\t<div class=\"form-group col-sm-7\">\n" +
-    "\t\t\t\t<label for=\"schoolYear\" class=\"control-label\">What school year would you like to order?</label>\n" +
-    "\t\t\t\t<select class=\"form-control\" name=\"schoolYear\" ng-model=\"periodic.schoolYear\">\n" +
-    "\t\t\t\t\t<option value=\"\">---Please select---</option>\n" +
-    "\t\t      \t\t<option ng-repeat=\"item in cost.periodicCalendarYears\" value=\"{{item}}\">{{item | schoolYear}}</option>\n" +
-    "\t\t\t\t </select>\n" +
-    "\t\t\t</div>\n" +
-    "\t\t\t<div class=\"form-group col-sm-2\">\n" +
-    "\t\t\t\t<label class=\"control-label\">&nbsp;</label>\n" +
-    "\t\t\t\t<div>\n" +
-    "\t\t\t\t\t<button type=\"button\" ng-model=\"addPeriodicOrderButton\" ng-click=\"addOrder(orders.periodic.orders, periodic.schoolYear)\"  class=\"btn btn-primary\" ng-disabled=\"!periodic.schoolYear\">Order Assessments</button>\n" +
-    "\t\t\t\t</div>\n" +
-    "\t\t\t</div>\n" +
+    "\t<div class=\"panel panel-default\">\n" +
+    "\t\t<div class=\"panel-heading\">Additional Comments</div>\n" +
+    "\t\t<div class=\"panel-body\">\n" +
+    "\t\t\t<textarea class=\"form-control\" rows=\"3\" ng-model=\"formData.comments\"></textarea>\n" +
     "\t\t</div>\n" +
-    "\t\t<div class=\"row\">\n" +
-    "\t\t\t<div class=\"alert alert-danger\" role=\"alert\" ng-show=\"periodic.error\">\n" +
-    "\t\t\t\t<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
-    "\t\t\t\t<span class=\"sr-only\">Error:</span>\n" +
-    "\t\t\t\t{{periodic.error}}\n" +
-    "\t\t\t</div>\n" +
-    "\t\t</div> \t\n" +
+    "\t</div>\n" +
     "\n" +
-    "\t\t<h3>4. Order Summary</h3>\n" +
-    "\t\t<div class=\"panel panel-default\">\n" +
-    "\t\t\t<div class=\"panel-heading\">\n" +
-    "\t\t\t\tOrder Summary\n" +
-    "\t\t\t</div>\n" +
-    "\t\t\t<div class=\"panel-body\">\n" +
-    "\t\t\t\t<div class=\"row\">\n" +
-    "\t\t\t\t\t<div class=\"col-sm-6 form-group\">\n" +
-    "\t\t\t\t\t    <label class=\"checkbox-inline\">\n" +
-    "\t\t\t\t\t    \t<input type=\"checkbox\" ng-model=\"formData.hasDiscountCode\">\n" +
-    "\t\t\t\t\t    \tDo you have a discount coupon code?\n" +
-    "\t\t\t\t\t    </label>\n" +
-    "\t\t\t\t\t</div>\n" +
-    "\t\t\t\t\t<div class=\"form-group col-sm-4\" ng-show=\"formData.hasDiscountCode\">\n" +
-    "\t\t\t\t\t\t<label for=\"discountCode\" class=\"control-label\">Discount Code</label>\n" +
-    "\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"discountCode\" ng-model=\"discountCode\">\n" +
-    "\t\t\t\t\t</div>\n" +
-    "\t\t\t\t\t<div class=\"col-sm-2\" ng-show=\"formData.hasDiscountCode\">\n" +
-    "\t\t\t\t\t\t<label class=\"control-label\">&nbsp;</label>\n" +
-    "\t\t\t\t\t\t<div>\n" +
-    "\t\t\t\t\t\t\t<button type=\"button\" ng-click=\"addDiscountCode(discountCode); discountCode = '';\" class=\"btn btn-default\">Add</button>\n" +
-    "\t\t\t\t\t\t</div>\n" +
-    "\t\t\t\t\t</div>\n" +
-    "\t\t\t\t</div>\n" +
-    "\t\t\t\t<div class=\"row\" ng-show=\"formData.hasDiscountCode\">\t\n" +
-    "\t\t\t\t\t<div class=\"col-sm-offset-6 col-sm-6\" ng-show=\"!formData.summary.discount.special.error\">\n" +
-    "\t\t\t\t\t\t<p class=\"coupon-code\">{{formData.summary.discount.special.code}}</p>\n" +
-    "\t\t\t\t\t</div>\n" +
-    "\t\t\t\t\t<div class=\"col-sm-offset-6 col-sm-6 alert alert-danger\" role=\"alert\" ng-show=\"formData.summary.discount.special.error\">\n" +
-    "\t\t\t\t\t\t<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
-    "\t\t\t\t\t\t<span class=\"sr-only\">Error:</span>\n" +
-    "\t\t\t\t\t\t{{formData.summary.discount.special.error}}\n" +
-    "\t\t\t\t\t</div>\n" +
-    "\t\t\t\t</div> \t\n" +
-    "\t\t\t</div>\n" +
-    "\t\t\t<table class=\"table table-striped table-condensed\">\n" +
-    "\t\t\t\t<thead>\n" +
-    "\t\t\t\t\t<th>Product Ordered</th>\n" +
-    "\t\t\t\t\t<th>Total Student</th>\n" +
-    "\t\t\t\t\t<th>Price</th>\n" +
-    "\t\t\t\t\t<th>Extended Price</th>\n" +
-    "\t\t\t\t\t<th>Discounts</th>\n" +
-    "\t\t\t\t\t<th>Total Discount</th>\n" +
-    "\t\t\t\t\t<th>Order Balance</th>\n" +
-    "\t\t\t\t</thead>\n" +
-    "\t\t\t\t<tbody>\n" +
-    "\t\t\t\t\t<tr ng-repeat=\"order in orders.summative.orders | filter:notZero('online')\">\n" +
-    "\t\t\t\t\t\t<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Order Online</td>\n" +
-    "\t\t\t\t\t\t<td>{{order.online.total}}</td>\n" +
-    "\t\t\t\t\t\t<td>\n" +
-    "\t\t\t\t\t\t\t<div ng-show=\"order.individualReports || order.scoreLabels\">\n" +
-    "\t\t\t\t\t\t\t\t<div>{{order.cost.online | currency}}</div>\n" +
-    "\t\t\t\t\t\t\t\t<div ng-show=\"order.individualReports\">{{order.reportsPerStudent * order.cost.isr | currency}} (ISR)</div>\n" +
-    "\t\t\t\t\t\t\t\t<div ng-show=\"order.scoreLabels\">{{order.cost.labels | currency}} (Labels)</div>\n" +
-    "\t\t\t\t\t\t\t\t<hr />\n" +
-    "\t\t\t\t\t\t\t</div>\n" +
-    "\t\t\t\t\t\t\t<div>{{order.online.price  | currency}}</div>\n" +
-    "\t\t\t\t\t\t</td>\n" +
-    "\t\t\t\t\t\t<td>{{order.online.extendedPrice | currency}}</td>\n" +
-    "\t\t\t\t\t\t<td>\n" +
-    "\t\t\t\t\t\t\t<span ng-show=\"order.online.totalDiscountPerStudent\">\n" +
-    "\t\t\t\t\t\t\t\t<div ng-show=\"order.online.discounts.volume\">{{order.online.discounts.volume | currency}} (Volume)</div>\n" +
-    "\t\t\t\t\t\t\t\t<div ng-show=\"order.online.discounts.multiGrade\">{{order.online.discounts.multiGrade | currency}} (Multi-Grade)</div>\n" +
-    "\t\t\t\t\t\t\t\t<div ng-show=\"order.online.discounts.periodic\">{{order.online.discounts.periodic | currency}} ({{order.online.periodicNumberApplied }} Periodic @ {{cost.discounts.periodic.discountPer | currency}})</div>\n" +
-    "\t\t\t\t\t\t\t\t<div ng-show=\"order.online.discounts.state\">{{order.online.discounts.state | currency}} (State)</div>\n" +
-    "\t\t\t\t\t\t\t\t<div ng-show=\"order.online.discounts.special\">{{order.online.discounts.special | currency}} (Special)</div>\n" +
-    "\t\t\t\t\t\t\t\t<hr />\n" +
-    "\t\t\t\t\t\t\t</span>\n" +
-    "\t\t\t\t\t\t\t<div>{{order.online.totalDiscountPerStudent | currency}} (Total Discount)</div>\n" +
-    "\t\t\t\t\t\t</td>\t\n" +
-    "\t\t\t\t\t\t<td>{{order.online.totalDiscount | currency}}</td>\n" +
-    "\t\t\t\t\t\t<td>{{order.online.balance | currency}}</td>\t\t\t\t\n" +
-    "\t\t\t\t\t</tr>\n" +
-    "\t\t\t\t\t<tr ng-repeat=\"order in orders.summative.orders | filter:notZero('paper')\">\n" +
-    "\t\t\t\t\t\t<td>{{order.administrationWindow}} {{order.calendarYear}} Summative Order Paper</td>\n" +
-    "\t\t\t\t\t\t<td>{{order.paper.total}}</td>\n" +
-    "\t\t\t\t\t\t<td>\n" +
-    "\t\t\t\t\t\t\t<div ng-show=\"order.individualReports || order.scoreLabels\">\n" +
-    "\t\t\t\t\t\t\t\t<div>{{order.cost.paper | currency}}</div>\n" +
-    "\t\t\t\t\t\t\t\t<div ng-show=\"order.individualReports\">{{order.reportsPerStudent * order.cost.isr | currency}} (ISR)</div>\n" +
-    "\t\t\t\t\t\t\t\t<div ng-show=\"order.scoreLabels\">{{order.cost.labels | currency}} (Labels)</div>\n" +
-    "\t\t\t\t\t\t\t\t<hr />\n" +
-    "\t\t\t\t\t\t\t</div>\n" +
-    "\t\t\t\t\t\t\t<div>{{order.paper.price  | currency}}</div>\n" +
-    "\t\t\t\t\t\t</td>\n" +
-    "\t\t\t\t\t\t<td>{{order.paper.extendedPrice | currency}}</td>\n" +
-    "\t\t\t\t\t\t<td>\n" +
-    "\t\t\t\t\t\t\t<span ng-show=\"order.paper.totalDiscountPerStudent\">\n" +
-    "\t\t\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.volume\">{{order.paper.discounts.volume | currency}} (Volume)</div>\n" +
-    "\t\t\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.multiGrade\">{{order.paper.discounts.multiGrade | currency}} (Multi-Grade)</div>\n" +
-    "\t\t\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.periodic\">{{order.paper.discounts.periodic | currency}} ({{order.paper.periodicNumberApplied }} Periodic @ {{cost.discounts.periodic.discountPer | currency}})</div>\n" +
-    "\t\t\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.state\">{{order.paper.discounts.state | currency}} (State)</div>\n" +
-    "\t\t\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.special\">{{order.paper.discounts.special | currency}} (Special)</div>\n" +
-    "\t\t\t\t\t\t\t\t<hr />\n" +
-    "\t\t\t\t\t\t\t</span>\n" +
-    "\t\t\t\t\t\t\t<div>{{order.paper.totalDiscountPerStudent | currency}} (Total Discount)</div>\n" +
-    "\t\t\t\t\t\t</td>\t\n" +
-    "\t\t\t\t\t\t<td>{{order.paper.totalDiscount | currency}}</td>\n" +
-    "\t\t\t\t\t\t<td>{{order.paper.balance | currency}}</td>\t\t\t\t\n" +
-    "\t\t\t\t\t</tr>\n" +
-    "\t\t\t\t\t<tr ng-repeat=\"order in orders.periodic.orders\">\n" +
-    "\t\t\t\t\t\t<td>{{order.administrationWindow}} {{order.calendarYear | schoolYear}} Periodic Order Online</td>\n" +
-    "\t\t\t\t\t\t<td>{{order.onlineTotal}}</td>\n" +
-    "\t\t\t\t\t\t<td>{{order.price  | currency}}</td>\n" +
-    "\t\t\t\t\t\t<td>{{order.extendedPrice | currency}}</td>\n" +
-    "\t\t\t\t\t\t<td>\n" +
-    "\t\t\t\t\t\t\t<span ng-show=\"order.totalDiscountPerStudent\">\n" +
-    "\t\t\t\t\t\t\t\t<div ng-show=\"order.discounts.state\">{{order.discounts.state | currency}} (State)</div>\n" +
-    "\t\t\t\t\t\t\t\t<div ng-show=\"order.discounts.special\">{{order.discounts.special | currency}} (Special)</div>\n" +
-    "\t\t\t\t\t\t\t\t<hr />\n" +
-    "\t\t\t\t\t\t\t</span>\n" +
-    "\t\t\t\t\t\t\t<div>{{order.totalDiscountPerStudent | currency}} (Total Discount)</div>\n" +
-    "\t\t\t\t\t\t</td>\t\n" +
-    "\t\t\t\t\t\t<td>{{order.totalDiscount | currency}}</td>\n" +
-    "\t\t\t\t\t\t<td>{{order.balance | currency}}</td>\t\t\t\t\t\t\n" +
-    "\t\t\t\t\t</tr>\n" +
-    "\t\t\t\t\t<tr>\n" +
-    "\t\t\t\t\t\t<td colspan=\"7\">\n" +
-    "\t\t\t\t\t\t\t<h4>Total: {{formData.summary.total | currency}} <span ng-show=\"formData.summary.tax\"> + {{formData.summary.tax | currency}} ({{formData.summary.taxRate}} Sales Tax) = {{formData.summary.totalWithTax | currency}}</span></h4>\n" +
-    "\t\t\t\t\t\t</td>\n" +
-    "\t\t\t\t\t</tr>\n" +
-    "\t\t\t\t</tbody>\n" +
-    "\t\t\t</table>\n" +
+    "\t<div class=\"row\">\n" +
+    "\t\t<div class=\"col-sm-12 form-group\">\n" +
+    "\t\t    <label class=\"checkbox-inline\">\n" +
+    "\t\t    \t<input type=\"checkbox\" ng-model=\"formData.acceptTerms\">\n" +
+    "\t\t    \tI agree to ACT Aspire's <a href=\"./json/ActAspireTermsAndConditions.pdf\" target=\"_blank\">Terms and Conditions</a>\n" +
+    "\t\t    </label>\n" +
     "\t\t</div>\n" +
-    "\n" +
-    "\t\t<div class=\"panel panel-default\">\n" +
-    "\t\t\t<div class=\"panel-heading\">Additional Comments</div>\n" +
-    "\t\t\t<div class=\"panel-body\">\n" +
-    "\t\t\t\t<textarea class=\"form-control\" rows=\"3\" ng-model=\"formData.comments\"></textarea>\n" +
-    "\t\t\t</div>\n" +
-    "\t\t</div>\n" +
-    "\n" +
-    "\t\t<div class=\"row\">\n" +
-    "\t\t\t<div class=\"col-sm-12 form-group\">\n" +
-    "\t\t\t    <label class=\"checkbox-inline\">\n" +
-    "\t\t\t    \t<input type=\"checkbox\" ng-model=\"formData.acceptTerms\">\n" +
-    "\t\t\t    \tI agree to ACT Aspire's <a href=\"./json/ActAspireTermsAndConditions.pdf\" target=\"_blank\">Terms and Conditions</a>\n" +
-    "\t\t\t    </label>\n" +
-    "\t\t\t</div>\n" +
-    "\t\t</div>\n" +
-    "\t\t<div class=\"row\" ng-show=\"formData.acceptTerms\">\n" +
-    "\t\t    <div class=\"form-group col-sm-12 required\">\n" +
-    "\t\t        <label for=\"firstName\" class=\"control-label\">Signature:</label>\n" +
-    "\t\t        <input type=\"text\" class=\"form-control\" name=\"firstName\" ng-model=\"formData.customer.signature\" required=\"required\" placeholder=\"Enter your name as a signature\">\n" +
-    "\t\t    </div>\n" +
-    "\t\t</div>\n" +
-    "\t\t<div class=\"row\">\n" +
-    "\t\t    <div class=\"col-sm-4\">\n" +
-    "\t\t  \t\t<button type=\"submit\" class=\"btn btn-primary\" ng-disabled=\"customerForm.$invalid || customerForm.$pending || !formData.acceptTerms || !formData.summary.total\">Submit Order</button>\n" +
-    "\t\t    </div>\n" +
-    "\t\t\t<div class=\"col-sm-4\">\n" +
-    "\t\t  \t\t<button type=\"button\" class=\"btn btn-default\" ng-click=\"saveDraft()\">Save Draft</button>\n" +
-    "\t\t    </div>\n" +
-    "\t\t</div>\n" +
-    "\t</form>\n" +
+    "\t</div>\n" +
+    "\t<div class=\"row\" ng-show=\"formData.acceptTerms\">\n" +
+    "\t    <div class=\"form-group col-sm-12 required\">\n" +
+    "\t        <label for=\"firstName\" class=\"control-label\">Signature:</label>\n" +
+    "\t        <input type=\"text\" class=\"form-control\" name=\"firstName\" ng-model=\"formData.customer.signature\" required=\"required\" placeholder=\"Enter your name as a signature\">\n" +
+    "\t    </div>\n" +
+    "\t</div>\n" +
+    "\t<div class=\"row\">\n" +
+    "\t    <div class=\"col-sm-4\">\n" +
+    "\t  \t\t<button type=\"submit\" class=\"btn btn-primary\" ng-disabled=\"customerForm.$invalid || customerForm.$pending || !formData.acceptTerms || !formData.summary.total\">Submit Order</button>\n" +
+    "\t    </div>\n" +
+    "\t\t<div class=\"col-sm-4\">\n" +
+    "\t  \t\t<button type=\"button\" class=\"btn btn-default\" ng-click=\"saveDraft()\">Save Draft</button>\n" +
+    "\t    </div>\n" +
+    "\t</div>\n" +
+    "\t<div class=\"row\">\n" +
+    "\t<p>*ACT Aspire reserves the right to disallow a discount at any time if it is determined the orderor did not earn the discount based on actual volume of tested students. </p>\n" +
+    "\t</div>\n" +
+    "</form>\n" +
     "</div>\n" +
     "<div ui-view></div>\n"
   );
