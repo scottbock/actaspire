@@ -1,0 +1,78 @@
+{
+	"training": [
+		{
+			"mode": "On-Site Training",
+			"title": "Getting Started with ACT Aspire",
+			"cost": 4000,
+			"duration": 8,
+			"maxParticipants": 25,
+			"url":""
+		},
+		{
+			"mode": "Webinar",
+			"title": "Test Coordinator Responsibilities (for administrators, counselors, assessment directors",
+			"cost": 350,
+			"duration": 1.5,
+			"maxParticipants": 150,
+			"url":""
+		},
+		{
+			"mode": "Webinar",
+			"title": "Portal Training Set Up",
+			"cost": 350,
+			"duration": 1.5,
+			"maxParticipants": 150,
+			"url":""
+		},
+		{
+			"mode": "Webinar",
+			"title": "Supervisor Responsibilities",
+			"cost": 350,
+			"duration": 1.5,
+			"maxParticipants": 150,
+			"url":""
+		},
+		{
+			"mode": "Webinar",
+			"title": "Portal Training Functions",
+			"cost": 350,
+			"duration": 1.5,
+			"maxParticipants": 150,
+			"url":""
+		},
+		{
+			"mode": "On-Site Training",
+			"title": "The ACT Aspire Summative Data Interpretation",
+			"cost": 3300,
+			"duration": 3,
+			"maxParticipants": 25,
+			"url":""
+		},
+		{
+			"mode": "Webinar",
+			"title": "Understanding ACT Aspire Summative Score Reports for Classroom Teachers and School Leaders",
+			"cost": 350,
+			"duration": 1.5,
+			"maxParticipants": 150,
+			"url":""
+		},
+		{
+			"mode": "Webinar",
+			"title": "Understanding ACT Aspire Summative Score Reports for School and District Leaders",
+			"cost": 350,
+			"duration": 1.5,
+			"maxParticipants": 150,
+			"url":""
+		},
+		{
+			"mode": "Webinar",
+			"title": "ACT Aspire Summative Data Interpretation Series: An Orientation",
+			"cost": 350,
+			"duration": 1.5,
+			"maxParticipants": 150,
+			"url":""
+		}
+	],
+	"ordersInbox":"l.scott.bock@gmail.com",
+	"ordersBcc":"scott.bock@objectpartners.com"
+}

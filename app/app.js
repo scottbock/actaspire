@@ -3,7 +3,8 @@
 // Declare app level module which depends on views, and components
 angular.module('myApp', [
   'ui.router',
-  'ngCookies'
+  'ngCookies',
+  'ui.bootstrap'
 ])
 .config(function($stateProvider, $urlRouterProvider) {
     
@@ -12,16 +13,27 @@ angular.module('myApp', [
         // route to show our basic form (/form)
         .state('form', {
             url: '/form',
-            templateUrl: 'app/form.html',
-            controller: 'formController'
+            templateUrl: 'app/form.html'
         })
 		
 		.state('form.customer', {
 			url: '/customer',
-			templateUrl: 'app/form-customer.html'
+			templateUrl: 'app/form-customer.html',
+            controller: 'formController'
 		})
 
-		.state('form.confirmation', {
+		.state('form.customer.confirmation', {
+			url: '/confirmation',
+			templateUrl: 'app/confirmation.html'
+		})
+
+		.state('form.training', {
+			url: '/training',
+			templateUrl: 'app/form-training.html',
+			controller: 'trainingController'
+		})
+
+		.state('form.training.confirmation', {
 			url: '/confirmation',
 			templateUrl: 'app/confirmation.html'
 		})
@@ -33,12 +45,12 @@ angular.module('myApp', [
 
 // our controller for the form
 // =============================================================================
-.controller('formController', ['$scope', '$http', '$cookies', 'CostService', 'EmailService', 'schoolYearFilter', function($scope, $http, $cookies, costService, emailService, schoolYearFilter) {
+.controller('formController', ['$scope', '$state', '$http', '$cookies', 'CostService', 'EmailService', 'schoolYearFilter', function($scope, $state, $http, $cookies, costService, emailService, schoolYearFilter) {
 
 	$http.get('json/states.json').success(function(data) { 
     	$scope.states = data;
 	});
-
+	$scope.$state = $state;
 	$scope.cost = costService.cost;
 
 	$scope.date = new Date();
@@ -376,6 +388,79 @@ angular.module('myApp', [
 	// }, true); 
 }])
 
+.controller('trainingController', ['$scope', '$state', '$http', '$cookies', 'TrainingCostService', 'EmailService', 'schoolYearFilter', function($scope, $state, $http, $cookies, trainingCostService, emailService, schoolYearFilter) {
+	$scope.cost = trainingCostService.cost;
+	$scope.date = new Date();
+	$http.get('json/states.json').success(function(data) { 
+    	$scope.states = data;
+	});
+	$scope.$state = $state;
+
+	$scope.formData = {
+
+	};
+
+	$scope.trainingOrders = [];
+
+	$scope.addTraining = function(training){
+		var order;
+		angular.forEach($scope.trainingOrders, function(trainingOrder, key) {
+			if(training.title == trainingOrder.title){
+				order = trainingOrder;
+			}
+		});
+			
+
+		if(!order){
+			order = {};
+			angular.copy(training, order);
+			order.quantity = 0;
+			order.preferredTime = "AM";
+			$scope.trainingOrders.push(order);
+		}   
+		
+
+		order.quantity++;
+	}
+
+	$scope.removeTraining = function(training){
+		var index = $scope.trainingOrders.indexOf(training);
+
+		if (index > -1) {
+		    $scope.trainingOrders.splice(index, 1);
+		}
+	}
+
+ 	$scope.dateOptions = {
+   		formatYear: 'yy',
+    	maxDate: new Date(2020, 5, 22),
+    	minDate: new Date(),
+    	startingDay: 1
+  	};
+
+	$scope.openCalendar = function(training) {
+	    training.opened = true;
+	};
+
+	$scope.getTotal = function(){
+	    var total = 0;
+	    for(var i = 0; i < $scope.trainingOrders.length; i++){
+	        var training = $scope.trainingOrders[i];
+	        total += (training.quantity * training.cost);
+	    }
+	    if($scope.formData){
+			$scope.formData.total = total;
+	    }	    
+	    return total;
+	};	
+
+	// function to process the form
+	$scope.processForm = function() {
+		emailService.sendTrainingConfirmationEmail($scope.formData, $scope.trainingOrders, $scope.cost);
+	};
+
+}])
+
 .factory('CostService', ['$http', function ($http) {
 	var cost = {};
 	$http.get('json/cost.json?'+ new Date().getTime(), { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
@@ -502,6 +587,19 @@ angular.module('myApp', [
 		'getPeriodicDiscount':getPeriodicDiscount,
 		'getSpecialDiscount':getSpecialDiscount,
 		'getStateDiscount': getStateDiscount
+	}
+}])
+
+.factory('TrainingCostService', ['$http', function ($http) {
+	var cost = {};
+	$http.get('json/trainingcost.json', { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
+    	cost.training = response.data.training;
+		cost.ordersInbox = response.data.ordersInbox;
+		cost.ordersBcc = response.data.ordersBcc;
+	});
+
+	return {
+		'cost':cost
 	}
 }])
 
@@ -915,7 +1013,7 @@ angular.module('myApp', [
 		);
 	}
 	var sendConfirmationEmail = function(formData, orders, cost){
-		$state.go('form.confirmation');
+		$state.go('form.customer.confirmation');
 
 		var postData = {};
 		postData.clientEmail = formData.customer.email;
@@ -944,12 +1042,79 @@ angular.module('myApp', [
 		else{
 			postConfirmationEmail(postData, formData);
 		}
-		
-		
 	};
 
+	var buildTrainingEmail = function(formData, trainingOrders){
+		var emailBody = 'Dear ' + formData.customer.firstName + ' ' + formData.customer.lastName + 
+			',\n\nThank you for your ACT Aspire Order' +
+			'\n\nContact: ' + formData.customer.firstName + ' ' + formData.customer.lastName + ', ' + formData.customer.jobTitle + ', ' + formData.customer.organization +
+			'\nEmail: ' + formData.customer.email;
+
+		emailBody += '\n\nBilling Contact: ' + formData.billingContact.name + ', ' + formData.billingContact.email + ', ' + formData.billingContact.phone;
+		emailBody += '\n' + formData.billing.address.line1;
+		if(formData.billing.address.line2){
+			emailBody += '\n' + formData.billing.address.line2;
+		}
+		emailBody += '\n' + formData.billing.address.city + ', ' + formData.billing.address.state + ' ' + formData.billing.address.zip;
+
+		angular.forEach(trainingOrders, function(training, key) {
+			emailBody += '\n\n' + training.mode + ': ' + training.title;
+			emailBody += '\n' + training.quantity + ' X ' + currencyFilter(training.cost) + ' = ' + currencyFilter(training.quantity * training.cost);
+		});
+		
+		emailBody += '\n\nTotal: ' + currencyFilter(formData.total);
+
+		emailBody += '\n\nI agree to ACT Aspire\'s Terms and Conditions: Y' + '\n\nSignature: ' + formData.customer.signature;
+
+		emailBody += '\n\nSincerely,\nYour ACT Aspire Team\nOrders@actaspire.org\n1-855-730-0400';
+
+		return emailBody;
+	};
+
+	var buildTrainingCsvFile = function(formData, trainingOrders, cost){
+		var fileContent = 'NS Name,Internal ID,Date,line,School / Customer,Training Description,Length (hours),Mode,Capacity,Preferred Date,Preferred Year,Preferred Time,Price,Quantity,Total\n';
+
+		var index = 0;
+        angular.forEach(trainingOrders, function(training, key) {
+
+			fileContent += ',,"' + today + colDelim 
+				+ (index++) + colDelim
+				+ formData.customer.organization + colDelim
+				+ training.title + colDelim
+				+ training.duration + colDelim
+				+ training.mode + colDelim
+				+ (training.maxParticipants * training.quantity) + colDelim
+				+ (training.preferredDate.getMonth() + 1) + ' - ' + training.preferredDate.getDate() + colDelim
+				+ training.preferredDate.getFullYear() + colDelim
+				+ training.preferredTime + colDelim
+				+ currencyFilter(training.cost) + colDelim
+				+ training.quantity + colDelim
+				+ currencyFilter(training.cost * training.quantity) + rowDelim;
+
+				// + writeCommonData(formData);
+		});
+
+		return fileContent;
+	}
+
+	var sendTrainingConfirmationEmail = function(formData, trainingOrders, cost){
+		$state.go('form.training.confirmation');
+
+		var postData = {};
+		postData.clientEmail = formData.customer.email;
+		postData.orderInbox = cost.ordersInbox;
+		postData.orderBcc = cost.ordersBcc;
+		postData.message = buildTrainingEmail(formData, trainingOrders);
+		postData.csv = buildTrainingCsvFile(formData, trainingOrders, cost);
+		postData.csvFileName = formData.customer.lastName + formData.customer.organization + new Date().getTime() + '.csv';
+		postData.csvFileName = postData.csvFileName.replace(/[/\\\\]/g, '');;
+
+		postConfirmationEmail(postData, formData);
+	};	
+
 	return {
-		'sendConfirmationEmail':sendConfirmationEmail
+		'sendConfirmationEmail':sendConfirmationEmail,
+		'sendTrainingConfirmationEmail': sendTrainingConfirmationEmail
 	}
 }])
 
