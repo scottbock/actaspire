@@ -45205,7 +45205,7 @@ angular.module('myApp', [
 		.state('form.isr', {
 			url: '/isr',
 			templateUrl: 'app/form-isr.html',
-			controller: 'trainingController'
+			controller: 'isrController'
 		})
 
 		.state('form.isr.confirmation', {
@@ -45636,6 +45636,41 @@ angular.module('myApp', [
 
 }])
 
+.controller('isrController', ['$scope', '$state', '$http', '$cookies', 'IsrCostService', 'EmailService', 'schoolYearFilter', function($scope, $state, $http, $cookies, isrCostService, emailService, schoolYearFilter) {
+	$scope.cost = isrCostService.cost;
+	$scope.date = new Date();
+	$http.get('json/states.json').success(function(data) { 
+    	$scope.states = data;
+	});
+	$scope.$state = $state;
+
+	$scope.formData = {
+
+	};
+
+	$scope.openCalendar = function(training) {
+	    training.opened = true;
+	};
+
+	$scope.getTotal = function(){
+	    var total = 0;
+	    for(var i = 0; i < $scope.trainingOrders.length; i++){
+	        var training = $scope.trainingOrders[i];
+	        total += (training.quantity * training.cost);
+	    }
+	    if($scope.formData){
+			$scope.formData.total = total;
+	    }	    
+	    return total;
+	};	
+
+	// function to process the form
+	$scope.processForm = function() {
+		emailService.sendTrainingConfirmationEmail($scope.formData, $scope.trainingOrders, $scope.cost);
+	};
+
+}])
+
 .factory('CostService', ['$http', function ($http) {
 	var cost = {};
 	$http.get('json/cost.json?'+ new Date().getTime(), { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
@@ -45769,6 +45804,21 @@ angular.module('myApp', [
 	var cost = {};
 	$http.get('json/trainingcost.json', { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
     	cost.training = response.data.training;
+		cost.ordersInbox = response.data.ordersInbox;
+		cost.ordersBcc = response.data.ordersBcc;
+	});
+
+	return {
+		'cost':cost
+	}
+}])
+
+.factory('IsrCostService', ['$http', function ($http) {
+	var cost = {};
+	$http.get('json/isrCost.json', { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
+    	cost.reportGroups = response.data.reportGroups;
+    	cost.currentSemester = response.data.currentSemester;
+    	cost.currentYear = response.data.currentYear;
 		cost.ordersInbox = response.data.ordersInbox;
 		cost.ordersBcc = response.data.ordersBcc;
 	});
@@ -46816,7 +46866,7 @@ angular.module('myApp', [
 
   $templateCache.put('app/form-isr.html',
     "<div ng-show=\"$state.is('form.isr')\">\n" +
-    "\t<h2>ACT Aspire Training Order Form</h2>\t\n" +
+    "\t<h2>For {{cost.currentSemester}} {{cost.currentYear}} Testing.</h2>\t\n" +
     "\n" +
     "\t<form id=\"trainingForm\" name=\"trainingForm\" ng-submit=\"processForm()\"> \n" +
     "\n" +
@@ -46905,86 +46955,30 @@ angular.module('myApp', [
     "\n" +
     "\t\t<div class=\"panel panel-default\">\n" +
     "\t\t\t<div class=\"panel-heading\">\n" +
-    "\t\t\tAvailable Training\n" +
+    "\t\t\tAvailable Reports\n" +
     "\t\t\t</div>\n" +
     "\n" +
     "\t\t\t<table class=\"table table-striped\">\n" +
     "\t\t\t\t<thead>\n" +
-    "\t\t\t\t\t<th>Training</th>\n" +
-    "\t\t\t\t\t<th>Cost</th>\n" +
-    "\t\t\t\t\t<th>Duration</th>\n" +
-    "\t\t\t\t\t<th>Maximum Participants</th>\n" +
+    "\t\t\t\t\t<th>Printed Reports</th>\n" +
+    "\t\t\t\t\t<th># of Reports</th>\n" +
     "\t\t\t\t\t<th></th>\n" +
+    "\t\t\t\t\t<th>Amount</th>\n" +
+    "\t\t\t\t\t<th>Estimated Student Count</th>\n" +
+    "\t\t\t\t\t<th>Estimated Total</th>\n" +
+    "\t\t\t\t\t<th>Special Notes</th>\n" +
     "\t\t\t\t</thead>\n" +
-    "\t\t\t\t<tr ng-repeat=\"training in cost.training\">\n" +
-    "\t\t\t\t\t<td><a href=\"{{training.url}}\" target=\"_blank\">{{training.mode}}: {{training.title}}</a></td>\n" +
-    "\t\t\t\t\t<td>{{training.cost | currency}}</td>\n" +
-    "\t\t\t\t\t<td>{{training.duration}} hr</td>\n" +
-    "\t\t\t\t\t<td>{{training.maxParticipants}}</td>\n" +
-    "\t\t\t\t\t<td>\n" +
-    "\t\t\t\t\t\t<button type=\"button\" ng-model=\"addTrainingButton\" ng-click=\"addTraining(training)\"  class=\"btn btn-primary\">Add</button>\n" +
-    "\t\t\t\t\t</td>\n" +
+    "\t\t\t\t<tbody ng-repeat=\"reportGroup in cost.reportGroups\">\n" +
+    "\t\t\t\t<tr ng-repeat=\"report in reportGroup.reports\">\n" +
+    "\t\t\t\t\t<td>{{report.name}}</td>\n" +
+    "\t\t\t\t\t<td>{{report.number}}</td>\n" +
+    "\t\t\t\t\t<td><input type=\"radio\" name=\"{{reportGroup.name}}\" value=\"{{report.name}}\" ng-model=\"reportGroup.selectedReport\"/></td>\n" +
+    "\t\t\t\t\t<td>{{report.cost | currency}}</td>\n" +
+    "\t\t\t\t\t<td><input type=\"number\" ng-model=\"report.amount\" min=\"0\" ng-disabled=\"reportGroup.selectedReport != report.name\"/></td>\n" +
+    "\t\t\t\t\t<td>{{report.cost * report.amount | currency}}</td>\n" +
+    "\t\t\t\t\t<td><input type=\"text\" ng-model=\"report.notes\" ng-disabled=\"reportGroup.selectedReport != report.name\"/></td>\n" +
     "\t\t\t\t</tr>\n" +
-    "\t\t\t</table>\n" +
-    "\t\t</div>\n" +
-    "\n" +
-    "\t\t<div class=\"panel panel-default\">\n" +
-    "\t\t\t<div class=\"panel-heading\">\n" +
-    "\t\t\tTraining Orders\n" +
-    "\t\t\t</div>\n" +
-    "\n" +
-    "\t\t\t<table class=\"table table-striped\">\n" +
-    "\t\t\t\t<thead>\n" +
-    "\t\t\t\t\t<th>Description</th>\n" +
-    "\t\t\t\t\t<th>Duration</th>\n" +
-    "\t\t\t\t\t<th>Mode</th>\n" +
-    "\t\t\t\t\t<th>Maximum Participants</th>\n" +
-    "\t\t\t\t\t<th>*Preferred Date</th>\n" +
-    "\t\t\t\t\t<th>*Preferred Time</th>\n" +
-    "\t\t\t\t\t<th>Price</th>\n" +
-    "\t\t\t\t\t<th>Quantity</th>\n" +
-    "\t\t\t\t\t<th>Total</th>\n" +
-    "\t\t\t\t\t<th></th>\n" +
-    "\t\t\t\t</thead>\n" +
-    "\t\t\t\t<tr ng-repeat=\"training in trainingOrders track by training.title\">\n" +
-    "\t\t\t\t\t<td><a href=\"{{training.url}}\" target=\"_blank\">{{training.title}}</a></td>\n" +
-    "\t\t\t\t\t<td>{{training.duration}} hr</td>\n" +
-    "\t\t\t\t\t<td>{{training.mode}}</td>\n" +
-    "\t\t\t\t\t<td>{{training.maxParticipants * training.quantity}}</td>\n" +
-    "\t\t\t\t\t<td>\n" +
-    "\t\t\t\t        <p class=\"input-group training-order-calendar\">\t\n" +
-    "\t\t\t\t          <input type=\"text\" class=\"form-control\" uib-datepicker-popup ng-model=\"training.preferredDate\" is-open=\"training.opened\" datepicker-options=\"dateOptions\" ng-required=\"true\" close-text=\"Close\" />\n" +
-    "\t\t\t\t          <span class=\"input-group-btn\">\n" +
-    "\t\t\t\t            <button type=\"button\" class=\"btn btn-default\" ng-click=\"openCalendar(training)\"><i class=\"glyphicon glyphicon-calendar\"></i></button>\n" +
-    "\t\t\t\t          </span>\n" +
-    "\t\t\t\t        </p>\n" +
-    "\t\t\t\t\t</td>\n" +
-    "\t\t\t\t\t<td>\n" +
-    "\t\t\t\t\t\t<select class=\"form-control\" name=\"\" ng-model=\"training.preferredTime\">\n" +
-    "\t\t\t\t\t\t\t<option value=\"AM\">AM</option>\n" +
-    "\t\t\t\t\t\t\t<option value=\"PM\">PM</option>\n" +
-    "\t\t\t\t\t\t</select>\n" +
-    "\t\t\t\t\t</td>\n" +
-    "\t\t\t\t\t<td>{{training.cost | currency}}</td>\n" +
-    "\t\t\t\t\t<td>\n" +
-    "\t\t\t\t\t\t<div class=\"training-order-quantity form-group\">\n" +
-    "\t\t\t\t\t\t\t<input class=\"form-control\" type=\"number\" ng-model=\"training.quantity\" name=\"\" min=\"1\">\n" +
-    "\t\t\t\t\t\t</div>\n" +
-    "\t\t\t\t\t</td>\n" +
-    "\t\t\t\t\t<td>{{training.quantity * training.cost | currency}}</td>\n" +
-    "\t\t\t\t\t<td>\t\t\t\n" +
-    "\t\t\t\t\t\t<button type=\"button\" class=\"pull-right btn btn-default btn-xs\" aria-label=\"Remove\" ng-click=\"removeTraining(training)\">\n" +
-    "\t\t\t\t\t\t\t<span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>\n" +
-    "\t\t\t\t\t\t</button>\n" +
-    "\t\t\t\t\t</td>\n" +
-    "\t\t\t\t</tr>\n" +
-    "\t\t\t\t<tfoot>\n" +
-    "\t\t\t\t\t<tr>\n" +
-    "\t\t\t\t\t\t<td colspan=\"10\">\n" +
-    "\t\t\t\t\t\t\t<div class=\"pull-right\"><h4>Total: {{getTotal() | currency}}</h4></div>\n" +
-    "\t\t\t\t\t\t</td>\n" +
-    "\t\t\t\t\t</tr>\n" +
-    "\t\t\t\t</tfoot>\n" +
+    "\t\t\t\t</tbody>\n" +
     "\t\t\t</table>\n" +
     "\t\t</div>\n" +
     "\n" +
@@ -46992,11 +46986,8 @@ angular.module('myApp', [
     "\t\t\t<h4>Important Next Steps:</h4>\n" +
     "\t\t\t<ul>\n" +
     "\t\t\t\t<li>Upon completion of the order an invoice for the total due will be sent to the contact above and you will be contacted regarding your preferred Training date and trainer availability.</li>\n" +
-    "\t\t\t\t<li>Training Service representiative will reach out to you to go through the training options, modules, and scheduling. </li>\n" +
-    "\t\t\t\t<li>Payment must be rendered before training is delivered. </li>\n" +
-    "\t\t\t\t<li>Typical turnaround time from order to delivery, depending on your prefered training date, is two weeks.</li>\n" +
-    "\t\t\t\t<li>Typical turnaround time from order to delivery, depending on your prefered training date, is two weeks.</li>\n" +
-    "\t\t\t\t<li>*Preferred date and times are to be confirmed.</li>\n" +
+    "\t\t\t\t<li>You will be invoiced upon receipt of your order</li>\n" +
+    "\t\t\t\t<li>If you would like to purchase printed reports for future testing adminstrations please call 1-855-733-0400 .</li>\n" +
     "\t\t\t</ul>\n" +
     "\t\t</div>\n" +
     "\n" +

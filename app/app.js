@@ -30,7 +30,7 @@ angular.module('myApp', [
 		.state('form.isr', {
 			url: '/isr',
 			templateUrl: 'app/form-isr.html',
-			controller: 'trainingController'
+			controller: 'isrController'
 		})
 
 		.state('form.isr.confirmation', {
@@ -461,6 +461,41 @@ angular.module('myApp', [
 
 }])
 
+.controller('isrController', ['$scope', '$state', '$http', '$cookies', 'IsrCostService', 'EmailService', 'schoolYearFilter', function($scope, $state, $http, $cookies, isrCostService, emailService, schoolYearFilter) {
+	$scope.cost = isrCostService.cost;
+	$scope.date = new Date();
+	$http.get('json/states.json').success(function(data) { 
+    	$scope.states = data;
+	});
+	$scope.$state = $state;
+
+	$scope.formData = {
+
+	};
+
+	$scope.openCalendar = function(training) {
+	    training.opened = true;
+	};
+
+	$scope.getTotal = function(){
+	    var total = 0;
+	    for(var i = 0; i < $scope.trainingOrders.length; i++){
+	        var training = $scope.trainingOrders[i];
+	        total += (training.quantity * training.cost);
+	    }
+	    if($scope.formData){
+			$scope.formData.total = total;
+	    }	    
+	    return total;
+	};	
+
+	// function to process the form
+	$scope.processForm = function() {
+		emailService.sendTrainingConfirmationEmail($scope.formData, $scope.trainingOrders, $scope.cost);
+	};
+
+}])
+
 .factory('CostService', ['$http', function ($http) {
 	var cost = {};
 	$http.get('json/cost.json?'+ new Date().getTime(), { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
@@ -594,6 +629,21 @@ angular.module('myApp', [
 	var cost = {};
 	$http.get('json/trainingcost.json', { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
     	cost.training = response.data.training;
+		cost.ordersInbox = response.data.ordersInbox;
+		cost.ordersBcc = response.data.ordersBcc;
+	});
+
+	return {
+		'cost':cost
+	}
+}])
+
+.factory('IsrCostService', ['$http', function ($http) {
+	var cost = {};
+	$http.get('json/isrCost.json', { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
+    	cost.reportGroups = response.data.reportGroups;
+    	cost.currentSemester = response.data.currentSemester;
+    	cost.currentYear = response.data.currentYear;
 		cost.ordersInbox = response.data.ordersInbox;
 		cost.ordersBcc = response.data.ordersBcc;
 	});
