@@ -469,13 +469,14 @@ angular.module('myApp', [
 	});
 	$scope.$state = $state;
 
-	$scope.formData = {
-
-	};
-
-	$scope.openCalendar = function(training) {
-	    training.opened = true;
-	};
+	$scope.selectReport = function(report, reportGroup){
+		angular.forEach(reportGroup.reports, function(report, key) {
+			if(reportGroup.selectedReport != report.name){
+				report.amount = undefined;
+				report.notes = undefined;
+			}
+		});
+	}
 
 	$scope.getTotal = function(){
 	    var total = 0;
