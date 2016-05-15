@@ -616,6 +616,13 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t\t<td><input type=\"text\" ng-model=\"report.notes\" ng-disabled=\"reportGroup.selectedReport != report.name\"/></td>\n" +
     "\t\t\t\t</tr>\n" +
     "\t\t\t\t</tbody>\n" +
+    "\t\t\t\t<tfoot>\n" +
+    "\t\t\t\t\t<tr>\n" +
+    "\t\t\t\t\t\t<td colspan=\"6\">\n" +
+    "\t\t\t\t\t\t\t<div class=\"pull-right\"><h4>Total: {{getTotal() | currency}}</h4></div>\n" +
+    "\t\t\t\t\t\t</td>\n" +
+    "\t\t\t\t\t</tr>\n" +
+    "\t\t\t\t</tfoot>\n" +
     "\t\t\t</table>\n" +
     "\t\t</div>\n" +
     "\n" +

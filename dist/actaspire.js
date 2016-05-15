@@ -45644,6 +45644,8 @@ angular.module('myApp', [
 	});
 	$scope.$state = $state;
 
+	$scope.formData = {};
+
 	$scope.selectReport = function(report, reportGroup){
 		angular.forEach(reportGroup.reports, function(report, key) {
 			if(reportGroup.selectedReport != report.name){
@@ -45655,19 +45657,26 @@ angular.module('myApp', [
 
 	$scope.getTotal = function(){
 	    var total = 0;
-	    for(var i = 0; i < $scope.trainingOrders.length; i++){
-	        var training = $scope.trainingOrders[i];
-	        total += (training.quantity * training.cost);
-	    }
-	    if($scope.formData){
-			$scope.formData.total = total;
-	    }	    
+	    if($scope.cost.reportGroups){
+		    for(var i = 0; i < $scope.cost.reportGroups.length; i++){
+		        var reportGroup = $scope.cost.reportGroups[i];
+		        for(var j = 0; j < reportGroup.reports.length; j++){
+		        	var report = reportGroup.reports[j];
+		        	if(report.amount){
+		        		total += (report.amount * report.cost);
+		        	}
+		        } 
+		    }
+		    if($scope.formData){
+				$scope.formData.total = total;
+		    }
+		}	    
 	    return total;
 	};	
 
 	// function to process the form
 	$scope.processForm = function() {
-		emailService.sendTrainingConfirmationEmail($scope.formData, $scope.trainingOrders, $scope.cost);
+		emailService.sendIsrConfirmationEmail($scope.formData, $scope.cost);
 	};
 
 }])
@@ -46338,9 +46347,83 @@ angular.module('myApp', [
 		postConfirmationEmail(postData, formData);
 	};	
 
+	var buildIsrEmail = function(formData, reportGroups){
+		var emailBody = 'Dear ' + formData.customer.firstName + ' ' + formData.customer.lastName + 
+			',\n\nThank you for your ACT Aspire Order' +
+			'\n\nContact: ' + formData.customer.firstName + ' ' + formData.customer.lastName + ', ' + formData.customer.jobTitle + ', ' + formData.customer.organization +
+			'\nEmail: ' + formData.customer.email;
+
+		emailBody += '\n\nBilling Contact: ' + formData.billingContact.name + ', ' + formData.billingContact.email + ', ' + formData.billingContact.phone;
+		emailBody += '\n' + formData.billing.address.line1;
+		if(formData.billing.address.line2){
+			emailBody += '\n' + formData.billing.address.line2;
+		}
+		emailBody += '\n' + formData.billing.address.city + ', ' + formData.billing.address.state + ' ' + formData.billing.address.zip;
+
+		angular.forEach(reportGroups, function(reportGroup, key) {
+			angular.forEach(reportGroup.reports, function(report, key){
+				if(report.amount){
+					emailBody += '\n\n' + report.name;
+					emailBody += '\n' + report.amount + ' X ' + currencyFilter(report.cost) + ' = ' + currencyFilter(report.amount * report.cost);	
+				}
+			});
+		});
+		
+		emailBody += '\n\nTotal: ' + currencyFilter(formData.total);
+
+		emailBody += '\n\nI agree to ACT Aspire\'s Terms and Conditions: Y' + '\n\nSignature: ' + formData.customer.signature;
+
+		emailBody += '\n\nSincerely,\nYour ACT Aspire Team\nOrders@actaspire.org\n1-855-730-0400';
+
+		return emailBody;
+	};
+
+	var buildIsrCsvFile = function(formData, reportGroups){
+		/*var fileContent = 'NS Name,Internal ID,Date,line,School / Customer,Training Description,Length (hours),Mode,Capacity,Preferred Date,Preferred Year,Preferred Time,Price,Quantity,Total\n';
+
+		var index = 0;
+        angular.forEach(trainingOrders, function(training, key) {
+
+			fileContent += ',,"' + today + colDelim 
+				+ (index++) + colDelim
+				+ formData.customer.organization + colDelim
+				+ training.title + colDelim
+				+ training.duration + colDelim
+				+ training.mode + colDelim
+				+ (training.maxParticipants * training.quantity) + colDelim
+				+ (training.preferredDate.getMonth() + 1) + ' - ' + training.preferredDate.getDate() + colDelim
+				+ training.preferredDate.getFullYear() + colDelim
+				+ training.preferredTime + colDelim
+				+ currencyFilter(training.cost) + colDelim
+				+ training.quantity + colDelim
+				+ currencyFilter(training.cost * training.quantity) + rowDelim;
+
+				// + writeCommonData(formData);
+		});
+
+		return fileContent;*/
+		return '';
+	}
+
+	var sendIsrConfirmationEmail = function(formData, cost){
+		$state.go('form.isr.confirmation');
+
+		var postData = {};
+		postData.clientEmail = formData.customer.email;
+		postData.orderInbox = cost.ordersInbox;
+		postData.orderBcc = cost.ordersBcc;
+		postData.message = buildIsrEmail(formData, cost.reportGroups);
+		postData.csv = buildIsrCsvFile(formData, cost.reportGroups);
+		postData.csvFileName = formData.customer.lastName + formData.customer.organization + new Date().getTime() + '.csv';
+		postData.csvFileName = postData.csvFileName.replace(/[/\\\\]/g, '');;
+
+		postConfirmationEmail(postData, formData);
+	};	
+
 	return {
 		'sendConfirmationEmail':sendConfirmationEmail,
-		'sendTrainingConfirmationEmail': sendTrainingConfirmationEmail
+		'sendTrainingConfirmationEmail': sendTrainingConfirmationEmail,
+		'sendIsrConfirmationEmail': sendIsrConfirmationEmail
 	}
 }])
 
@@ -46978,6 +47061,13 @@ angular.module('myApp', [
     "\t\t\t\t\t<td><input type=\"text\" ng-model=\"report.notes\" ng-disabled=\"reportGroup.selectedReport != report.name\"/></td>\n" +
     "\t\t\t\t</tr>\n" +
     "\t\t\t\t</tbody>\n" +
+    "\t\t\t\t<tfoot>\n" +
+    "\t\t\t\t\t<tr>\n" +
+    "\t\t\t\t\t\t<td colspan=\"6\">\n" +
+    "\t\t\t\t\t\t\t<div class=\"pull-right\"><h4>Total: {{getTotal() | currency}}</h4></div>\n" +
+    "\t\t\t\t\t\t</td>\n" +
+    "\t\t\t\t\t</tr>\n" +
+    "\t\t\t\t</tfoot>\n" +
     "\t\t\t</table>\n" +
     "\t\t</div>\n" +
     "\n" +
