@@ -1,0 +1,38 @@
+{
+	"reportGroups":[
+		{
+			"name":"ISR",
+			"reports":[
+				{
+					"name":"Single Individual Student Reports",
+					"number":"1 copy per student",
+					"cost":1.5
+				},
+				{
+					"name":"Double Individual Student Reports",
+					"number":"2 copies per student",
+					"cost":3.0
+				}
+			]
+		},
+		{
+			"name":"Labels",
+			"reports":[
+				{
+					"name":"Single Score Label",
+					"number":"1 copy per student",
+					"cost":0.5
+				},
+				{
+					"name":"Double Score Labels",
+					"number":"2 copies per student",
+					"cost":1.0
+				}
+			]
+		}
+	],
+	"currentSemester":"Spring",
+	"currentYear":2016,
+	"ordersInbox":"l.scott.bock@gmail.com",
+	"ordersBcc":"scott.bock@objectpartners.com"
+}
