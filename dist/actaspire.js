@@ -46379,30 +46379,47 @@ angular.module('myApp', [
 	};
 
 	var buildIsrCsvFile = function(formData, reportGroups){
-		/*var fileContent = 'NS Name,Internal ID,Date,line,School / Customer,Training Description,Length (hours),Mode,Capacity,Preferred Date,Preferred Year,Preferred Time,Price,Quantity,Total\n';
+		var fileContent = 'NS Name,Internal ID,Date,line,School / Customer,Report Description,# of Reports,Price,Quantity,Total,Special Notes,Name,Job Title,Contact email,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions\n';
 
 		var index = 0;
-        angular.forEach(trainingOrders, function(training, key) {
+        angular.forEach(reportGroups, function(reportGroup, key) {
+        	angular.forEach(reportGroup.reports, function(report, key) {
+        		if(report.amount){
+					fileContent += ',,"' + today + colDelim 
+						+ (index++) + colDelim
+						+ formData.customer.organization + colDelim
+						+ report.name + colDelim
+						+ report.number + colDelim
+						+ currencyFilter(report.cost) + colDelim
+						+ report.amount + colDelim
+						+ currencyFilter(report.cost * report.amount ) + colDelim
+						+ report.notes + colDelim				
+						+ formData.customer.firstName + ' ' + formData.customer.lastName + colDelim
+						+ formData.customer.jobTitle + colDelim
+						+ formData.customer.email + colDelim
+						+ formData.billingContact.name + colDelim
+						+ formData.billingContact.email + colDelim
+						+ formData.billingContact.phone + colDelim
+						+ formData.billing.address.line1 + colDelim;
 
-			fileContent += ',,"' + today + colDelim 
-				+ (index++) + colDelim
-				+ formData.customer.organization + colDelim
-				+ training.title + colDelim
-				+ training.duration + colDelim
-				+ training.mode + colDelim
-				+ (training.maxParticipants * training.quantity) + colDelim
-				+ (training.preferredDate.getMonth() + 1) + ' - ' + training.preferredDate.getDate() + colDelim
-				+ training.preferredDate.getFullYear() + colDelim
-				+ training.preferredTime + colDelim
-				+ currencyFilter(training.cost) + colDelim
-				+ training.quantity + colDelim
-				+ currencyFilter(training.cost * training.quantity) + rowDelim;
+					if(formData.billing.address.line2){
+						fileContent += formData.billing.address.line2 + colDelim
+					}
+					else{
+						fileContent += colDelim;
+					}
 
-				// + writeCommonData(formData);
+					fileContent +=	formData.billing.address.city + colDelim
+						+ formData.billing.address.state + colDelim
+						+ formData.billing.address.zip + colDelim
+						+ yesNo(formData.acceptTerms) + rowDelim;
+						// + yesNo(formData.billing.taxExempt) + colDelim;
+				}	
+			});
+
 		});
 
-		return fileContent;*/
-		return '';
+		return fileContent;
 	}
 
 	var sendIsrConfirmationEmail = function(formData, cost){
