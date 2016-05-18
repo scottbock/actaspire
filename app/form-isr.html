@@ -1,5 +1,5 @@
 <div ng-show="$state.is('form.isr')">
-	<h2>For {{cost.currentSemester}} {{cost.currentYear}} Testing.</h2>	
+	<h2>This form should be filled out by organizations wishing to purchase printed score reports and labels for the {{cost.currentSemester}} {{cost.currentYear}} test administration of ACT Aspire.</h2>	
 
 	<form id="trainingForm" name="trainingForm" ng-submit="processForm()"> 
 
@@ -50,7 +50,7 @@
 
 		            <div class="form-group col-sm-4 required">
 		                <label for="billingPhone" class="control-label">Billing Contact Phone</label>
-		                <input type="tel" class="form-control" name="billingPhone" ng-model="formData.billingContact.phone" required="required">
+		                <input type="tel" class="form-control" name="billingPhone" ng-model="formData.billingContact.phone" required="required" ng-pattern="/^[(]{0,1}[0-9]{3}[)\.\- ]{0,1}[0-9]{3}[\.\- ]{0,1}[0-9]{4}$/">
 		            </div>
 		        </div>    
 		        <div class="row">
@@ -98,7 +98,6 @@
 					<th>Amount</th>
 					<th>Estimated Student Count</th>
 					<th>Estimated Total</th>
-					<th>Special Notes</th>
 				</thead>
 				<tbody ng-repeat="reportGroup in cost.reportGroups">
 				<tr ng-repeat="report in reportGroup.reports">
@@ -107,7 +106,6 @@
 					<td>{{report.cost | currency}}</td>
 					<td><input type="number" ng-model="report.amount" min="0" ng-disabled="reportGroup.selectedReport != report.name"/></td>
 					<td>{{report.cost * report.amount | currency}}</td>
-					<td><input type="text" ng-model="report.notes" ng-disabled="reportGroup.selectedReport != report.name"/></td>
 				</tr>
 				</tbody>
 				<tfoot>
@@ -120,12 +118,18 @@
 			</table>
 		</div>
 
+		<div class="panel panel-default">
+			<div class="panel-heading">Additional Comments</div>
+			<div class="panel-body">
+				<textarea class="form-control" rows="3" ng-model="formData.comments"></textarea>
+			</div>
+		</div>
+
 		<div class="row gutter">
 			<h4>Important Next Steps:</h4>
 			<ul>
-				<li>Upon completion of the order an invoice for the total due will be sent to the contact above and you will be contacted regarding your preferred Training date and trainer availability.</li>
 				<li>You will be invoiced upon receipt of your order</li>
-				<li>If you would like to purchase printed reports for future testing adminstrations please call 1-855-733-0400 .</li>
+				<li>If you would like to purchase printed reports and/or score labels for future testing adminstrations please call 1-855-733-0400 .</li>
 			</ul>
 		</div>
 

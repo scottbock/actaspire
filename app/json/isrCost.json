@@ -4,12 +4,12 @@
 			"name":"ISR",
 			"reports":[
 				{
-					"name":"Single Individual Student Reports",
+					"name":"Single Individual Score Reports",
 					"number":"1 copy per student",
 					"cost":1.5
 				},
 				{
-					"name":"Double Individual Student Reports",
+					"name":"Double Individual Score Reports",
 					"number":"2 copies per student",
 					"cost":3.0
 				}

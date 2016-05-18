@@ -46393,7 +46393,7 @@ angular.module('myApp', [
 						+ currencyFilter(report.cost) + colDelim
 						+ report.amount + colDelim
 						+ currencyFilter(report.cost * report.amount ) + colDelim
-						+ report.notes + colDelim				
+						+ formData.comments + colDelim				
 						+ formData.customer.firstName + ' ' + formData.customer.lastName + colDelim
 						+ formData.customer.jobTitle + colDelim
 						+ formData.customer.email + colDelim
@@ -46967,7 +46967,7 @@ angular.module('myApp', [
 
   $templateCache.put('app/form-isr.html',
     "<div ng-show=\"$state.is('form.isr')\">\n" +
-    "\t<h2>For {{cost.currentSemester}} {{cost.currentYear}} Testing.</h2>\t\n" +
+    "\t<h2>This form should be filled out by organizations wishing to purchase printed score reports and labels for the {{cost.currentSemester}} {{cost.currentYear}} test administration of ACT Aspire.</h2>\t\n" +
     "\n" +
     "\t<form id=\"trainingForm\" name=\"trainingForm\" ng-submit=\"processForm()\"> \n" +
     "\n" +
@@ -47018,7 +47018,7 @@ angular.module('myApp', [
     "\n" +
     "\t\t            <div class=\"form-group col-sm-4 required\">\n" +
     "\t\t                <label for=\"billingPhone\" class=\"control-label\">Billing Contact Phone</label>\n" +
-    "\t\t                <input type=\"tel\" class=\"form-control\" name=\"billingPhone\" ng-model=\"formData.billingContact.phone\" required=\"required\">\n" +
+    "\t\t                <input type=\"tel\" class=\"form-control\" name=\"billingPhone\" ng-model=\"formData.billingContact.phone\" required=\"required\" ng-pattern=\"/^[(]{0,1}[0-9]{3}[)\\.\\- ]{0,1}[0-9]{3}[\\.\\- ]{0,1}[0-9]{4}$/\">\n" +
     "\t\t            </div>\n" +
     "\t\t        </div>    \n" +
     "\t\t        <div class=\"row\">\n" +
@@ -47066,7 +47066,6 @@ angular.module('myApp', [
     "\t\t\t\t\t<th>Amount</th>\n" +
     "\t\t\t\t\t<th>Estimated Student Count</th>\n" +
     "\t\t\t\t\t<th>Estimated Total</th>\n" +
-    "\t\t\t\t\t<th>Special Notes</th>\n" +
     "\t\t\t\t</thead>\n" +
     "\t\t\t\t<tbody ng-repeat=\"reportGroup in cost.reportGroups\">\n" +
     "\t\t\t\t<tr ng-repeat=\"report in reportGroup.reports\">\n" +
@@ -47075,7 +47074,6 @@ angular.module('myApp', [
     "\t\t\t\t\t<td>{{report.cost | currency}}</td>\n" +
     "\t\t\t\t\t<td><input type=\"number\" ng-model=\"report.amount\" min=\"0\" ng-disabled=\"reportGroup.selectedReport != report.name\"/></td>\n" +
     "\t\t\t\t\t<td>{{report.cost * report.amount | currency}}</td>\n" +
-    "\t\t\t\t\t<td><input type=\"text\" ng-model=\"report.notes\" ng-disabled=\"reportGroup.selectedReport != report.name\"/></td>\n" +
     "\t\t\t\t</tr>\n" +
     "\t\t\t\t</tbody>\n" +
     "\t\t\t\t<tfoot>\n" +
@@ -47088,12 +47086,18 @@ angular.module('myApp', [
     "\t\t\t</table>\n" +
     "\t\t</div>\n" +
     "\n" +
+    "\t\t<div class=\"panel panel-default\">\n" +
+    "\t\t\t<div class=\"panel-heading\">Additional Comments</div>\n" +
+    "\t\t\t<div class=\"panel-body\">\n" +
+    "\t\t\t\t<textarea class=\"form-control\" rows=\"3\" ng-model=\"formData.comments\"></textarea>\n" +
+    "\t\t\t</div>\n" +
+    "\t\t</div>\n" +
+    "\n" +
     "\t\t<div class=\"row gutter\">\n" +
     "\t\t\t<h4>Important Next Steps:</h4>\n" +
     "\t\t\t<ul>\n" +
-    "\t\t\t\t<li>Upon completion of the order an invoice for the total due will be sent to the contact above and you will be contacted regarding your preferred Training date and trainer availability.</li>\n" +
     "\t\t\t\t<li>You will be invoiced upon receipt of your order</li>\n" +
-    "\t\t\t\t<li>If you would like to purchase printed reports for future testing adminstrations please call 1-855-733-0400 .</li>\n" +
+    "\t\t\t\t<li>If you would like to purchase printed reports and/or score labels for future testing adminstrations please call 1-855-733-0400 .</li>\n" +
     "\t\t\t</ul>\n" +
     "\t\t</div>\n" +
     "\n" +
