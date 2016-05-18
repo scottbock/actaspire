@@ -94,17 +94,15 @@
 			<table class="table table-striped">
 				<thead>
 					<th>Printed Reports</th>
-					<th># of Reports</th>
 					<th>Amount</th>
 					<th>Estimated Student Count</th>
 					<th>Estimated Total</th>
 				</thead>
 				<tbody ng-repeat="reportGroup in cost.reportGroups">
 				<tr ng-repeat="report in reportGroup.reports">
-					<td><label><input type="radio" name="{{reportGroup.name}}" value="{{report.name}}" ng-model="reportGroup.selectedReport" ng-change="selectReport(report, reportGroup)"/>  {{report.name}}</label></td>
-					<td>{{report.number}}</td>					
+					<td><label><input type="radio" name="{{reportGroup.name}}" value="{{report.number}}" ng-model="reportGroup.selectedReport" ng-change="selectReport(report, reportGroup)"/>  {{reportGroup.name}} (x{{report.number}} per student)</label></td>					
 					<td>{{report.cost | currency}}</td>
-					<td><input type="number" ng-model="report.amount" min="0" ng-disabled="reportGroup.selectedReport != report.name"/></td>
+					<td><input type="number" ng-model="report.amount" min="0" ng-disabled="reportGroup.selectedReport != report.number"/></td>
 					<td>{{report.cost * report.amount | currency}}</td>
 				</tr>
 				</tbody>

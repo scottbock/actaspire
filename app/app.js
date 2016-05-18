@@ -473,9 +473,8 @@ angular.module('myApp', [
 
 	$scope.selectReport = function(report, reportGroup){
 		angular.forEach(reportGroup.reports, function(report, key) {
-			if(reportGroup.selectedReport != report.name){
+			if(reportGroup.selectedReport != report.number){
 				report.amount = undefined;
-				report.notes = undefined;
 			}
 		});
 	}
@@ -1188,7 +1187,7 @@ angular.module('myApp', [
 		angular.forEach(reportGroups, function(reportGroup, key) {
 			angular.forEach(reportGroup.reports, function(report, key){
 				if(report.amount){
-					emailBody += '\n\n' + report.name;
+					emailBody += '\n\n' + reportGroup.name + ' ' + report.number + 'x';
 					emailBody += '\n' + report.amount + ' X ' + currencyFilter(report.cost) + ' = ' + currencyFilter(report.amount * report.cost);	
 				}
 			});
@@ -1204,7 +1203,7 @@ angular.module('myApp', [
 	};
 
 	var buildIsrCsvFile = function(formData, reportGroups){
-		var fileContent = 'NS Name,Internal ID,Date,line,School / Customer,Report Description,# of Reports,Price,Quantity,Total,Special Notes,Name,Job Title,Contact email,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions\n';
+		var fileContent = 'NS Name,Internal ID,Date,line,School / Customer,Report Description,Price,Quantity,Total,Special Notes,Name,Job Title,Contact email,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions\n';
 
 		var index = 0;
         angular.forEach(reportGroups, function(reportGroup, key) {
@@ -1213,8 +1212,7 @@ angular.module('myApp', [
 					fileContent += ',,"' + today + colDelim 
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
-						+ report.name + colDelim
-						+ report.number + colDelim
+						+ reportGroup.name + ' ' + report.number + 'x' + colDelim
 						+ currencyFilter(report.cost) + colDelim
 						+ report.amount + colDelim
 						+ currencyFilter(report.cost * report.amount ) + colDelim

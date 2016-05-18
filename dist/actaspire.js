@@ -45648,9 +45648,8 @@ angular.module('myApp', [
 
 	$scope.selectReport = function(report, reportGroup){
 		angular.forEach(reportGroup.reports, function(report, key) {
-			if(reportGroup.selectedReport != report.name){
+			if(reportGroup.selectedReport != report.number){
 				report.amount = undefined;
-				report.notes = undefined;
 			}
 		});
 	}
@@ -46363,7 +46362,7 @@ angular.module('myApp', [
 		angular.forEach(reportGroups, function(reportGroup, key) {
 			angular.forEach(reportGroup.reports, function(report, key){
 				if(report.amount){
-					emailBody += '\n\n' + report.name;
+					emailBody += '\n\n' + reportGroup.name + ' ' + report.number + 'x';
 					emailBody += '\n' + report.amount + ' X ' + currencyFilter(report.cost) + ' = ' + currencyFilter(report.amount * report.cost);	
 				}
 			});
@@ -46379,7 +46378,7 @@ angular.module('myApp', [
 	};
 
 	var buildIsrCsvFile = function(formData, reportGroups){
-		var fileContent = 'NS Name,Internal ID,Date,line,School / Customer,Report Description,# of Reports,Price,Quantity,Total,Special Notes,Name,Job Title,Contact email,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions\n';
+		var fileContent = 'NS Name,Internal ID,Date,line,School / Customer,Report Description,Price,Quantity,Total,Special Notes,Name,Job Title,Contact email,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions\n';
 
 		var index = 0;
         angular.forEach(reportGroups, function(reportGroup, key) {
@@ -46388,8 +46387,7 @@ angular.module('myApp', [
 					fileContent += ',,"' + today + colDelim 
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
-						+ report.name + colDelim
-						+ report.number + colDelim
+						+ reportGroup.name + ' ' + report.number + 'x' + colDelim
 						+ currencyFilter(report.cost) + colDelim
 						+ report.amount + colDelim
 						+ currencyFilter(report.cost * report.amount ) + colDelim
@@ -47062,17 +47060,15 @@ angular.module('myApp', [
     "\t\t\t<table class=\"table table-striped\">\n" +
     "\t\t\t\t<thead>\n" +
     "\t\t\t\t\t<th>Printed Reports</th>\n" +
-    "\t\t\t\t\t<th># of Reports</th>\n" +
     "\t\t\t\t\t<th>Amount</th>\n" +
     "\t\t\t\t\t<th>Estimated Student Count</th>\n" +
     "\t\t\t\t\t<th>Estimated Total</th>\n" +
     "\t\t\t\t</thead>\n" +
     "\t\t\t\t<tbody ng-repeat=\"reportGroup in cost.reportGroups\">\n" +
     "\t\t\t\t<tr ng-repeat=\"report in reportGroup.reports\">\n" +
-    "\t\t\t\t\t<td><label><input type=\"radio\" name=\"{{reportGroup.name}}\" value=\"{{report.name}}\" ng-model=\"reportGroup.selectedReport\" ng-change=\"selectReport(report, reportGroup)\"/>  {{report.name}}</label></td>\n" +
-    "\t\t\t\t\t<td>{{report.number}}</td>\t\t\t\t\t\n" +
+    "\t\t\t\t\t<td><label><input type=\"radio\" name=\"{{reportGroup.name}}\" value=\"{{report.number}}\" ng-model=\"reportGroup.selectedReport\" ng-change=\"selectReport(report, reportGroup)\"/>  {{reportGroup.name}} (x{{report.number}} per student)</label></td>\t\t\t\t\t\n" +
     "\t\t\t\t\t<td>{{report.cost | currency}}</td>\n" +
-    "\t\t\t\t\t<td><input type=\"number\" ng-model=\"report.amount\" min=\"0\" ng-disabled=\"reportGroup.selectedReport != report.name\"/></td>\n" +
+    "\t\t\t\t\t<td><input type=\"number\" ng-model=\"report.amount\" min=\"0\" ng-disabled=\"reportGroup.selectedReport != report.number\"/></td>\n" +
     "\t\t\t\t\t<td>{{report.cost * report.amount | currency}}</td>\n" +
     "\t\t\t\t</tr>\n" +
     "\t\t\t\t</tbody>\n" +
