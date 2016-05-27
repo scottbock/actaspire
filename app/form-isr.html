@@ -1,37 +1,42 @@
 <div ng-show="$state.is('form.isr')">
-	<h2>This form should be filled out by organizations wishing to purchase printed score reports and labels for the {{cost.currentSemester}} {{cost.currentYear}} test administration of ACT Aspire.</h2>	
+	<p>This form should be filled out by organizations wishing to purchase printed score reports and labels for the <strong>{{cost.currentSemester}} {{cost.currentYear}}</strong> test administration of ACT Aspire.</p>	
 
 	<form id="trainingForm" name="trainingForm" ng-submit="processForm()"> 
 
 		<div class="row"><div class="col-sm-12"><h4>Date: {{date | date:'yyyy-MM-dd'}}</h4></div></div>
 
-		<div class="row">
-		    <div class="form-group col-sm-3 required">
-		        <label for="firstName" class="control-label">First Name</label>
-		        <input type="text" class="form-control" name="firstName" ng-model="formData.customer.firstName" required="required">
-		    </div>
+		<div class="panel panel-default">
+		    <div class="panel-heading">Contact Information</div>
+		    <div class="panel-body">
+				<div class="row">
+				    <div class="form-group col-sm-3 required">
+				        <label for="firstName" class="control-label">First Name</label>
+				        <input type="text" class="form-control" name="firstName" ng-model="formData.customer.firstName" required="required">
+				    </div>
 
-		    <div class="form-group col-sm-3 required">
-		        <label for="lastName" class="control-label">Last Name</label>
-		        <input type="text" class="form-control" name="lastName" ng-model="formData.customer.lastName" required="required">
-		    </div>
+				    <div class="form-group col-sm-3 required">
+				        <label for="lastName" class="control-label">Last Name</label>
+				        <input type="text" class="form-control" name="lastName" ng-model="formData.customer.lastName" required="required">
+				    </div>
 
-		    <div class="form-group col-sm-6 required">
-		        <label for="organization" class="control-label">School / District / Organization</label>
-		        <input type="text" class="form-control" name="organization" ng-model="formData.customer.organization" required="required">
-		    </div>
-		</div>
+				    <div class="form-group col-sm-6 required">
+				        <label for="organization" class="control-label">School / District / Organization</label>
+				        <input type="text" class="form-control" name="organization" ng-model="formData.customer.organization" required="required">
+				    </div>
+				</div>
 
-		<div class="row">
-		    <div class="form-group col-sm-6 required">
-		        <label for="jobTitle" class="control-label">Job Title</label>
-		        <input type="text" class="form-control" name="jobTitle" ng-model="formData.customer.jobTitle" required="required">
-		    </div>
+				<div class="row">
+				    <div class="form-group col-sm-6 required">
+				        <label for="jobTitle" class="control-label">Job Title</label>
+				        <input type="text" class="form-control" name="jobTitle" ng-model="formData.customer.jobTitle" required="required">
+				    </div>
 
-		    <div class="form-group col-sm-4 required">
-		        <label for="email" class="control-label">Email</label>
-		        <input type="email" class="form-control" name="email" ng-model="formData.customer.email" required="required">
-		    </div>
+				    <div class="form-group col-sm-4 required">
+				        <label for="email" class="control-label">Email</label>
+				        <input type="email" class="form-control" name="email" ng-model="formData.customer.email" required="required">
+				    </div>
+				</div>
+			</div>
 		</div>
 
 		<div class="panel panel-default">
