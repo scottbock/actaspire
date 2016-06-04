@@ -217,7 +217,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t     \t<div class=\"col-sm-6 form-group\">\n" +
     "\t\t\t    <label class=\"checkbox-inline\">\n" +
     "\t\t\t    \t<input type=\"checkbox\" ng-model=\"order.scoreLabels\">\n" +
-    "\t\t\t    \tAdd Printed Score Labels ({{order.cost.labels | currency}})\n" +
+    "\t\t\t    \tAdd Printed Score Labels (x1 per student) - {{order.cost.labels | currency}}\n" +
     "\t\t\t    </label>\n" +
     "\t\t    </div>\n" +
     "\t\t</div>\n" +
@@ -225,11 +225,11 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t    \t<div class=\"col-sm-6 form-group\">\n" +
     "\t\t\t\t<label>\n" +
     "\t\t\t\t\t<input type=\"radio\" ng-model=\"order.reportsPerStudent\" value=\"1\">\n" +
-    "\t\t\t\t\t1 Report Per Student ({{order.cost.isr | currency}})\n" +
+    "\t\t\t\t\tIndividual Score Reports (x1 per student) - {{order.cost.isr | currency}}\n" +
     "\t\t\t\t</label>\n" +
     "\t\t\t\t<label>\n" +
     "\t\t\t\t\t<input type=\"radio\" ng-model=\"order.reportsPerStudent\" value=\"2\">\n" +
-    "\t\t\t\t\t2 Reports Per Student ({{order.cost.isr * 2 | currency}})\n" +
+    "\t\t\t\t\tIndividual Score Reports (x2 per student) - {{order.cost.isr * 2 | currency}}\n" +
     "\t\t\t\t</label>\t\t\t\n" +
     "\t\t    </div>\n" +
     "\t    </div>\n" +
@@ -505,39 +505,44 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
 
   $templateCache.put('app/form-isr.html',
     "<div ng-show=\"$state.is('form.isr')\">\n" +
-    "\t<h2>This form should be filled out by organizations wishing to purchase printed score reports and labels for the {{cost.currentSemester}} {{cost.currentYear}} test administration of ACT Aspire.</h2>\t\n" +
+    "\t<p>This form should be filled out by organizations wishing to purchase printed score reports and labels for the <strong>{{cost.currentSemester}} {{cost.currentYear}}</strong> test administration of ACT Aspire.</p>\t\n" +
     "\n" +
     "\t<form id=\"trainingForm\" name=\"trainingForm\" ng-submit=\"processForm()\"> \n" +
     "\n" +
     "\t\t<div class=\"row\"><div class=\"col-sm-12\"><h4>Date: {{date | date:'yyyy-MM-dd'}}</h4></div></div>\n" +
     "\n" +
-    "\t\t<div class=\"row\">\n" +
-    "\t\t    <div class=\"form-group col-sm-3 required\">\n" +
-    "\t\t        <label for=\"firstName\" class=\"control-label\">First Name</label>\n" +
-    "\t\t        <input type=\"text\" class=\"form-control\" name=\"firstName\" ng-model=\"formData.customer.firstName\" required=\"required\">\n" +
-    "\t\t    </div>\n" +
+    "\t\t<div class=\"panel panel-default\">\n" +
+    "\t\t    <div class=\"panel-heading\">Contact Information</div>\n" +
+    "\t\t    <div class=\"panel-body\">\n" +
+    "\t\t\t\t<div class=\"row\">\n" +
+    "\t\t\t\t    <div class=\"form-group col-sm-3 required\">\n" +
+    "\t\t\t\t        <label for=\"firstName\" class=\"control-label\">First Name</label>\n" +
+    "\t\t\t\t        <input type=\"text\" class=\"form-control\" name=\"firstName\" ng-model=\"formData.customer.firstName\" required=\"required\">\n" +
+    "\t\t\t\t    </div>\n" +
     "\n" +
-    "\t\t    <div class=\"form-group col-sm-3 required\">\n" +
-    "\t\t        <label for=\"lastName\" class=\"control-label\">Last Name</label>\n" +
-    "\t\t        <input type=\"text\" class=\"form-control\" name=\"lastName\" ng-model=\"formData.customer.lastName\" required=\"required\">\n" +
-    "\t\t    </div>\n" +
+    "\t\t\t\t    <div class=\"form-group col-sm-3 required\">\n" +
+    "\t\t\t\t        <label for=\"lastName\" class=\"control-label\">Last Name</label>\n" +
+    "\t\t\t\t        <input type=\"text\" class=\"form-control\" name=\"lastName\" ng-model=\"formData.customer.lastName\" required=\"required\">\n" +
+    "\t\t\t\t    </div>\n" +
     "\n" +
-    "\t\t    <div class=\"form-group col-sm-6 required\">\n" +
-    "\t\t        <label for=\"organization\" class=\"control-label\">School / District / Organization</label>\n" +
-    "\t\t        <input type=\"text\" class=\"form-control\" name=\"organization\" ng-model=\"formData.customer.organization\" required=\"required\">\n" +
-    "\t\t    </div>\n" +
-    "\t\t</div>\n" +
+    "\t\t\t\t    <div class=\"form-group col-sm-6 required\">\n" +
+    "\t\t\t\t        <label for=\"organization\" class=\"control-label\">School / District / Organization</label>\n" +
+    "\t\t\t\t        <input type=\"text\" class=\"form-control\" name=\"organization\" ng-model=\"formData.customer.organization\" required=\"required\">\n" +
+    "\t\t\t\t    </div>\n" +
+    "\t\t\t\t</div>\n" +
     "\n" +
-    "\t\t<div class=\"row\">\n" +
-    "\t\t    <div class=\"form-group col-sm-6 required\">\n" +
-    "\t\t        <label for=\"jobTitle\" class=\"control-label\">Job Title</label>\n" +
-    "\t\t        <input type=\"text\" class=\"form-control\" name=\"jobTitle\" ng-model=\"formData.customer.jobTitle\" required=\"required\">\n" +
-    "\t\t    </div>\n" +
+    "\t\t\t\t<div class=\"row\">\n" +
+    "\t\t\t\t    <div class=\"form-group col-sm-6 required\">\n" +
+    "\t\t\t\t        <label for=\"jobTitle\" class=\"control-label\">Job Title</label>\n" +
+    "\t\t\t\t        <input type=\"text\" class=\"form-control\" name=\"jobTitle\" ng-model=\"formData.customer.jobTitle\" required=\"required\">\n" +
+    "\t\t\t\t    </div>\n" +
     "\n" +
-    "\t\t    <div class=\"form-group col-sm-4 required\">\n" +
-    "\t\t        <label for=\"email\" class=\"control-label\">Email</label>\n" +
-    "\t\t        <input type=\"email\" class=\"form-control\" name=\"email\" ng-model=\"formData.customer.email\" required=\"required\">\n" +
-    "\t\t    </div>\n" +
+    "\t\t\t\t    <div class=\"form-group col-sm-4 required\">\n" +
+    "\t\t\t\t        <label for=\"email\" class=\"control-label\">Email</label>\n" +
+    "\t\t\t\t        <input type=\"email\" class=\"form-control\" name=\"email\" ng-model=\"formData.customer.email\" required=\"required\">\n" +
+    "\t\t\t\t    </div>\n" +
+    "\t\t\t\t</div>\n" +
+    "\t\t\t</div>\n" +
     "\t\t</div>\n" +
     "\n" +
     "\t\t<div class=\"panel panel-default\">\n" +
@@ -607,15 +612,15 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t<tbody ng-repeat=\"reportGroup in cost.reportGroups\">\n" +
     "\t\t\t\t<tr ng-repeat=\"report in reportGroup.reports\">\n" +
     "\t\t\t\t\t<td><label><input type=\"radio\" name=\"{{reportGroup.name}}\" value=\"{{report.number}}\" ng-model=\"reportGroup.selectedReport\" ng-change=\"selectReport(report, reportGroup)\"/>  {{reportGroup.name}} (x{{report.number}} per student)</label></td>\t\t\t\t\t\n" +
-    "\t\t\t\t\t<td>{{report.cost | currency}}</td>\n" +
+    "\t\t\t\t\t<td>{{report.cost | currency:\"\"}}</td>\n" +
     "\t\t\t\t\t<td><input type=\"number\" ng-model=\"report.amount\" min=\"0\" ng-disabled=\"reportGroup.selectedReport != report.number\"/></td>\n" +
-    "\t\t\t\t\t<td>{{report.cost * report.amount | currency}}</td>\n" +
+    "\t\t\t\t\t<td>{{report.cost * report.amount | currency:\"\"}}</td>\n" +
     "\t\t\t\t</tr>\n" +
     "\t\t\t\t</tbody>\n" +
     "\t\t\t\t<tfoot>\n" +
     "\t\t\t\t\t<tr>\n" +
     "\t\t\t\t\t\t<td colspan=\"6\">\n" +
-    "\t\t\t\t\t\t\t<div class=\"pull-right\"><h4>Total: {{getTotal() | currency}}</h4></div>\n" +
+    "\t\t\t\t\t\t\t<div class=\"pull-right\"><h4>Total: {{getTotal() | currency:\"\"}}</h4></div>\n" +
     "\t\t\t\t\t\t</td>\n" +
     "\t\t\t\t\t</tr>\n" +
     "\t\t\t\t</tfoot>\n" +
