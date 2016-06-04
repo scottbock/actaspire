@@ -179,10 +179,10 @@ angular.module('myApp', [
 		}
 		else{
 			if(administrationWindow){
-				$scope.summative.error = administrationWindow + ' ' + calendarYear + ' already exists';
+				$scope.summative.error = 'You have already placed ' + administrationWindow + ' ' + calendarYear + ' into the cart. Please proceed to the bottom to check-out.';
 			}
 			else{
-				$scope.periodic.error = calendarYear + ' already exists';
+				$scope.periodic.error = 'You have already placed ' + schoolYearFilter(calendarYear) + ' into the cart. Please proceed to the bottom to check-out.';
 			}
 		}		
 	};
@@ -1203,13 +1203,13 @@ angular.module('myApp', [
 	};
 
 	var buildIsrCsvFile = function(formData, reportGroups){
-		var fileContent = 'NS Name,Internal ID,Date,line,School / Customer,Report Description,Price,Quantity,Total,Special Notes,Name,Job Title,Contact email,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions\n';
+		var fileContent = 'NS Name,Internal ID,Grade,Date,line,School / Customer,Report Description,Price,Quantity,Total,Special Notes,Name,Job Title,Contact email,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions\n';
 
 		var index = 0;
         angular.forEach(reportGroups, function(reportGroup, key) {
         	angular.forEach(reportGroup.reports, function(report, key) {
         		if(report.amount){
-					fileContent += ',,"' + today + colDelim 
+					fileContent += ',,0,"' + today + colDelim 
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ reportGroup.name + ' ' + report.number + 'x' + colDelim

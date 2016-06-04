@@ -203,7 +203,7 @@
 	     	<div class="col-sm-6 form-group">
 			    <label class="checkbox-inline">
 			    	<input type="checkbox" ng-model="order.scoreLabels">
-			    	Add Printed Score Labels ({{order.cost.labels | currency}})
+			    	Add Printed Score Labels (x1 per student) - {{order.cost.labels | currency}}
 			    </label>
 		    </div>
 		</div>
@@ -211,11 +211,11 @@
 	    	<div class="col-sm-6 form-group">
 				<label>
 					<input type="radio" ng-model="order.reportsPerStudent" value="1">
-					1 Report Per Student ({{order.cost.isr | currency}})
+					Individual Score Reports (x1 per student) - {{order.cost.isr | currency}}
 				</label>
 				<label>
 					<input type="radio" ng-model="order.reportsPerStudent" value="2">
-					2 Reports Per Student ({{order.cost.isr * 2 | currency}})
+					Individual Score Reports (x2 per student) - {{order.cost.isr * 2 | currency}}
 				</label>			
 		    </div>
 	    </div>

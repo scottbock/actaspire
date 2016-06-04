@@ -45354,10 +45354,10 @@ angular.module('myApp', [
 		}
 		else{
 			if(administrationWindow){
-				$scope.summative.error = administrationWindow + ' ' + calendarYear + ' already exists';
+				$scope.summative.error = 'You have already placed ' + administrationWindow + ' ' + calendarYear + ' into the cart. Please proceed to the bottom to check-out.';
 			}
 			else{
-				$scope.periodic.error = calendarYear + ' already exists';
+				$scope.periodic.error = 'You have already placed ' + schoolYearFilter(calendarYear) + ' into the cart. Please proceed to the bottom to check-out.';
 			}
 		}		
 	};
@@ -46378,13 +46378,13 @@ angular.module('myApp', [
 	};
 
 	var buildIsrCsvFile = function(formData, reportGroups){
-		var fileContent = 'NS Name,Internal ID,Date,line,School / Customer,Report Description,Price,Quantity,Total,Special Notes,Name,Job Title,Contact email,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions\n';
+		var fileContent = 'NS Name,Internal ID,Grade,Date,line,School / Customer,Report Description,Price,Quantity,Total,Special Notes,Name,Job Title,Contact email,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions\n';
 
 		var index = 0;
         angular.forEach(reportGroups, function(reportGroup, key) {
         	angular.forEach(reportGroup.reports, function(report, key) {
         		if(report.amount){
-					fileContent += ',,"' + today + colDelim 
+					fileContent += ',,0,"' + today + colDelim 
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ reportGroup.name + ' ' + report.number + 'x' + colDelim
@@ -46677,7 +46677,7 @@ angular.module('myApp', [
     "\t     \t<div class=\"col-sm-6 form-group\">\n" +
     "\t\t\t    <label class=\"checkbox-inline\">\n" +
     "\t\t\t    \t<input type=\"checkbox\" ng-model=\"order.scoreLabels\">\n" +
-    "\t\t\t    \tAdd Printed Score Labels ({{order.cost.labels | currency}})\n" +
+    "\t\t\t    \tAdd Printed Score Labels (x1 per student) - {{order.cost.labels | currency}}\n" +
     "\t\t\t    </label>\n" +
     "\t\t    </div>\n" +
     "\t\t</div>\n" +
@@ -46685,11 +46685,11 @@ angular.module('myApp', [
     "\t    \t<div class=\"col-sm-6 form-group\">\n" +
     "\t\t\t\t<label>\n" +
     "\t\t\t\t\t<input type=\"radio\" ng-model=\"order.reportsPerStudent\" value=\"1\">\n" +
-    "\t\t\t\t\t1 Report Per Student ({{order.cost.isr | currency}})\n" +
+    "\t\t\t\t\tIndividual Score Reports (x1 per student) - {{order.cost.isr | currency}}\n" +
     "\t\t\t\t</label>\n" +
     "\t\t\t\t<label>\n" +
     "\t\t\t\t\t<input type=\"radio\" ng-model=\"order.reportsPerStudent\" value=\"2\">\n" +
-    "\t\t\t\t\t2 Reports Per Student ({{order.cost.isr * 2 | currency}})\n" +
+    "\t\t\t\t\tIndividual Score Reports (x2 per student) - {{order.cost.isr * 2 | currency}}\n" +
     "\t\t\t\t</label>\t\t\t\n" +
     "\t\t    </div>\n" +
     "\t    </div>\n" +
@@ -47072,15 +47072,15 @@ angular.module('myApp', [
     "\t\t\t\t<tbody ng-repeat=\"reportGroup in cost.reportGroups\">\n" +
     "\t\t\t\t<tr ng-repeat=\"report in reportGroup.reports\">\n" +
     "\t\t\t\t\t<td><label><input type=\"radio\" name=\"{{reportGroup.name}}\" value=\"{{report.number}}\" ng-model=\"reportGroup.selectedReport\" ng-change=\"selectReport(report, reportGroup)\"/>  {{reportGroup.name}} (x{{report.number}} per student)</label></td>\t\t\t\t\t\n" +
-    "\t\t\t\t\t<td>{{report.cost | currency}}</td>\n" +
+    "\t\t\t\t\t<td>{{report.cost | currency:\"\"}}</td>\n" +
     "\t\t\t\t\t<td><input type=\"number\" ng-model=\"report.amount\" min=\"0\" ng-disabled=\"reportGroup.selectedReport != report.number\"/></td>\n" +
-    "\t\t\t\t\t<td>{{report.cost * report.amount | currency}}</td>\n" +
+    "\t\t\t\t\t<td>{{report.cost * report.amount | currency:\"\"}}</td>\n" +
     "\t\t\t\t</tr>\n" +
     "\t\t\t\t</tbody>\n" +
     "\t\t\t\t<tfoot>\n" +
     "\t\t\t\t\t<tr>\n" +
     "\t\t\t\t\t\t<td colspan=\"6\">\n" +
-    "\t\t\t\t\t\t\t<div class=\"pull-right\"><h4>Total: {{getTotal() | currency}}</h4></div>\n" +
+    "\t\t\t\t\t\t\t<div class=\"pull-right\"><h4>Total: {{getTotal() | currency:\"\"}}</h4></div>\n" +
     "\t\t\t\t\t\t</td>\n" +
     "\t\t\t\t\t</tr>\n" +
     "\t\t\t\t</tfoot>\n" +

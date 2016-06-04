@@ -217,7 +217,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t     \t<div class=\"col-sm-6 form-group\">\n" +
     "\t\t\t    <label class=\"checkbox-inline\">\n" +
     "\t\t\t    \t<input type=\"checkbox\" ng-model=\"order.scoreLabels\">\n" +
-    "\t\t\t    \tAdd Printed Score Labels ({{order.cost.labels | currency}})\n" +
+    "\t\t\t    \tAdd Printed Score Labels (x1 per student) - {{order.cost.labels | currency}}\n" +
     "\t\t\t    </label>\n" +
     "\t\t    </div>\n" +
     "\t\t</div>\n" +
@@ -225,11 +225,11 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t    \t<div class=\"col-sm-6 form-group\">\n" +
     "\t\t\t\t<label>\n" +
     "\t\t\t\t\t<input type=\"radio\" ng-model=\"order.reportsPerStudent\" value=\"1\">\n" +
-    "\t\t\t\t\t1 Report Per Student ({{order.cost.isr | currency}})\n" +
+    "\t\t\t\t\tIndividual Score Reports (x1 per student) - {{order.cost.isr | currency}}\n" +
     "\t\t\t\t</label>\n" +
     "\t\t\t\t<label>\n" +
     "\t\t\t\t\t<input type=\"radio\" ng-model=\"order.reportsPerStudent\" value=\"2\">\n" +
-    "\t\t\t\t\t2 Reports Per Student ({{order.cost.isr * 2 | currency}})\n" +
+    "\t\t\t\t\tIndividual Score Reports (x2 per student) - {{order.cost.isr * 2 | currency}}\n" +
     "\t\t\t\t</label>\t\t\t\n" +
     "\t\t    </div>\n" +
     "\t    </div>\n" +
@@ -612,15 +612,15 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t<tbody ng-repeat=\"reportGroup in cost.reportGroups\">\n" +
     "\t\t\t\t<tr ng-repeat=\"report in reportGroup.reports\">\n" +
     "\t\t\t\t\t<td><label><input type=\"radio\" name=\"{{reportGroup.name}}\" value=\"{{report.number}}\" ng-model=\"reportGroup.selectedReport\" ng-change=\"selectReport(report, reportGroup)\"/>  {{reportGroup.name}} (x{{report.number}} per student)</label></td>\t\t\t\t\t\n" +
-    "\t\t\t\t\t<td>{{report.cost | currency}}</td>\n" +
+    "\t\t\t\t\t<td>{{report.cost | currency:\"\"}}</td>\n" +
     "\t\t\t\t\t<td><input type=\"number\" ng-model=\"report.amount\" min=\"0\" ng-disabled=\"reportGroup.selectedReport != report.number\"/></td>\n" +
-    "\t\t\t\t\t<td>{{report.cost * report.amount | currency}}</td>\n" +
+    "\t\t\t\t\t<td>{{report.cost * report.amount | currency:\"\"}}</td>\n" +
     "\t\t\t\t</tr>\n" +
     "\t\t\t\t</tbody>\n" +
     "\t\t\t\t<tfoot>\n" +
     "\t\t\t\t\t<tr>\n" +
     "\t\t\t\t\t\t<td colspan=\"6\">\n" +
-    "\t\t\t\t\t\t\t<div class=\"pull-right\"><h4>Total: {{getTotal() | currency}}</h4></div>\n" +
+    "\t\t\t\t\t\t\t<div class=\"pull-right\"><h4>Total: {{getTotal() | currency:\"\"}}</h4></div>\n" +
     "\t\t\t\t\t\t</td>\n" +
     "\t\t\t\t\t</tr>\n" +
     "\t\t\t\t</tfoot>\n" +
