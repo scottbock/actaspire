@@ -902,15 +902,15 @@ angular.module('myApp', [
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
-						+ (order.online.total * order.reportsPerStudent) + colDelim
-						+ 'ACT Aspire Printed Individual Student Reports' + colDelim
+						+ order.online.total + colDelim
+						+ 'Individual Score Reports ' + order.reportsPerStudent + 'x' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Online' + colDelim
 						+ 'Rev Rec - ISR' + colDelim
 						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
-						+ (order.cost.isr) + colDelim
-						+ ((order.cost.isr) * order.online.total * order.reportsPerStudent) + colDelim
+						+ (order.cost.isr * order.reportsPerStudent) + colDelim
+						+ ((order.cost.isr) * order.online.total) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
 						+ yesNo(order.subjects.Math) + colDelim
 						+ yesNo(order.subjects.Reading) + colDelim
@@ -979,15 +979,15 @@ angular.module('myApp', [
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
-						+ (order.paper.total * order.reportsPerStudent) + colDelim
-						+ 'ACT Aspire Printed Individual Student Reports' + colDelim
+						+ order.paper.total + colDelim
+						+ 'Individual Score Reports ' + order.reportsPerStudent + 'x' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Paper' + colDelim
 						+ 'Rev Rec - ISR' + colDelim
-						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim	
-						+ (order.cost.isr) + colDelim
-						+ ((order.cost.isr) * order.paper.total * order.reportsPerStudent) + colDelim
+						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
+						+ (order.cost.isr * order.reportsPerStudent) + colDelim
+						+ ((order.cost.isr) * order.paper.total) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
 						+ yesNo(order.subjects.Math) + colDelim
 						+ yesNo(order.subjects.Reading) + colDelim
