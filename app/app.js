@@ -108,6 +108,9 @@ angular.module('myApp', [
 		$scope.formData.summary.total = 0.0;
 		angular.forEach($scope.orders.summative.orders, function(order, key) {
 			$scope.formData.summary.total += order.online.balance + order.paper.balance;
+			if(order.cost.lateFee){
+				$scope.formData.summary.total += order.cost.lateFee;
+			}
 		});
 		
 		angular.forEach($scope.orders.periodic.orders, function(order, key) {

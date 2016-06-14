@@ -45283,6 +45283,9 @@ angular.module('myApp', [
 		$scope.formData.summary.total = 0.0;
 		angular.forEach($scope.orders.summative.orders, function(order, key) {
 			$scope.formData.summary.total += order.online.balance + order.paper.balance;
+			if(order.cost.lateFee){
+				$scope.formData.summary.total += order.cost.lateFee;
+			}
 		});
 		
 		angular.forEach($scope.orders.periodic.orders, function(order, key) {
@@ -46657,6 +46660,9 @@ angular.module('myApp', [
     "\t\t\t</button>\n" +
     "\t\t</div>\n" +
     "\t\t<div class=\"panel-body\">\n" +
+    "\t\t<div ng-show=\"order.cost.lateFee\" class=\"lateFee\">\n" +
+    "\t\tA late fee of {{order.cost.lateFee | currency}} will be applied to this order.\n" +
+    "\t\t</div>\n" +
     "\t\t<h5>Subjects</h5>\n" +
     "\t\t<div class=\"row\">\n" +
     "\t    \t<div class=\"col-sm-2 form-group\" ng-repeat=\"(subject,enabled) in order.subjects\">\n" +
@@ -46915,6 +46921,15 @@ angular.module('myApp', [
     "\t\t\t\t\t</td>\t\n" +
     "\t\t\t\t\t<td>{{order.totalDiscount | currency}}</td>\n" +
     "\t\t\t\t\t<td>{{order.balance | currency}}</td>\t\t\t\t\t\t\n" +
+    "\t\t\t\t</tr>\n" +
+    "\t\t\t\t<tr ng-repeat=\"order in orders.summative.orders\" ng-if=\"order.cost.lateFee\">\n" +
+    "\t\t\t\t\t<td>Late Fee</td>\n" +
+    "\t\t\t\t\t<td>--</td>\n" +
+    "\t\t\t\t\t<td>{{order.cost.lateFee | currency}}</td>\n" +
+    "\t\t\t\t\t<td>--</td>\n" +
+    "\t\t\t\t\t<td>--</td>\n" +
+    "\t\t\t\t\t<td>--</td>\n" +
+    "\t\t\t\t\t<td>{{order.cost.lateFee | currency}}</td>\n" +
     "\t\t\t\t</tr>\n" +
     "\t\t\t\t<tr>\n" +
     "\t\t\t\t\t<td colspan=\"7\">\n" +
