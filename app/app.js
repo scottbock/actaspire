@@ -108,6 +108,9 @@ angular.module('myApp', [
 		$scope.formData.summary.total = 0.0;
 		angular.forEach($scope.orders.summative.orders, function(order, key) {
 			$scope.formData.summary.total += order.online.balance + order.paper.balance;
+			if(order.cost.lateFee){
+				$scope.formData.summary.total += order.cost.lateFee;
+			}
 		});
 		
 		angular.forEach($scope.orders.periodic.orders, function(order, key) {
@@ -721,7 +724,11 @@ angular.module('myApp', [
 					emailBody += '\n(' + currencyFilter(order.online.discounts.special) + ')\t\tDiscount - Coupon Code';
 				}
 				emailBody += '\n----------\n' + currencyFilter(order.online.finalPricePerStudent) + '\t\tEffective Price';
-				emailBody += '\n----------\n' + currencyFilter(order.online.balance) + '\t\tTotal (' + currencyFilter(order.online.finalPricePerStudent) + ' X ' + order.online.total + ' Students)\n==========';
+				emailBody += '\n----------\n' + currencyFilter(order.online.balance) + '\t\tTotal (' + currencyFilter(order.online.finalPricePerStudent) + ' X ' + order.online.total + ' Students)\n';
+				if(order.cost.lateFee){
+					emailBody += currencyFilter(order.cost.lateFee) + ' Late Fee\n';
+				}
+				emailBody += '==========';
 
 			}
 		});
@@ -853,7 +860,7 @@ angular.module('myApp', [
 			fileContent += colDelim;
 		}
 
-		return fileContent += formData.comments + rowDelim;
+		return fileContent += (formData.comments || '') + rowDelim;
 	};
 
 	var revRecDate = function(year, administrationWindow)
@@ -1047,6 +1054,28 @@ angular.module('myApp', [
 							+ writeCommonData(formData);
 					}
 				});
+			}
+		});
+
+		//Late Fee
+		angular.forEach(orders.summative.orders, function(order, key) {
+        	if(order.cost.lateFee){
+				fileContent += ',,"' + today + colDelim 
+					+ 0 + colDelim
+					+ formData.customer.organization + colDelim
+					+ 0 + colDelim
+					+ 1 + colDelim
+					+ 'Late Fee' + colDelim
+					+ order.administrationWindow + colDelim
+					+ order.calendarYear + colDelim + colDelim + colDelim + colDelim
+					+ order.cost.lateFee + colDelim
+					+ order.cost.lateFee + colDelim
+					+ yesNo(true) + colDelim
+					+ yesNo(true) + colDelim
+					+ yesNo(true) + colDelim
+					+ yesNo(true) + colDelim
+					+ yesNo(true) + colDelim
+					+ writeCommonData(formData);
 			}
 		});
 

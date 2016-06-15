@@ -183,6 +183,9 @@
 			</button>
 		</div>
 		<div class="panel-body">
+		<div ng-show="order.cost.lateFee" class="alert alert-danger">
+		A late fee of {{order.cost.lateFee | currency}} will be applied to this order.
+		</div>
 		<h5>Subjects</h5>
 		<div class="row">
 	    	<div class="col-sm-2 form-group" ng-repeat="(subject,enabled) in order.subjects">
@@ -441,6 +444,15 @@
 					</td>	
 					<td>{{order.totalDiscount | currency}}</td>
 					<td>{{order.balance | currency}}</td>						
+				</tr>
+				<tr ng-repeat="order in orders.summative.orders" ng-if="order.cost.lateFee">
+					<td>Late Fee</td>
+					<td>--</td>
+					<td>{{order.cost.lateFee | currency}}</td>
+					<td>--</td>
+					<td>--</td>
+					<td>--</td>
+					<td>{{order.cost.lateFee | currency}}</td>
 				</tr>
 				<tr>
 					<td colspan="7">
