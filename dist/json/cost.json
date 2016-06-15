@@ -16,7 +16,8 @@
 				"online":25.0,
 				"paper":31.0,
 				"isr":1.5,
-				"labels":0.5
+				"labels":0.5,
+				"lateFee":50.25
 			},
 			{
 				"semester":"Fall",

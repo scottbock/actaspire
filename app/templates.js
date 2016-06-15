@@ -197,7 +197,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t</button>\n" +
     "\t\t</div>\n" +
     "\t\t<div class=\"panel-body\">\n" +
-    "\t\t<div ng-show=\"order.cost.lateFee\" class=\"lateFee\">\n" +
+    "\t\t<div ng-show=\"order.cost.lateFee\" class=\"alert alert-danger\">\n" +
     "\t\tA late fee of {{order.cost.lateFee | currency}} will be applied to this order.\n" +
     "\t\t</div>\n" +
     "\t\t<h5>Subjects</h5>\n" +
