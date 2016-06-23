@@ -910,7 +910,7 @@ angular.module('myApp', [
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
 						+ (order.online.total * order.reportsPerStudent) + colDelim
-						+ 'ACT Aspire Printed Individual Student Reports' + colDelim
+						+ 'Individual Score Reports 1x' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Online' + colDelim
@@ -933,7 +933,7 @@ angular.module('myApp', [
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
 						+ (order.online.total) + colDelim
-						+ 'ACT Aspire Printed Score Labels' + colDelim
+						+ 'Score Labels 1x' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Online' + colDelim
@@ -987,7 +987,7 @@ angular.module('myApp', [
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
 						+ (order.paper.total * order.reportsPerStudent) + colDelim
-						+ 'ACT Aspire Printed Individual Student Reports' + colDelim
+						+ 'Individual Score Reports 1x' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Paper' + colDelim
@@ -1010,7 +1010,7 @@ angular.module('myApp', [
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
 						+ (order.paper.total) + colDelim
-						+ 'ACT Aspire Printed Score Labels' + colDelim
+						+ 'Score Labels 1x' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Paper' + colDelim
