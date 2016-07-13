@@ -46089,7 +46089,7 @@ angular.module('myApp', [
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Online' + colDelim
-						+ 'Rev Rec - ISR' + colDelim
+						+ 'Ancillary Rev Rec Template' + colDelim
 						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 						+ (order.cost.isr) + colDelim
 						+ ((order.cost.isr) * order.online.total * order.reportsPerStudent) + colDelim
@@ -46112,7 +46112,7 @@ angular.module('myApp', [
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Online' + colDelim
-						+ 'Rev Rec - Score Labels' + colDelim
+						+ 'Ancillary Rev Rec Template' + colDelim
 						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 						+ (order.cost.labels) + colDelim
 						+ ((order.cost.labels) * order.online.total) + colDelim
@@ -46166,7 +46166,7 @@ angular.module('myApp', [
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Paper' + colDelim
-						+ 'Rev Rec - ISR' + colDelim
+						+ 'Ancillary Rev Rec Template' + colDelim
 						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim	
 						+ (order.cost.isr) + colDelim
 						+ ((order.cost.isr) * order.paper.total * order.reportsPerStudent) + colDelim
@@ -46189,7 +46189,7 @@ angular.module('myApp', [
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Paper' + colDelim
-						+ 'Rev Rec - Score Labels' + colDelim
+						+ 'Ancillary Rev Rec Template' + colDelim
 						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 						+ (order.cost.labels) + colDelim
 						+ ((order.cost.labels) * order.paper.total) + colDelim
@@ -46406,11 +46406,11 @@ angular.module('myApp', [
 		return emailBody;
 	};
 
-	var buildIsrCsvFile = function(formData, reportGroups){
-		var fileContent = 'NS Name,Internal ID,Grade,Date,line,School / Customer,Report Description,Price,Quantity,Total,Special Notes,Name,Job Title,Contact email,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions\n';
+	var buildIsrCsvFile = function(formData, cost){
+		var fileContent = 'NS Name,Internal ID,Grade,Date,line,School / Customer,Report Description,Price,Quantity,Total,Special Notes,Rev Rec,Rev Rec Date,Name,Job Title,Contact email,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions\n';
 
 		var index = 0;
-        angular.forEach(reportGroups, function(reportGroup, key) {
+        angular.forEach(cost.reportGroups, function(reportGroup, key) {
         	angular.forEach(reportGroup.reports, function(report, key) {
         		if(report.amount){
 					fileContent += ',,0,"' + today + colDelim 
@@ -46420,7 +46420,9 @@ angular.module('myApp', [
 						+ currencyFilter(report.cost) + colDelim
 						+ report.amount + colDelim
 						+ currencyFilter(report.cost * report.amount ) + colDelim
-						+ formData.comments + colDelim				
+						+ formData.comments + colDelim
+						+ 'Ancillary Rev Rec Template' + colDelim
+						+ revRecDate(cost.currentYear, cost.currentSemester) + colDelim
 						+ formData.customer.firstName + ' ' + formData.customer.lastName + colDelim
 						+ formData.customer.jobTitle + colDelim
 						+ formData.customer.email + colDelim
@@ -46457,7 +46459,7 @@ angular.module('myApp', [
 		postData.orderInbox = cost.ordersInbox;
 		postData.orderBcc = cost.ordersBcc;
 		postData.message = buildIsrEmail(formData, cost.reportGroups);
-		postData.csv = buildIsrCsvFile(formData, cost.reportGroups);
+		postData.csv = buildIsrCsvFile(formData, cost);
 		postData.csvFileName = formData.customer.lastName + formData.customer.organization + new Date().getTime() + '.csv';
 		postData.csvFileName = postData.csvFileName.replace(/[/\\\\]/g, '');;
 
@@ -46487,7 +46489,7 @@ angular.module('myApp', [
 });
 
 
-;angular.module('myApp').run(['$templateCache', function($templateCache) {
+;;angular.module('myApp').run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('app/confirmation.html',
