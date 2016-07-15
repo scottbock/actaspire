@@ -45430,11 +45430,11 @@ angular.module('myApp', [
 				var paperTotal = 0;
 				angular.forEach(order.grade, function(grade, key) {
 					var countGrade = false;
-					if(grade.online !== null && !isNaN(grade.online)){
+					if(grade.online !== null && !isNaN(grade.online) && grade.online > 0){
 						onlineTotal += parseInt(grade.online);
 						countGrade = true;
 					}
-					if(grade.paper !== null && !isNaN(grade.paper)){
+					if(grade.paper !== null && !isNaN(grade.paper) && grade.paper > 0){
 						paperTotal += parseInt(grade.paper);
 						countGrade = true;
 					}
