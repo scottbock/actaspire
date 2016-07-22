@@ -1,0 +1,207 @@
+<div ng-show="$state.is('form.training')">
+	<h2>ACT Aspire Training Order Form</h2>	
+
+	<form id="trainingForm" name="trainingForm" ng-submit="processForm()"> 
+
+		<div class="row"><div class="col-sm-12"><h4>Date: {{date | date:'yyyy-MM-dd'}}</h4></div></div>
+
+		<div class="row">
+		    <div class="form-group col-sm-3 required">
+		        <label for="firstName" class="control-label">First Name</label>
+		        <input type="text" class="form-control" name="firstName" ng-model="formData.customer.firstName" required="required">
+		    </div>
+
+		    <div class="form-group col-sm-3 required">
+		        <label for="lastName" class="control-label">Last Name</label>
+		        <input type="text" class="form-control" name="lastName" ng-model="formData.customer.lastName" required="required">
+		    </div>
+
+		    <div class="form-group col-sm-6 required">
+		        <label for="organization" class="control-label">School / District / Organization</label>
+		        <input type="text" class="form-control" name="organization" ng-model="formData.customer.organization" required="required">
+		    </div>
+		</div>
+
+		<div class="row">
+		    <div class="form-group col-sm-6 required">
+		        <label for="jobTitle" class="control-label">Job Title</label>
+		        <input type="text" class="form-control" name="jobTitle" ng-model="formData.customer.jobTitle" required="required">
+		    </div>
+
+		    <div class="form-group col-sm-4 required">
+		        <label for="email" class="control-label">Email</label>
+		        <input type="email" class="form-control" name="email" ng-model="formData.customer.email" required="required">
+		    </div>
+		</div>
+
+		<div class="panel panel-default">
+		    <div class="panel-heading">Billing Information</div>
+		    <div class="panel-body">
+		        <div class="row">
+		            <div class="form-group col-sm-4 required">
+		                <label for="billingName" class="control-label">Billing Contact Name</label>
+		                <input type="text" class="form-control" name="billingName" ng-model="formData.billingContact.name" required="required">
+		            </div>
+
+		            <div class="form-group col-sm-4 required">
+		                <label for="billingEmail" class="control-label">Billing Contact Email</label>
+		                <input type="email" class="form-control" name="billingEmail" ng-model="formData.billingContact.email" required="required">
+		            </div>
+
+		            <div class="form-group col-sm-4 required">
+		                <label for="billingPhone" class="control-label">Billing Contact Phone</label>
+		                <input type="tel" class="form-control" name="billingPhone" ng-model="formData.billingContact.phone" required="required">
+		            </div>
+		        </div>    
+		        <div class="row">
+		            <div class="form-group col-sm-12 required">
+		                <label for="billingAddress" class="control-label">Billing Address Line 1</label>
+		                <input type="text" class="form-control" name="billingAddress" ng-model="formData.billing.address.line1" required="required">
+		            </div>
+		        </div>
+		        <div class="row">
+		            <div class="form-group col-sm-12">
+		                <label for="billingAddress" class="control-label">Billing Address Line 2</label>
+		                <input type="text" class="form-control" name="billingAddress" ng-model="formData.billing.address.line2">
+		            </div>
+		        </div>        
+		        <div class="row">
+		            <div class="form-group col-sm-4 required">
+		                <label for="city" class="control-label">City</label>
+		                <input type="text" class="form-control" name="city" ng-model="formData.billing.address.city" required="required">
+		            </div>
+
+		            <div class="form-group col-sm-4 required">
+		                <label for="state" class="control-label">State</label>
+		        		<select class="form-control" name="state" ng-model="formData.billing.address.state" ng-options="key as value for (key , value) in states" required="required"></select>
+		            </div>
+
+		            <div class="form-group col-sm-4 required">
+		                <label for="zip" class="control-label">Zip</label>
+		                <input type="text" class="form-control" name="zip" ng-model="formData.billing.address.zip" required="required">
+		            </div>
+		        </div>    
+		    </div>
+		</div>
+
+
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+			Available Training
+			</div>
+
+			<table class="table table-striped">
+				<thead>
+					<th>Training</th>
+					<th>Cost</th>
+					<th>Duration</th>
+					<th>Maximum Participants</th>
+					<th></th>
+				</thead>
+				<tr ng-repeat="training in cost.training">
+					<td><a href="{{training.url}}" target="_blank">{{training.mode}}: {{training.title}}</a></td>
+					<td>{{training.cost | currency}}</td>
+					<td>{{training.duration}} hr</td>
+					<td>{{training.maxParticipants}}</td>
+					<td>
+						<button type="button" ng-model="addTrainingButton" ng-click="addTraining(training)"  class="btn btn-primary">Add</button>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+			Training Orders
+			</div>
+
+			<table class="table table-striped">
+				<thead>
+					<th>Description</th>
+					<th>Duration</th>
+					<th>Mode</th>
+					<th>Maximum Participants</th>
+					<th>*Preferred Date</th>
+					<th>*Preferred Time</th>
+					<th>Price</th>
+					<th>Quantity</th>
+					<th>Total</th>
+					<th></th>
+				</thead>
+				<tr ng-repeat="training in trainingOrders track by training.title">
+					<td><a href="{{training.url}}" target="_blank">{{training.title}}</a></td>
+					<td>{{training.duration}} hr</td>
+					<td>{{training.mode}}</td>
+					<td>{{training.maxParticipants * training.quantity}}</td>
+					<td>
+				        <p class="input-group training-order-calendar">	
+				          <input type="text" class="form-control" uib-datepicker-popup ng-model="training.preferredDate" is-open="training.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+				          <span class="input-group-btn">
+				            <button type="button" class="btn btn-default" ng-click="openCalendar(training)"><i class="glyphicon glyphicon-calendar"></i></button>
+				          </span>
+				        </p>
+					</td>
+					<td>
+						<select class="form-control" name="" ng-model="training.preferredTime">
+							<option value="AM">AM</option>
+							<option value="PM">PM</option>
+						</select>
+					</td>
+					<td>{{training.cost | currency}}</td>
+					<td>
+						<div class="training-order-quantity form-group">
+							<input class="form-control" type="number" ng-model="training.quantity" name="" min="1">
+						</div>
+					</td>
+					<td>{{training.quantity * training.cost | currency}}</td>
+					<td>			
+						<button type="button" class="pull-right btn btn-default btn-xs" aria-label="Remove" ng-click="removeTraining(training)">
+							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						</button>
+					</td>
+				</tr>
+				<tfoot>
+					<tr>
+						<td colspan="10">
+							<div class="pull-right"><h4>Total: {{getTotal() | currency}}</h4></div>
+						</td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+
+		<div class="row gutter">
+			<h4>Important Next Steps:</h4>
+			<ul>
+				<li>Upon completion of the order an invoice for the total due will be sent to the contact above and you will be contacted regarding your preferred Training date and trainer availability.</li>
+				<li>Training Service representiative will reach out to you to go through the training options, modules, and scheduling. </li>
+				<li>Payment must be rendered before training is delivered. </li>
+				<li>Typical turnaround time from order to delivery, depending on your prefered training date, is two weeks.</li>
+				<li>Typical turnaround time from order to delivery, depending on your prefered training date, is two weeks.</li>
+				<li>*Preferred date and times are to be confirmed.</li>
+			</ul>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-12 form-group">
+			    <label class="checkbox-inline">
+			    	<input type="checkbox" ng-model="formData.acceptTerms">
+			    	I agree to ACT Aspire's <a href="./json/ActAspireTermsAndConditions.pdf" target="_blank">Terms and Conditions</a>
+			    </label>
+			</div>
+		</div>
+		<div class="row" ng-show="formData.acceptTerms">
+		    <div class="form-group col-sm-12 required">
+		        <label for="firstName" class="control-label">Signature:</label>
+		        <input type="text" class="form-control" name="firstName" ng-model="formData.customer.signature" required="required" placeholder="Enter your name as a signature">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="col-sm-4">
+		  		<button type="submit" class="btn btn-primary" ng-disabled="trainingForm.$invalid || trainingForm.$pending || !formData.acceptTerms ">Submit Order</button>
+		    </div>
+		</div>
+	</form>
+</div>
+<div ui-view></div>

@@ -37,6 +37,17 @@ angular.module('myApp', [
 			url: '/confirmation',
 			templateUrl: 'app/confirmation.html'
 		})
+
+		.state('form.training', {
+			url: '/training',
+			templateUrl: 'app/form-training.html',
+			controller: 'trainingController'
+		})
+
+		.state('form.training.confirmation', {
+			url: '/confirmation',
+			templateUrl: 'app/confirmation.html'
+		})		
         
     // catch all route
     // send users to the form page 
