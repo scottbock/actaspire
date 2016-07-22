@@ -63,11 +63,17 @@ angular.module('myApp', [
 		'schoolYear' : ''
 	};
 
+	/**
+	//Save Draft
 	$scope.saveDraft = function(){
 		localStorage.setItem('formData', angular.toJson($scope.formData));
 		localStorage.setItem('summative', angular.toJson($scope.orders.summative));
 		localStorage.setItem('periodic', angular.toJson($scope.orders.periodic));
-	};
+	};**/
+
+	$scope.printPage = function(){
+		window.print();
+	}
 
 	$scope.notZero = function(type) {
 	  return function(order) { return order[type].total; }
@@ -89,6 +95,7 @@ angular.module('myApp', [
 		}
 	}
 
+/*	//Load saved draft if available
 	var cookieFormData = localStorage.getItem('formData');
 	if(cookieFormData){
 		$scope.formData = angular.fromJson(cookieFormData);
@@ -102,7 +109,7 @@ angular.module('myApp', [
 	var periodicData = localStorage.getItem('periodic');
 	if(periodicData){
 		$scope.orders.periodic = angular.fromJson(periodicData);
-	}
+	}*/
 
 	$scope.updateTotals = function(){	
 		$scope.formData.summary.total = 0.0;
@@ -686,6 +693,10 @@ angular.module('myApp', [
 		}
 		emailBody += '\n' + formData.billing.address.city + ', ' + formData.billing.address.state + ' ' + formData.billing.address.zip;
 
+		if(formData.billing.purchaseOrderNumber){
+			emailBody += '\nPurchase Order #: ' + formData.billing.purchaseOrderNumber;
+		}
+
 		//TODO: uncomment for tax exempt	
 		// if(formData.billing.taxExempt){
 		// 	emailBody += '\n\nTax Exempt: Y';
@@ -846,6 +857,12 @@ angular.module('myApp', [
 		else{
 			fileContent += colDelim;
 		}
+		if(formData.billing.purchaseOrderNumber){
+			fileContent += formData.billing.purchaseOrderNumber + colDelim
+		}
+		else{
+			fileContent += colDelim;
+		}
 
 		fileContent +=	formData.billing.address.city + colDelim
 			+ formData.billing.address.state + colDelim
@@ -874,7 +891,7 @@ angular.module('myApp', [
 	}
 
 	var buildCsvFile = function(formData, orders, cost){
-        var fileContent = 'NS Name,Internal ID,Date,line ,School / Customer,Grade,Quantity,Item,Test Administration,Test Admin Year,Test Mode,Rev Rec,Rev Rec Date,Item Rate,Amount,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,Test Coordinator Name,Test Coordinator Email,Test Coordinator Phone,Backup Coordinator Name,Backup Coordinator Email,Backup Coordinator Phone,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions,Discount Code,Memo\n';
+        var fileContent = 'NS Name,Internal ID,Date,line ,School / Customer,Grade,Quantity,Item,Test Administration,Test Admin Year,Test Mode,Rev Rec,Rev Rec Date,Item Rate,Amount,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,Test Coordinator Name,Test Coordinator Email,Test Coordinator Phone,Backup Coordinator Name,Backup Coordinator Email,Backup Coordinator Phone,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,Purchase Order #,City,State,Zip,Terms And Conditions,Discount Code,Memo\n';
 
         angular.forEach(orders.summative.orders, function(order, key) {
         	if(order.online.total){

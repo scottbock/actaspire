@@ -165,7 +165,13 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t                <label for=\"zip\" class=\"control-label\">Zip</label>\n" +
     "\t                <input type=\"text\" class=\"form-control\" name=\"zip\" ng-model=\"formData.billing.address.zip\" required=\"required\">\n" +
     "\t            </div>\n" +
-    "\t        </div>    \n" +
+    "\t        </div> \n" +
+    "\t        <div class=\"row\">\n" +
+    "\t            <div class=\"form-group col-sm-4\">\n" +
+    "\t                <label for=\"purchaseOrderNumber\" class=\"control-label\">Purchase Order #</label>\n" +
+    "\t                <input type=\"text\" class=\"form-control\" name=\"city\" ng-model=\"formData.billing.purchaseOrderNumber\">\n" +
+    "\t            </div>\t        \n" +
+    "\t        </div>   \n" +
     "\t    </div>\n" +
     "\t</div>\n" +
     "\n" +
@@ -503,7 +509,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t  \t\t<button type=\"submit\" class=\"btn btn-primary\" ng-disabled=\"customerForm.$invalid || customerForm.$pending || !formData.acceptTerms || !formData.summary.total\">Submit Order</button>\n" +
     "\t    </div>\n" +
     "\t\t<div class=\"col-sm-4\">\n" +
-    "\t  \t\t<button type=\"button\" class=\"btn btn-default\" ng-click=\"saveDraft()\">Save Draft</button>\n" +
+    "\t  \t\t<button type=\"button\" class=\"btn btn-default\" ng-click=\"printPage()\">Print Page</button>\n" +
     "\t    </div>\n" +
     "\t</div>\n" +
     "\t<div class=\"row\">\n" +

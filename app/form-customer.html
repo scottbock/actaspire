@@ -151,7 +151,13 @@
 	                <label for="zip" class="control-label">Zip</label>
 	                <input type="text" class="form-control" name="zip" ng-model="formData.billing.address.zip" required="required">
 	            </div>
-	        </div>    
+	        </div> 
+	        <div class="row">
+	            <div class="form-group col-sm-4">
+	                <label for="purchaseOrderNumber" class="control-label">Purchase Order #</label>
+	                <input type="text" class="form-control" name="city" ng-model="formData.billing.purchaseOrderNumber">
+	            </div>	        
+	        </div>   
 	    </div>
 	</div>
 
@@ -489,7 +495,7 @@
 	  		<button type="submit" class="btn btn-primary" ng-disabled="customerForm.$invalid || customerForm.$pending || !formData.acceptTerms || !formData.summary.total">Submit Order</button>
 	    </div>
 		<div class="col-sm-4">
-	  		<button type="button" class="btn btn-default" ng-click="saveDraft()">Save Draft</button>
+	  		<button type="button" class="btn btn-default" ng-click="printPage()">Print Page</button>
 	    </div>
 	</div>
 	<div class="row">
