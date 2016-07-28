@@ -1188,7 +1188,7 @@ angular.module('myApp', [
 	};
 
 	var buildTrainingCsvFile = function(formData, trainingOrders, cost){
-		var fileContent = 'NS Name,Internal ID,Date,line,School / Customer,Training Description,Length (hours),Mode,Capacity,Preferred Date,Preferred Year,Preferred Time,Price,Quantity,Total\n';
+		var fileContent = 'NS Name,Internal ID,Date,line,School / Customer,Training Description,Length (hours),Mode,Capacity,Preferred Date,Preferred Year,Preferred Time,Price,Quantity,Total,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2\n';
 
 		var index = 0;
         angular.forEach(trainingOrders, function(training, key) {
@@ -1205,9 +1205,18 @@ angular.module('myApp', [
 				+ training.preferredTime + colDelim
 				+ currencyFilter(training.cost) + colDelim
 				+ training.quantity + colDelim
-				+ currencyFilter(training.cost * training.quantity) + rowDelim;
+				+ currencyFilter(training.cost * training.quantity) + colDelim
+				+ formData.billingContact.name + colDelim
+				+ formData.billingContact.email + colDelim
+				+ formData.billingContact.phone + colDelim
+				+ formData.billing.address.line1 + colDelim;
 
-				// + writeCommonData(formData);
+				if(formData.billing.address.line2){
+					fileContent += formData.billing.address.line2
+				}
+
+				fileContent += rowDelim;
+
 		});
 
 		return fileContent;

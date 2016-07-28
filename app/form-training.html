@@ -101,7 +101,7 @@
 				</thead>
 				<tr ng-repeat="training in cost.training">
 					<td><a href="{{training.url}}" target="_blank">{{training.mode}}: {{training.title}}</a></td>
-					<td>{{training.cost | currency}}</td>
+					<td><span class="pull-right">{{training.cost | currency:undefined:0}}</span></td>
 					<td>{{training.duration}} hr</td>
 					<td>{{training.maxParticipants}}</td>
 					<td>
@@ -148,13 +148,13 @@
 							<option value="PM">PM</option>
 						</select>
 					</td>
-					<td>{{training.cost | currency}}</td>
+					<td><span class="pull-right">{{training.cost | currency:undefined:0}}</span></td>
 					<td>
 						<div class="training-order-quantity form-group">
 							<input class="form-control" type="number" ng-model="training.quantity" name="" min="1">
 						</div>
 					</td>
-					<td>{{training.quantity * training.cost | currency}}</td>
+					<td><span class="pull-right">{{training.quantity * training.cost | currency:undefined:0}}</span></td>
 					<td>			
 						<button type="button" class="pull-right btn btn-default btn-xs" aria-label="Remove" ng-click="removeTraining(training)">
 							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
@@ -164,7 +164,7 @@
 				<tfoot>
 					<tr>
 						<td colspan="10">
-							<div class="pull-right"><h4>Total: {{getTotal() | currency}}</h4></div>
+							<div class="pull-right"><h4>Total: {{getTotal() | currency:undefined:0}}</h4></div>
 						</td>
 					</tr>
 				</tfoot>
@@ -172,14 +172,14 @@
 		</div>
 
 		<div class="row gutter">
+			<h5>*Preferred date and times are to be confirmed.</h5>
 			<h4>Important Next Steps:</h4>
 			<ul>
 				<li>Upon completion of the order an invoice for the total due will be sent to the contact above and you will be contacted regarding your preferred Training date and trainer availability.</li>
 				<li>Training Service representiative will reach out to you to go through the training options, modules, and scheduling. </li>
 				<li>Payment must be rendered before training is delivered. </li>
-				<li>Typical turnaround time from order to delivery, depending on your prefered training date, is two weeks.</li>
-				<li>Typical turnaround time from order to delivery, depending on your prefered training date, is two weeks.</li>
-				<li>*Preferred date and times are to be confirmed.</li>
+				<li>Typical turnaround time from order to delivery, depending on your preferred training date, is two weeks.</li>
+				<li>Typical turnaround time from order to delivery, depending on your preferred training date, is two weeks.</li>
 			</ul>
 		</div>
 

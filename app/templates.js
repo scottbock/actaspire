@@ -789,7 +789,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t</thead>\n" +
     "\t\t\t\t<tr ng-repeat=\"training in cost.training\">\n" +
     "\t\t\t\t\t<td><a href=\"{{training.url}}\" target=\"_blank\">{{training.mode}}: {{training.title}}</a></td>\n" +
-    "\t\t\t\t\t<td>{{training.cost | currency}}</td>\n" +
+    "\t\t\t\t\t<td><span class=\"pull-right\">{{training.cost | currency:undefined:0}}</span></td>\n" +
     "\t\t\t\t\t<td>{{training.duration}} hr</td>\n" +
     "\t\t\t\t\t<td>{{training.maxParticipants}}</td>\n" +
     "\t\t\t\t\t<td>\n" +
@@ -836,13 +836,13 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t\t\t\t<option value=\"PM\">PM</option>\n" +
     "\t\t\t\t\t\t</select>\n" +
     "\t\t\t\t\t</td>\n" +
-    "\t\t\t\t\t<td>{{training.cost | currency}}</td>\n" +
+    "\t\t\t\t\t<td><span class=\"pull-right\">{{training.cost | currency:undefined:0}}</span></td>\n" +
     "\t\t\t\t\t<td>\n" +
     "\t\t\t\t\t\t<div class=\"training-order-quantity form-group\">\n" +
     "\t\t\t\t\t\t\t<input class=\"form-control\" type=\"number\" ng-model=\"training.quantity\" name=\"\" min=\"1\">\n" +
     "\t\t\t\t\t\t</div>\n" +
     "\t\t\t\t\t</td>\n" +
-    "\t\t\t\t\t<td>{{training.quantity * training.cost | currency}}</td>\n" +
+    "\t\t\t\t\t<td><span class=\"pull-right\">{{training.quantity * training.cost | currency:undefined:0}}</span></td>\n" +
     "\t\t\t\t\t<td>\t\t\t\n" +
     "\t\t\t\t\t\t<button type=\"button\" class=\"pull-right btn btn-default btn-xs\" aria-label=\"Remove\" ng-click=\"removeTraining(training)\">\n" +
     "\t\t\t\t\t\t\t<span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>\n" +
@@ -852,7 +852,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t<tfoot>\n" +
     "\t\t\t\t\t<tr>\n" +
     "\t\t\t\t\t\t<td colspan=\"10\">\n" +
-    "\t\t\t\t\t\t\t<div class=\"pull-right\"><h4>Total: {{getTotal() | currency}}</h4></div>\n" +
+    "\t\t\t\t\t\t\t<div class=\"pull-right\"><h4>Total: {{getTotal() | currency:undefined:0}}</h4></div>\n" +
     "\t\t\t\t\t\t</td>\n" +
     "\t\t\t\t\t</tr>\n" +
     "\t\t\t\t</tfoot>\n" +
@@ -860,14 +860,14 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t</div>\n" +
     "\n" +
     "\t\t<div class=\"row gutter\">\n" +
+    "\t\t\t<h5>*Preferred date and times are to be confirmed.</h5>\n" +
     "\t\t\t<h4>Important Next Steps:</h4>\n" +
     "\t\t\t<ul>\n" +
     "\t\t\t\t<li>Upon completion of the order an invoice for the total due will be sent to the contact above and you will be contacted regarding your preferred Training date and trainer availability.</li>\n" +
     "\t\t\t\t<li>Training Service representiative will reach out to you to go through the training options, modules, and scheduling. </li>\n" +
     "\t\t\t\t<li>Payment must be rendered before training is delivered. </li>\n" +
-    "\t\t\t\t<li>Typical turnaround time from order to delivery, depending on your prefered training date, is two weeks.</li>\n" +
-    "\t\t\t\t<li>Typical turnaround time from order to delivery, depending on your prefered training date, is two weeks.</li>\n" +
-    "\t\t\t\t<li>*Preferred date and times are to be confirmed.</li>\n" +
+    "\t\t\t\t<li>Typical turnaround time from order to delivery, depending on your preferred training date, is two weeks.</li>\n" +
+    "\t\t\t\t<li>Typical turnaround time from order to delivery, depending on your preferred training date, is two weeks.</li>\n" +
     "\t\t\t</ul>\n" +
     "\t\t</div>\n" +
     "\n" +
