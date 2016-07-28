@@ -45212,6 +45212,17 @@ angular.module('myApp', [
 			url: '/confirmation',
 			templateUrl: 'app/confirmation.html'
 		})
+
+		.state('form.training', {
+			url: '/training',
+			templateUrl: 'app/form-training.html',
+			controller: 'trainingController'
+		})
+
+		.state('form.training.confirmation', {
+			url: '/confirmation',
+			templateUrl: 'app/confirmation.html'
+		})		
         
     // catch all route
     // send users to the form page 
@@ -45238,11 +45249,17 @@ angular.module('myApp', [
 		'schoolYear' : ''
 	};
 
+	/**
+	//Save Draft
 	$scope.saveDraft = function(){
 		localStorage.setItem('formData', angular.toJson($scope.formData));
 		localStorage.setItem('summative', angular.toJson($scope.orders.summative));
 		localStorage.setItem('periodic', angular.toJson($scope.orders.periodic));
-	};
+	};**/
+
+	$scope.printPage = function(){
+		window.print();
+	}
 
 	$scope.notZero = function(type) {
 	  return function(order) { return order[type].total; }
@@ -45264,6 +45281,7 @@ angular.module('myApp', [
 		}
 	}
 
+/*	//Load saved draft if available
 	var cookieFormData = localStorage.getItem('formData');
 	if(cookieFormData){
 		$scope.formData = angular.fromJson(cookieFormData);
@@ -45277,7 +45295,7 @@ angular.module('myApp', [
 	var periodicData = localStorage.getItem('periodic');
 	if(periodicData){
 		$scope.orders.periodic = angular.fromJson(periodicData);
-	}
+	}*/
 
 	$scope.updateTotals = function(){	
 		$scope.formData.summary.total = 0.0;
@@ -45430,11 +45448,11 @@ angular.module('myApp', [
 				var paperTotal = 0;
 				angular.forEach(order.grade, function(grade, key) {
 					var countGrade = false;
-					if(grade.online !== null && !isNaN(grade.online)){
+					if(grade.online !== null && !isNaN(grade.online) && grade.online > 0){
 						onlineTotal += parseInt(grade.online);
 						countGrade = true;
 					}
-					if(grade.paper !== null && !isNaN(grade.paper)){
+					if(grade.paper !== null && !isNaN(grade.paper) && grade.paper > 0){
 						paperTotal += parseInt(grade.paper);
 						countGrade = true;
 					}
@@ -45861,6 +45879,10 @@ angular.module('myApp', [
 		}
 		emailBody += '\n' + formData.billing.address.city + ', ' + formData.billing.address.state + ' ' + formData.billing.address.zip;
 
+		if(formData.billing.purchaseOrderNumber){
+			emailBody += '\nPurchase Order #: ' + formData.billing.purchaseOrderNumber;
+		}
+
 		//TODO: uncomment for tax exempt	
 		// if(formData.billing.taxExempt){
 		// 	emailBody += '\n\nTax Exempt: Y';
@@ -46021,6 +46043,12 @@ angular.module('myApp', [
 		else{
 			fileContent += colDelim;
 		}
+		if(formData.billing.purchaseOrderNumber){
+			fileContent += formData.billing.purchaseOrderNumber + colDelim
+		}
+		else{
+			fileContent += colDelim;
+		}
 
 		fileContent +=	formData.billing.address.city + colDelim
 			+ formData.billing.address.state + colDelim
@@ -46049,7 +46077,7 @@ angular.module('myApp', [
 	}
 
 	var buildCsvFile = function(formData, orders, cost){
-        var fileContent = 'NS Name,Internal ID,Date,line ,School / Customer,Grade,Quantity,Item,Test Administration,Test Admin Year,Test Mode,Rev Rec,Rev Rec Date,Item Rate,Amount,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,Test Coordinator Name,Test Coordinator Email,Test Coordinator Phone,Backup Coordinator Name,Backup Coordinator Email,Backup Coordinator Phone,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions,Discount Code,Memo\n';
+        var fileContent = 'NS Name,Internal ID,Date,line ,School / Customer,Grade,Quantity,Item,Test Administration,Test Admin Year,Test Mode,Rev Rec,Rev Rec Date,Item Rate,Amount,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,Test Coordinator Name,Test Coordinator Email,Test Coordinator Phone,Backup Coordinator Name,Backup Coordinator Email,Backup Coordinator Phone,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,Purchase Order #,City,State,Zip,Terms And Conditions,Discount Code,Memo\n';
 
         angular.forEach(orders.summative.orders, function(order, key) {
         	if(order.online.total){
@@ -46065,7 +46093,7 @@ angular.module('myApp', [
 							+ order.administrationWindow + colDelim
 							+ order.calendarYear + colDelim
 							+ 'Online' + colDelim
-							+ 'Rev Rec - Summative' + colDelim
+							+ 'Summative Test Rev Rec Template' + colDelim
 							+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 							+ (order.cost.online - order.online.totalDiscountPerStudent) + colDelim
 							+ ((order.cost.online - order.online.totalDiscountPerStudent) * grade.online) + colDelim
@@ -46084,15 +46112,15 @@ angular.module('myApp', [
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
-						+ order.online.total + colDelim
-						+ 'Individual Score Reports ' + order.reportsPerStudent + 'x' + colDelim
+						+ (order.online.total * order.reportsPerStudent) + colDelim
+						+ 'Individual Score Reports 1x' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Online' + colDelim
-						+ 'Rev Rec - ISR' + colDelim
+						+ 'Ancillary Rev Rec Template' + colDelim
 						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
-						+ (order.cost.isr * order.reportsPerStudent) + colDelim
-						+ ((order.cost.isr) * order.online.total) + colDelim
+						+ (order.cost.isr) + colDelim
+						+ ((order.cost.isr) * order.online.total * order.reportsPerStudent) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
 						+ yesNo(order.subjects.Math) + colDelim
 						+ yesNo(order.subjects.Reading) + colDelim
@@ -46108,11 +46136,11 @@ angular.module('myApp', [
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
 						+ (order.online.total) + colDelim
-						+ 'ACT Aspire Printed Score Labels' + colDelim
+						+ 'Score Labels 1x' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Online' + colDelim
-						+ 'Rev Rec - Score Labels' + colDelim
+						+ 'Ancillary Rev Rec Template' + colDelim
 						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 						+ (order.cost.labels) + colDelim
 						+ ((order.cost.labels) * order.online.total) + colDelim
@@ -46141,7 +46169,7 @@ angular.module('myApp', [
 							+ order.administrationWindow + colDelim
 							+ order.calendarYear + colDelim
 							+ 'Paper' + colDelim
-							+ 'Rev Rec - Summative' + colDelim
+							+ 'Summative Test Rev Rec Template' + colDelim
 							+ revRecDate(order.calendarYear, order.administrationWindow)+ colDelim
 							+ (order.cost.paper - order.paper.totalDiscountPerStudent) + colDelim
 							+ ((order.cost.paper - order.paper.totalDiscountPerStudent) * grade.paper) + colDelim
@@ -46161,15 +46189,15 @@ angular.module('myApp', [
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
-						+ order.paper.total + colDelim
-						+ 'Individual Score Reports ' + order.reportsPerStudent + 'x' + colDelim
+						+ (order.paper.total * order.reportsPerStudent) + colDelim
+						+ 'Individual Score Reports 1x' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Paper' + colDelim
-						+ 'Rev Rec - ISR' + colDelim
-						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
-						+ (order.cost.isr * order.reportsPerStudent) + colDelim
-						+ ((order.cost.isr) * order.paper.total) + colDelim
+						+ 'Ancillary Rev Rec Template' + colDelim
+						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim	
+						+ (order.cost.isr) + colDelim
+						+ ((order.cost.isr) * order.paper.total * order.reportsPerStudent) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
 						+ yesNo(order.subjects.Math) + colDelim
 						+ yesNo(order.subjects.Reading) + colDelim
@@ -46185,11 +46213,11 @@ angular.module('myApp', [
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
 						+ (order.paper.total) + colDelim
-						+ 'ACT Aspire Printed Score Labels' + colDelim
+						+ 'Score Labels 1x' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Paper' + colDelim
-						+ 'Rev Rec - Score Labels' + colDelim
+						+ 'Ancillary Rev Rec Template' + colDelim
 						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 						+ (order.cost.labels) + colDelim
 						+ ((order.cost.labels) * order.paper.total) + colDelim
@@ -46217,7 +46245,7 @@ angular.module('myApp', [
 							+ 'School Year' + colDelim
 							+ schoolYearFilter(order.calendarYear) + colDelim
 							+ 'Online' + colDelim
-							+ 'Rev Rec - Periodic' + colDelim
+							+ 'Periodic Test Rev Rec Template' + colDelim
 							+ revRecDate(order.calendarYear)+ colDelim
 							+ (order.cost - order.totalDiscountPerStudent) + colDelim
 							+ ((order.cost - order.totalDiscountPerStudent) * grade.online) + colDelim
@@ -46335,7 +46363,7 @@ angular.module('myApp', [
 	};
 
 	var buildTrainingCsvFile = function(formData, trainingOrders, cost){
-		var fileContent = 'NS Name,Internal ID,Date,line,School / Customer,Training Description,Length (hours),Mode,Capacity,Preferred Date,Preferred Year,Preferred Time,Price,Quantity,Total\n';
+		var fileContent = 'NS Name,Internal ID,Date,line,School / Customer,Training Description,Length (hours),Mode,Capacity,Preferred Date,Preferred Year,Preferred Time,Price,Quantity,Total,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2\n';
 
 		var index = 0;
         angular.forEach(trainingOrders, function(training, key) {
@@ -46352,9 +46380,18 @@ angular.module('myApp', [
 				+ training.preferredTime + colDelim
 				+ currencyFilter(training.cost) + colDelim
 				+ training.quantity + colDelim
-				+ currencyFilter(training.cost * training.quantity) + rowDelim;
+				+ currencyFilter(training.cost * training.quantity) + colDelim
+				+ formData.billingContact.name + colDelim
+				+ formData.billingContact.email + colDelim
+				+ formData.billingContact.phone + colDelim
+				+ formData.billing.address.line1 + colDelim;
 
-				// + writeCommonData(formData);
+				if(formData.billing.address.line2){
+					fileContent += formData.billing.address.line2
+				}
+
+				fileContent += rowDelim;
+
 		});
 
 		return fileContent;
@@ -46406,11 +46443,11 @@ angular.module('myApp', [
 		return emailBody;
 	};
 
-	var buildIsrCsvFile = function(formData, reportGroups){
-		var fileContent = 'NS Name,Internal ID,Grade,Date,line,School / Customer,Report Description,Price,Quantity,Total,Special Notes,Name,Job Title,Contact email,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions\n';
+	var buildIsrCsvFile = function(formData, cost){
+		var fileContent = 'NS Name,Internal ID,Grade,Date,line,School / Customer,Report Description,Price,Quantity,Total,Special Notes,Rev Rec,Rev Rec Date,Name,Job Title,Contact email,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions\n';
 
 		var index = 0;
-        angular.forEach(reportGroups, function(reportGroup, key) {
+        angular.forEach(cost.reportGroups, function(reportGroup, key) {
         	angular.forEach(reportGroup.reports, function(report, key) {
         		if(report.amount){
 					fileContent += ',,0,"' + today + colDelim 
@@ -46420,7 +46457,9 @@ angular.module('myApp', [
 						+ currencyFilter(report.cost) + colDelim
 						+ report.amount + colDelim
 						+ currencyFilter(report.cost * report.amount ) + colDelim
-						+ formData.comments + colDelim				
+						+ formData.comments + colDelim
+						+ 'Ancillary Rev Rec Template' + colDelim
+						+ revRecDate(cost.currentYear, cost.currentSemester) + colDelim
 						+ formData.customer.firstName + ' ' + formData.customer.lastName + colDelim
 						+ formData.customer.jobTitle + colDelim
 						+ formData.customer.email + colDelim
@@ -46457,7 +46496,7 @@ angular.module('myApp', [
 		postData.orderInbox = cost.ordersInbox;
 		postData.orderBcc = cost.ordersBcc;
 		postData.message = buildIsrEmail(formData, cost.reportGroups);
-		postData.csv = buildIsrCsvFile(formData, cost.reportGroups);
+		postData.csv = buildIsrCsvFile(formData, cost);
 		postData.csvFileName = formData.customer.lastName + formData.customer.organization + new Date().getTime() + '.csv';
 		postData.csvFileName = postData.csvFileName.replace(/[/\\\\]/g, '');;
 
@@ -46487,7 +46526,7 @@ angular.module('myApp', [
 });
 
 
-;angular.module('myApp').run(['$templateCache', function($templateCache) {
+;;angular.module('myApp').run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('app/confirmation.html',
@@ -46654,7 +46693,13 @@ angular.module('myApp', [
     "\t                <label for=\"zip\" class=\"control-label\">Zip</label>\n" +
     "\t                <input type=\"text\" class=\"form-control\" name=\"zip\" ng-model=\"formData.billing.address.zip\" required=\"required\">\n" +
     "\t            </div>\n" +
-    "\t        </div>    \n" +
+    "\t        </div> \n" +
+    "\t        <div class=\"row\">\n" +
+    "\t            <div class=\"form-group col-sm-4\">\n" +
+    "\t                <label for=\"purchaseOrderNumber\" class=\"control-label\">Purchase Order #</label>\n" +
+    "\t                <input type=\"text\" class=\"form-control\" name=\"city\" ng-model=\"formData.billing.purchaseOrderNumber\">\n" +
+    "\t            </div>\t        \n" +
+    "\t        </div>   \n" +
     "\t    </div>\n" +
     "\t</div>\n" +
     "\n" +
@@ -46992,7 +47037,7 @@ angular.module('myApp', [
     "\t  \t\t<button type=\"submit\" class=\"btn btn-primary\" ng-disabled=\"customerForm.$invalid || customerForm.$pending || !formData.acceptTerms || !formData.summary.total\">Submit Order</button>\n" +
     "\t    </div>\n" +
     "\t\t<div class=\"col-sm-4\">\n" +
-    "\t  \t\t<button type=\"button\" class=\"btn btn-default\" ng-click=\"saveDraft()\">Save Draft</button>\n" +
+    "\t  \t\t<button type=\"button\" class=\"btn btn-default\" ng-click=\"printPage()\">Print Page</button>\n" +
     "\t    </div>\n" +
     "\t</div>\n" +
     "\t<div class=\"row\">\n" +
@@ -47140,6 +47185,217 @@ angular.module('myApp', [
     "\t\t\t<ul>\n" +
     "\t\t\t\t<li>You will be invoiced upon receipt of your order</li>\n" +
     "\t\t\t\t<li>If you would like to purchase printed reports and/or score labels for future testing adminstrations please call 1-855-733-0400 .</li>\n" +
+    "\t\t\t</ul>\n" +
+    "\t\t</div>\n" +
+    "\n" +
+    "\t\t<div class=\"row\">\n" +
+    "\t\t\t<div class=\"col-sm-12 form-group\">\n" +
+    "\t\t\t    <label class=\"checkbox-inline\">\n" +
+    "\t\t\t    \t<input type=\"checkbox\" ng-model=\"formData.acceptTerms\">\n" +
+    "\t\t\t    \tI agree to ACT Aspire's <a href=\"./json/ActAspireTermsAndConditions.pdf\" target=\"_blank\">Terms and Conditions</a>\n" +
+    "\t\t\t    </label>\n" +
+    "\t\t\t</div>\n" +
+    "\t\t</div>\n" +
+    "\t\t<div class=\"row\" ng-show=\"formData.acceptTerms\">\n" +
+    "\t\t    <div class=\"form-group col-sm-12 required\">\n" +
+    "\t\t        <label for=\"firstName\" class=\"control-label\">Signature:</label>\n" +
+    "\t\t        <input type=\"text\" class=\"form-control\" name=\"firstName\" ng-model=\"formData.customer.signature\" required=\"required\" placeholder=\"Enter your name as a signature\">\n" +
+    "\t\t    </div>\n" +
+    "\t\t</div>\n" +
+    "\t\t<div class=\"row\">\n" +
+    "\t\t    <div class=\"col-sm-4\">\n" +
+    "\t\t  \t\t<button type=\"submit\" class=\"btn btn-primary\" ng-disabled=\"trainingForm.$invalid || trainingForm.$pending || !formData.acceptTerms \">Submit Order</button>\n" +
+    "\t\t    </div>\n" +
+    "\t\t</div>\n" +
+    "\t</form>\n" +
+    "</div>\n" +
+    "<div ui-view></div>"
+  );
+
+
+  $templateCache.put('app/form-training.html',
+    "<div ng-show=\"$state.is('form.training')\">\n" +
+    "\t<h2>ACT Aspire Training Order Form</h2>\t\n" +
+    "\n" +
+    "\t<form id=\"trainingForm\" name=\"trainingForm\" ng-submit=\"processForm()\"> \n" +
+    "\n" +
+    "\t\t<div class=\"row\"><div class=\"col-sm-12\"><h4>Date: {{date | date:'yyyy-MM-dd'}}</h4></div></div>\n" +
+    "\n" +
+    "\t\t<div class=\"row\">\n" +
+    "\t\t    <div class=\"form-group col-sm-3 required\">\n" +
+    "\t\t        <label for=\"firstName\" class=\"control-label\">First Name</label>\n" +
+    "\t\t        <input type=\"text\" class=\"form-control\" name=\"firstName\" ng-model=\"formData.customer.firstName\" required=\"required\">\n" +
+    "\t\t    </div>\n" +
+    "\n" +
+    "\t\t    <div class=\"form-group col-sm-3 required\">\n" +
+    "\t\t        <label for=\"lastName\" class=\"control-label\">Last Name</label>\n" +
+    "\t\t        <input type=\"text\" class=\"form-control\" name=\"lastName\" ng-model=\"formData.customer.lastName\" required=\"required\">\n" +
+    "\t\t    </div>\n" +
+    "\n" +
+    "\t\t    <div class=\"form-group col-sm-6 required\">\n" +
+    "\t\t        <label for=\"organization\" class=\"control-label\">School / District / Organization</label>\n" +
+    "\t\t        <input type=\"text\" class=\"form-control\" name=\"organization\" ng-model=\"formData.customer.organization\" required=\"required\">\n" +
+    "\t\t    </div>\n" +
+    "\t\t</div>\n" +
+    "\n" +
+    "\t\t<div class=\"row\">\n" +
+    "\t\t    <div class=\"form-group col-sm-6 required\">\n" +
+    "\t\t        <label for=\"jobTitle\" class=\"control-label\">Job Title</label>\n" +
+    "\t\t        <input type=\"text\" class=\"form-control\" name=\"jobTitle\" ng-model=\"formData.customer.jobTitle\" required=\"required\">\n" +
+    "\t\t    </div>\n" +
+    "\n" +
+    "\t\t    <div class=\"form-group col-sm-4 required\">\n" +
+    "\t\t        <label for=\"email\" class=\"control-label\">Email</label>\n" +
+    "\t\t        <input type=\"email\" class=\"form-control\" name=\"email\" ng-model=\"formData.customer.email\" required=\"required\">\n" +
+    "\t\t    </div>\n" +
+    "\t\t</div>\n" +
+    "\n" +
+    "\t\t<div class=\"panel panel-default\">\n" +
+    "\t\t    <div class=\"panel-heading\">Billing Information</div>\n" +
+    "\t\t    <div class=\"panel-body\">\n" +
+    "\t\t        <div class=\"row\">\n" +
+    "\t\t            <div class=\"form-group col-sm-4 required\">\n" +
+    "\t\t                <label for=\"billingName\" class=\"control-label\">Billing Contact Name</label>\n" +
+    "\t\t                <input type=\"text\" class=\"form-control\" name=\"billingName\" ng-model=\"formData.billingContact.name\" required=\"required\">\n" +
+    "\t\t            </div>\n" +
+    "\n" +
+    "\t\t            <div class=\"form-group col-sm-4 required\">\n" +
+    "\t\t                <label for=\"billingEmail\" class=\"control-label\">Billing Contact Email</label>\n" +
+    "\t\t                <input type=\"email\" class=\"form-control\" name=\"billingEmail\" ng-model=\"formData.billingContact.email\" required=\"required\">\n" +
+    "\t\t            </div>\n" +
+    "\n" +
+    "\t\t            <div class=\"form-group col-sm-4 required\">\n" +
+    "\t\t                <label for=\"billingPhone\" class=\"control-label\">Billing Contact Phone</label>\n" +
+    "\t\t                <input type=\"tel\" class=\"form-control\" name=\"billingPhone\" ng-model=\"formData.billingContact.phone\" required=\"required\">\n" +
+    "\t\t            </div>\n" +
+    "\t\t        </div>    \n" +
+    "\t\t        <div class=\"row\">\n" +
+    "\t\t            <div class=\"form-group col-sm-12 required\">\n" +
+    "\t\t                <label for=\"billingAddress\" class=\"control-label\">Billing Address Line 1</label>\n" +
+    "\t\t                <input type=\"text\" class=\"form-control\" name=\"billingAddress\" ng-model=\"formData.billing.address.line1\" required=\"required\">\n" +
+    "\t\t            </div>\n" +
+    "\t\t        </div>\n" +
+    "\t\t        <div class=\"row\">\n" +
+    "\t\t            <div class=\"form-group col-sm-12\">\n" +
+    "\t\t                <label for=\"billingAddress\" class=\"control-label\">Billing Address Line 2</label>\n" +
+    "\t\t                <input type=\"text\" class=\"form-control\" name=\"billingAddress\" ng-model=\"formData.billing.address.line2\">\n" +
+    "\t\t            </div>\n" +
+    "\t\t        </div>        \n" +
+    "\t\t        <div class=\"row\">\n" +
+    "\t\t            <div class=\"form-group col-sm-4 required\">\n" +
+    "\t\t                <label for=\"city\" class=\"control-label\">City</label>\n" +
+    "\t\t                <input type=\"text\" class=\"form-control\" name=\"city\" ng-model=\"formData.billing.address.city\" required=\"required\">\n" +
+    "\t\t            </div>\n" +
+    "\n" +
+    "\t\t            <div class=\"form-group col-sm-4 required\">\n" +
+    "\t\t                <label for=\"state\" class=\"control-label\">State</label>\n" +
+    "\t\t        \t\t<select class=\"form-control\" name=\"state\" ng-model=\"formData.billing.address.state\" ng-options=\"key as value for (key , value) in states\" required=\"required\"></select>\n" +
+    "\t\t            </div>\n" +
+    "\n" +
+    "\t\t            <div class=\"form-group col-sm-4 required\">\n" +
+    "\t\t                <label for=\"zip\" class=\"control-label\">Zip</label>\n" +
+    "\t\t                <input type=\"text\" class=\"form-control\" name=\"zip\" ng-model=\"formData.billing.address.zip\" required=\"required\">\n" +
+    "\t\t            </div>\n" +
+    "\t\t        </div>    \n" +
+    "\t\t    </div>\n" +
+    "\t\t</div>\n" +
+    "\n" +
+    "\n" +
+    "\n" +
+    "\t\t<div class=\"panel panel-default\">\n" +
+    "\t\t\t<div class=\"panel-heading\">\n" +
+    "\t\t\tAvailable Training\n" +
+    "\t\t\t</div>\n" +
+    "\n" +
+    "\t\t\t<table class=\"table table-striped\">\n" +
+    "\t\t\t\t<thead>\n" +
+    "\t\t\t\t\t<th>Training</th>\n" +
+    "\t\t\t\t\t<th>Cost</th>\n" +
+    "\t\t\t\t\t<th>Duration</th>\n" +
+    "\t\t\t\t\t<th>Maximum Participants</th>\n" +
+    "\t\t\t\t\t<th></th>\n" +
+    "\t\t\t\t</thead>\n" +
+    "\t\t\t\t<tr ng-repeat=\"training in cost.training\">\n" +
+    "\t\t\t\t\t<td><a href=\"{{training.url}}\" target=\"_blank\">{{training.mode}}: {{training.title}}</a></td>\n" +
+    "\t\t\t\t\t<td><span class=\"pull-right\">{{training.cost | currency:undefined:0}}</span></td>\n" +
+    "\t\t\t\t\t<td>{{training.duration}} hr</td>\n" +
+    "\t\t\t\t\t<td>{{training.maxParticipants}}</td>\n" +
+    "\t\t\t\t\t<td>\n" +
+    "\t\t\t\t\t\t<button type=\"button\" ng-model=\"addTrainingButton\" ng-click=\"addTraining(training)\"  class=\"btn btn-primary\">Add</button>\n" +
+    "\t\t\t\t\t</td>\n" +
+    "\t\t\t\t</tr>\n" +
+    "\t\t\t</table>\n" +
+    "\t\t</div>\n" +
+    "\n" +
+    "\t\t<div class=\"panel panel-default\">\n" +
+    "\t\t\t<div class=\"panel-heading\">\n" +
+    "\t\t\tTraining Orders\n" +
+    "\t\t\t</div>\n" +
+    "\n" +
+    "\t\t\t<table class=\"table table-striped\">\n" +
+    "\t\t\t\t<thead>\n" +
+    "\t\t\t\t\t<th>Description</th>\n" +
+    "\t\t\t\t\t<th>Duration</th>\n" +
+    "\t\t\t\t\t<th>Mode</th>\n" +
+    "\t\t\t\t\t<th>Maximum Participants</th>\n" +
+    "\t\t\t\t\t<th>*Preferred Date</th>\n" +
+    "\t\t\t\t\t<th>*Preferred Time</th>\n" +
+    "\t\t\t\t\t<th>Price</th>\n" +
+    "\t\t\t\t\t<th>Quantity</th>\n" +
+    "\t\t\t\t\t<th>Total</th>\n" +
+    "\t\t\t\t\t<th></th>\n" +
+    "\t\t\t\t</thead>\n" +
+    "\t\t\t\t<tr ng-repeat=\"training in trainingOrders track by training.title\">\n" +
+    "\t\t\t\t\t<td><a href=\"{{training.url}}\" target=\"_blank\">{{training.title}}</a></td>\n" +
+    "\t\t\t\t\t<td>{{training.duration}} hr</td>\n" +
+    "\t\t\t\t\t<td>{{training.mode}}</td>\n" +
+    "\t\t\t\t\t<td>{{training.maxParticipants * training.quantity}}</td>\n" +
+    "\t\t\t\t\t<td>\n" +
+    "\t\t\t\t        <p class=\"input-group training-order-calendar\">\t\n" +
+    "\t\t\t\t          <input type=\"text\" class=\"form-control\" uib-datepicker-popup ng-model=\"training.preferredDate\" is-open=\"training.opened\" datepicker-options=\"dateOptions\" ng-required=\"true\" close-text=\"Close\" />\n" +
+    "\t\t\t\t          <span class=\"input-group-btn\">\n" +
+    "\t\t\t\t            <button type=\"button\" class=\"btn btn-default\" ng-click=\"openCalendar(training)\"><i class=\"glyphicon glyphicon-calendar\"></i></button>\n" +
+    "\t\t\t\t          </span>\n" +
+    "\t\t\t\t        </p>\n" +
+    "\t\t\t\t\t</td>\n" +
+    "\t\t\t\t\t<td>\n" +
+    "\t\t\t\t\t\t<select class=\"form-control\" name=\"\" ng-model=\"training.preferredTime\">\n" +
+    "\t\t\t\t\t\t\t<option value=\"AM\">AM</option>\n" +
+    "\t\t\t\t\t\t\t<option value=\"PM\">PM</option>\n" +
+    "\t\t\t\t\t\t</select>\n" +
+    "\t\t\t\t\t</td>\n" +
+    "\t\t\t\t\t<td><span class=\"pull-right\">{{training.cost | currency:undefined:0}}</span></td>\n" +
+    "\t\t\t\t\t<td>\n" +
+    "\t\t\t\t\t\t<div class=\"training-order-quantity form-group\">\n" +
+    "\t\t\t\t\t\t\t<input class=\"form-control\" type=\"number\" ng-model=\"training.quantity\" name=\"\" min=\"1\">\n" +
+    "\t\t\t\t\t\t</div>\n" +
+    "\t\t\t\t\t</td>\n" +
+    "\t\t\t\t\t<td><span class=\"pull-right\">{{training.quantity * training.cost | currency:undefined:0}}</span></td>\n" +
+    "\t\t\t\t\t<td>\t\t\t\n" +
+    "\t\t\t\t\t\t<button type=\"button\" class=\"pull-right btn btn-default btn-xs\" aria-label=\"Remove\" ng-click=\"removeTraining(training)\">\n" +
+    "\t\t\t\t\t\t\t<span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>\n" +
+    "\t\t\t\t\t\t</button>\n" +
+    "\t\t\t\t\t</td>\n" +
+    "\t\t\t\t</tr>\n" +
+    "\t\t\t\t<tfoot>\n" +
+    "\t\t\t\t\t<tr>\n" +
+    "\t\t\t\t\t\t<td colspan=\"10\">\n" +
+    "\t\t\t\t\t\t\t<div class=\"pull-right\"><h4>Total: {{getTotal() | currency:undefined:0}}</h4></div>\n" +
+    "\t\t\t\t\t\t</td>\n" +
+    "\t\t\t\t\t</tr>\n" +
+    "\t\t\t\t</tfoot>\n" +
+    "\t\t\t</table>\n" +
+    "\t\t</div>\n" +
+    "\n" +
+    "\t\t<div class=\"row gutter\">\n" +
+    "\t\t\t<h5>*Preferred date and times are to be confirmed.</h5>\n" +
+    "\t\t\t<h4>Important Next Steps:</h4>\n" +
+    "\t\t\t<ul>\n" +
+    "\t\t\t\t<li>Upon completion of the order an invoice for the total due will be sent to the contact above and you will be contacted regarding your preferred Training date and trainer availability.</li>\n" +
+    "\t\t\t\t<li>Training Service representiative will reach out to you to go through the training options, modules, and scheduling. </li>\n" +
+    "\t\t\t\t<li>Payment must be rendered before training is delivered. </li>\n" +
+    "\t\t\t\t<li>Typical turnaround time from order to delivery, depending on your preferred training date, is two weeks.</li>\n" +
+    "\t\t\t\t<li>Typical turnaround time from order to delivery, depending on your preferred training date, is two weeks.</li>\n" +
     "\t\t\t</ul>\n" +
     "\t\t</div>\n" +
     "\n" +

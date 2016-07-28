@@ -37,6 +37,17 @@ angular.module('myApp', [
 			url: '/confirmation',
 			templateUrl: 'app/confirmation.html'
 		})
+
+		.state('form.training', {
+			url: '/training',
+			templateUrl: 'app/form-training.html',
+			controller: 'trainingController'
+		})
+
+		.state('form.training.confirmation', {
+			url: '/confirmation',
+			templateUrl: 'app/confirmation.html'
+		})		
         
     // catch all route
     // send users to the form page 
@@ -63,11 +74,17 @@ angular.module('myApp', [
 		'schoolYear' : ''
 	};
 
+	/**
+	//Save Draft
 	$scope.saveDraft = function(){
 		localStorage.setItem('formData', angular.toJson($scope.formData));
 		localStorage.setItem('summative', angular.toJson($scope.orders.summative));
 		localStorage.setItem('periodic', angular.toJson($scope.orders.periodic));
-	};
+	};**/
+
+	$scope.printPage = function(){
+		window.print();
+	}
 
 	$scope.notZero = function(type) {
 	  return function(order) { return order[type].total; }
@@ -89,6 +106,7 @@ angular.module('myApp', [
 		}
 	}
 
+/*	//Load saved draft if available
 	var cookieFormData = localStorage.getItem('formData');
 	if(cookieFormData){
 		$scope.formData = angular.fromJson(cookieFormData);
@@ -102,7 +120,7 @@ angular.module('myApp', [
 	var periodicData = localStorage.getItem('periodic');
 	if(periodicData){
 		$scope.orders.periodic = angular.fromJson(periodicData);
-	}
+	}*/
 
 	$scope.updateTotals = function(){	
 		$scope.formData.summary.total = 0.0;
@@ -255,11 +273,11 @@ angular.module('myApp', [
 				var paperTotal = 0;
 				angular.forEach(order.grade, function(grade, key) {
 					var countGrade = false;
-					if(grade.online !== null && !isNaN(grade.online)){
+					if(grade.online !== null && !isNaN(grade.online) && grade.online > 0){
 						onlineTotal += parseInt(grade.online);
 						countGrade = true;
 					}
-					if(grade.paper !== null && !isNaN(grade.paper)){
+					if(grade.paper !== null && !isNaN(grade.paper) && grade.paper > 0){
 						paperTotal += parseInt(grade.paper);
 						countGrade = true;
 					}
@@ -686,6 +704,10 @@ angular.module('myApp', [
 		}
 		emailBody += '\n' + formData.billing.address.city + ', ' + formData.billing.address.state + ' ' + formData.billing.address.zip;
 
+		if(formData.billing.purchaseOrderNumber){
+			emailBody += '\nPurchase Order #: ' + formData.billing.purchaseOrderNumber;
+		}
+
 		//TODO: uncomment for tax exempt	
 		// if(formData.billing.taxExempt){
 		// 	emailBody += '\n\nTax Exempt: Y';
@@ -846,6 +868,12 @@ angular.module('myApp', [
 		else{
 			fileContent += colDelim;
 		}
+		if(formData.billing.purchaseOrderNumber){
+			fileContent += formData.billing.purchaseOrderNumber + colDelim
+		}
+		else{
+			fileContent += colDelim;
+		}
 
 		fileContent +=	formData.billing.address.city + colDelim
 			+ formData.billing.address.state + colDelim
@@ -874,7 +902,7 @@ angular.module('myApp', [
 	}
 
 	var buildCsvFile = function(formData, orders, cost){
-        var fileContent = 'NS Name,Internal ID,Date,line ,School / Customer,Grade,Quantity,Item,Test Administration,Test Admin Year,Test Mode,Rev Rec,Rev Rec Date,Item Rate,Amount,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,Test Coordinator Name,Test Coordinator Email,Test Coordinator Phone,Backup Coordinator Name,Backup Coordinator Email,Backup Coordinator Phone,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions,Discount Code,Memo\n';
+        var fileContent = 'NS Name,Internal ID,Date,line ,School / Customer,Grade,Quantity,Item,Test Administration,Test Admin Year,Test Mode,Rev Rec,Rev Rec Date,Item Rate,Amount,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,Test Coordinator Name,Test Coordinator Email,Test Coordinator Phone,Backup Coordinator Name,Backup Coordinator Email,Backup Coordinator Phone,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,Purchase Order #,City,State,Zip,Terms And Conditions,Discount Code,Memo\n';
 
         angular.forEach(orders.summative.orders, function(order, key) {
         	if(order.online.total){
@@ -890,7 +918,7 @@ angular.module('myApp', [
 							+ order.administrationWindow + colDelim
 							+ order.calendarYear + colDelim
 							+ 'Online' + colDelim
-							+ 'Rev Rec - Summative' + colDelim
+							+ 'Summative Test Rev Rec Template' + colDelim
 							+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 							+ (order.cost.online - order.online.totalDiscountPerStudent) + colDelim
 							+ ((order.cost.online - order.online.totalDiscountPerStudent) * grade.online) + colDelim
@@ -909,15 +937,15 @@ angular.module('myApp', [
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
-						+ order.online.total + colDelim
-						+ 'Individual Score Reports ' + order.reportsPerStudent + 'x' + colDelim
+						+ (order.online.total * order.reportsPerStudent) + colDelim
+						+ 'Individual Score Reports 1x' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Online' + colDelim
-						+ 'Rev Rec - ISR' + colDelim
+						+ 'Ancillary Rev Rec Template' + colDelim
 						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
-						+ (order.cost.isr * order.reportsPerStudent) + colDelim
-						+ ((order.cost.isr) * order.online.total) + colDelim
+						+ (order.cost.isr) + colDelim
+						+ ((order.cost.isr) * order.online.total * order.reportsPerStudent) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
 						+ yesNo(order.subjects.Math) + colDelim
 						+ yesNo(order.subjects.Reading) + colDelim
@@ -933,11 +961,11 @@ angular.module('myApp', [
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
 						+ (order.online.total) + colDelim
-						+ 'ACT Aspire Printed Score Labels' + colDelim
+						+ 'Score Labels 1x' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Online' + colDelim
-						+ 'Rev Rec - Score Labels' + colDelim
+						+ 'Ancillary Rev Rec Template' + colDelim
 						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 						+ (order.cost.labels) + colDelim
 						+ ((order.cost.labels) * order.online.total) + colDelim
@@ -966,7 +994,7 @@ angular.module('myApp', [
 							+ order.administrationWindow + colDelim
 							+ order.calendarYear + colDelim
 							+ 'Paper' + colDelim
-							+ 'Rev Rec - Summative' + colDelim
+							+ 'Summative Test Rev Rec Template' + colDelim
 							+ revRecDate(order.calendarYear, order.administrationWindow)+ colDelim
 							+ (order.cost.paper - order.paper.totalDiscountPerStudent) + colDelim
 							+ ((order.cost.paper - order.paper.totalDiscountPerStudent) * grade.paper) + colDelim
@@ -986,15 +1014,15 @@ angular.module('myApp', [
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
-						+ order.paper.total + colDelim
-						+ 'Individual Score Reports ' + order.reportsPerStudent + 'x' + colDelim
+						+ (order.paper.total * order.reportsPerStudent) + colDelim
+						+ 'Individual Score Reports 1x' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Paper' + colDelim
-						+ 'Rev Rec - ISR' + colDelim
-						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
-						+ (order.cost.isr * order.reportsPerStudent) + colDelim
-						+ ((order.cost.isr) * order.paper.total) + colDelim
+						+ 'Ancillary Rev Rec Template' + colDelim
+						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim	
+						+ (order.cost.isr) + colDelim
+						+ ((order.cost.isr) * order.paper.total * order.reportsPerStudent) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
 						+ yesNo(order.subjects.Math) + colDelim
 						+ yesNo(order.subjects.Reading) + colDelim
@@ -1010,11 +1038,11 @@ angular.module('myApp', [
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
 						+ (order.paper.total) + colDelim
-						+ 'ACT Aspire Printed Score Labels' + colDelim
+						+ 'Score Labels 1x' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'Paper' + colDelim
-						+ 'Rev Rec - Score Labels' + colDelim
+						+ 'Ancillary Rev Rec Template' + colDelim
 						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 						+ (order.cost.labels) + colDelim
 						+ ((order.cost.labels) * order.paper.total) + colDelim
@@ -1042,7 +1070,7 @@ angular.module('myApp', [
 							+ 'School Year' + colDelim
 							+ schoolYearFilter(order.calendarYear) + colDelim
 							+ 'Online' + colDelim
-							+ 'Rev Rec - Periodic' + colDelim
+							+ 'Periodic Test Rev Rec Template' + colDelim
 							+ revRecDate(order.calendarYear)+ colDelim
 							+ (order.cost - order.totalDiscountPerStudent) + colDelim
 							+ ((order.cost - order.totalDiscountPerStudent) * grade.online) + colDelim
@@ -1160,7 +1188,7 @@ angular.module('myApp', [
 	};
 
 	var buildTrainingCsvFile = function(formData, trainingOrders, cost){
-		var fileContent = 'NS Name,Internal ID,Date,line,School / Customer,Training Description,Length (hours),Mode,Capacity,Preferred Date,Preferred Year,Preferred Time,Price,Quantity,Total\n';
+		var fileContent = 'NS Name,Internal ID,Date,line,School / Customer,Training Description,Length (hours),Mode,Capacity,Preferred Date,Preferred Year,Preferred Time,Price,Quantity,Total,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2\n';
 
 		var index = 0;
         angular.forEach(trainingOrders, function(training, key) {
@@ -1177,9 +1205,18 @@ angular.module('myApp', [
 				+ training.preferredTime + colDelim
 				+ currencyFilter(training.cost) + colDelim
 				+ training.quantity + colDelim
-				+ currencyFilter(training.cost * training.quantity) + rowDelim;
+				+ currencyFilter(training.cost * training.quantity) + colDelim
+				+ formData.billingContact.name + colDelim
+				+ formData.billingContact.email + colDelim
+				+ formData.billingContact.phone + colDelim
+				+ formData.billing.address.line1 + colDelim;
 
-				// + writeCommonData(formData);
+				if(formData.billing.address.line2){
+					fileContent += formData.billing.address.line2
+				}
+
+				fileContent += rowDelim;
+
 		});
 
 		return fileContent;
@@ -1231,11 +1268,11 @@ angular.module('myApp', [
 		return emailBody;
 	};
 
-	var buildIsrCsvFile = function(formData, reportGroups){
-		var fileContent = 'NS Name,Internal ID,Grade,Date,line,School / Customer,Report Description,Price,Quantity,Total,Special Notes,Name,Job Title,Contact email,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions\n';
+	var buildIsrCsvFile = function(formData, cost){
+		var fileContent = 'NS Name,Internal ID,Grade,Date,line,School / Customer,Report Description,Price,Quantity,Total,Special Notes,Rev Rec,Rev Rec Date,Name,Job Title,Contact email,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions\n';
 
 		var index = 0;
-        angular.forEach(reportGroups, function(reportGroup, key) {
+        angular.forEach(cost.reportGroups, function(reportGroup, key) {
         	angular.forEach(reportGroup.reports, function(report, key) {
         		if(report.amount){
 					fileContent += ',,0,"' + today + colDelim 
@@ -1245,7 +1282,9 @@ angular.module('myApp', [
 						+ currencyFilter(report.cost) + colDelim
 						+ report.amount + colDelim
 						+ currencyFilter(report.cost * report.amount ) + colDelim
-						+ formData.comments + colDelim				
+						+ formData.comments + colDelim
+						+ 'Ancillary Rev Rec Template' + colDelim
+						+ revRecDate(cost.currentYear, cost.currentSemester) + colDelim
 						+ formData.customer.firstName + ' ' + formData.customer.lastName + colDelim
 						+ formData.customer.jobTitle + colDelim
 						+ formData.customer.email + colDelim
@@ -1282,7 +1321,7 @@ angular.module('myApp', [
 		postData.orderInbox = cost.ordersInbox;
 		postData.orderBcc = cost.ordersBcc;
 		postData.message = buildIsrEmail(formData, cost.reportGroups);
-		postData.csv = buildIsrCsvFile(formData, cost.reportGroups);
+		postData.csv = buildIsrCsvFile(formData, cost);
 		postData.csvFileName = formData.customer.lastName + formData.customer.organization + new Date().getTime() + '.csv';
 		postData.csvFileName = postData.csvFileName.replace(/[/\\\\]/g, '');;
 
