@@ -693,6 +693,21 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\n" +
     "\t\t<div class=\"row\"><div class=\"col-sm-12\"><h4>Date: {{date | date:'yyyy-MM-dd'}}</h4></div></div>\n" +
     "\n" +
+    "\t\t<div class=\"col-sm-12\">\n" +
+    "\t\t\t<p>\n" +
+    "\t\t\t\tThank you for your decision to order training for your ACT Aspire assessment. To help ensure your order is accurate, please fill in all applicable fields.\n" +
+    "\t\t\t</p>\n" +
+    "\t\t\t<p>\n" +
+    "\t\t\t\tUpon completion and submission of this order form, an ACT Aspire representative will contact you regarding preferred training date, availability and scheduling.\n" +
+    "\t\t\t</p>\n" +
+    "\t\t\t<p>\n" +
+    "\t\t\t\tIf you have questions regarding the order form below, please contact Orders@ActAspire.org or 1-855-730-0400.\n" +
+    "\t\t\t</p>\n" +
+    "\t\t\t<p>\n" +
+    "\t\t\t\tPricing is valid through {{cost.validThrough}}\n" +
+    "\t\t\t</p>\n" +
+    "\t\t</div>\n" +
+    "\n" +
     "\t\t<div class=\"row\">\n" +
     "\t\t    <div class=\"form-group col-sm-3 required\">\n" +
     "\t\t        <label for=\"firstName\" class=\"control-label\">First Name</label>\n" +
@@ -774,9 +789,9 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\n" +
     "\n" +
     "\n" +
-    "\t\t<div class=\"panel panel-default\">\n" +
+    "\t\t<div class=\"panel panel-default\" ng-repeat=\"(trainingType, trainings) in cost.training\">\n" +
     "\t\t\t<div class=\"panel-heading\">\n" +
-    "\t\t\tAvailable Training\n" +
+    "\t\t\t{{trainingType}}\n" +
     "\t\t\t</div>\n" +
     "\n" +
     "\t\t\t<table class=\"table table-striped\">\n" +
@@ -787,7 +802,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t\t<th>Maximum Participants</th>\n" +
     "\t\t\t\t\t<th></th>\n" +
     "\t\t\t\t</thead>\n" +
-    "\t\t\t\t<tr ng-repeat=\"training in cost.training\">\n" +
+    "\t\t\t\t<tr ng-repeat=\"training in trainings\">\n" +
     "\t\t\t\t\t<td><a href=\"{{training.url}}\" target=\"_blank\">{{training.mode}}: {{training.title}}</a></td>\n" +
     "\t\t\t\t\t<td><span class=\"pull-right\">{{training.cost | currency:undefined:0}}</span></td>\n" +
     "\t\t\t\t\t<td>{{training.duration}} hr</td>\n" +
@@ -801,7 +816,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\n" +
     "\t\t<div class=\"panel panel-default\">\n" +
     "\t\t\t<div class=\"panel-heading\">\n" +
-    "\t\t\tTraining Orders\n" +
+    "\t\t\tOrder Summary\n" +
     "\t\t\t</div>\n" +
     "\n" +
     "\t\t\t<table class=\"table table-striped\">\n" +
@@ -866,7 +881,6 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t<li>Upon completion of the order an invoice for the total due will be sent to the contact above and you will be contacted regarding your preferred Training date and trainer availability.</li>\n" +
     "\t\t\t\t<li>Training Service representiative will reach out to you to go through the training options, modules, and scheduling. </li>\n" +
     "\t\t\t\t<li>Payment must be rendered before training is delivered. </li>\n" +
-    "\t\t\t\t<li>Typical turnaround time from order to delivery, depending on your preferred training date, is two weeks.</li>\n" +
     "\t\t\t\t<li>Typical turnaround time from order to delivery, depending on your preferred training date, is two weeks.</li>\n" +
     "\t\t\t</ul>\n" +
     "\t\t</div>\n" +
