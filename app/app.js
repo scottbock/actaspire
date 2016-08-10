@@ -661,6 +661,7 @@ angular.module('myApp', [
     	cost.training = response.data.training;
 		cost.ordersInbox = response.data.ordersInbox;
 		cost.ordersBcc = response.data.ordersBcc;
+		cost.validThrough = response.data.validThrough;
 	});
 
 	return {
@@ -1188,12 +1189,12 @@ angular.module('myApp', [
 	};
 
 	var buildTrainingCsvFile = function(formData, trainingOrders, cost){
-		var fileContent = 'NS Name,Internal ID,Date,line,School / Customer,Training Description,Length (hours),Mode,Capacity,Preferred Date,Preferred Year,Preferred Time,Price,Quantity,Total,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2\n';
+		var fileContent = 'NS Name,Internal ID,Admin,Year,Date,line,School / Customer,Training Description,Length (hours),Mode,Capacity,Preferred Date,Preferred Year,Preferred Time,Price,Quantity,Total,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2\n';
 
 		var index = 0;
         angular.forEach(trainingOrders, function(training, key) {
 
-			fileContent += ',,"' + today + colDelim 
+			fileContent += ',,,,"' + today + colDelim 
 				+ (index++) + colDelim
 				+ formData.customer.organization + colDelim
 				+ training.title + colDelim

@@ -5,6 +5,21 @@
 
 		<div class="row"><div class="col-sm-12"><h4>Date: {{date | date:'yyyy-MM-dd'}}</h4></div></div>
 
+		<div class="col-sm-12">
+			<p>
+				Thank you for your decision to order training for your ACT Aspire assessment. To help ensure your order is accurate, please fill in all applicable fields.
+			</p>
+			<p>
+				Upon completion and submission of this order form, an ACT Aspire representative will contact you regarding preferred training date, availability and scheduling.
+			</p>
+			<p>
+				If you have questions regarding the order form below, please contact Orders@ActAspire.org or 1-855-730-0400.
+			</p>
+			<p>
+				Pricing is valid through {{cost.validThrough}}
+			</p>
+		</div>
+
 		<div class="row">
 		    <div class="form-group col-sm-3 required">
 		        <label for="firstName" class="control-label">First Name</label>
@@ -86,9 +101,9 @@
 
 
 
-		<div class="panel panel-default">
+		<div class="panel panel-default" ng-repeat="(trainingType, trainings) in cost.training">
 			<div class="panel-heading">
-			Available Training
+			{{trainingType}}
 			</div>
 
 			<table class="table table-striped">
@@ -99,7 +114,7 @@
 					<th>Maximum Participants</th>
 					<th></th>
 				</thead>
-				<tr ng-repeat="training in cost.training">
+				<tr ng-repeat="training in trainings">
 					<td><a href="{{training.url}}" target="_blank">{{training.mode}}: {{training.title}}</a></td>
 					<td><span class="pull-right">{{training.cost | currency:undefined:0}}</span></td>
 					<td>{{training.duration}} hr</td>
@@ -113,7 +128,7 @@
 
 		<div class="panel panel-default">
 			<div class="panel-heading">
-			Training Orders
+			Order Summary
 			</div>
 
 			<table class="table table-striped">
@@ -178,7 +193,6 @@
 				<li>Upon completion of the order an invoice for the total due will be sent to the contact above and you will be contacted regarding your preferred Training date and trainer availability.</li>
 				<li>Training Service representiative will reach out to you to go through the training options, modules, and scheduling. </li>
 				<li>Payment must be rendered before training is delivered. </li>
-				<li>Typical turnaround time from order to delivery, depending on your preferred training date, is two weeks.</li>
 				<li>Typical turnaround time from order to delivery, depending on your preferred training date, is two weeks.</li>
 			</ul>
 		</div>
