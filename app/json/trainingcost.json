@@ -1,6 +1,6 @@
 {
 	"training": {
-		"Before Training":[
+		"Before Test Administration Training":[
 			{
 				"mode": "On-Site Training",
 				"title": "Getting Started with ACT Aspire",
@@ -42,7 +42,7 @@
 				"url":""
 			}
 		],
-		"After Training": [
+		"After Test Administration Training": [
 			{
 				"mode": "On-Site Training",
 				"title": "The ACT Aspire Summative Data Interpretation",
