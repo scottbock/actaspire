@@ -47224,12 +47224,15 @@ angular.module('myApp', [
     "\n" +
     "\t\t<div class=\"col-sm-12\">\n" +
     "\t\t\t<p>\n" +
-    "\t\t\t\tThank you for your decision to order training for your ACT Aspire assessment. To help ensure your order is accurate, please fill in all applicable fields.<br />\n" +
-    "\t\t\t\n" +
-    "\t\t\t\tUpon completion and submission of this order form, an ACT Aspire representative will contact you regarding preferred training date, availability and scheduling. <br/>\n" +
-    "\t\t\t\n" +
-    "\t\t\t\tIf you have questions regarding the order form below, please contact Orders@ActAspire.org or 1-855-730-0400. <br />\n" +
-    "\n" +
+    "\t\t\t\tThank you for your decision to order training for your ACT Aspire assessment. To help ensure your order is accurate, please fill in all applicable fields.\n" +
+    "\t\t\t</p>\n" +
+    "\t\t\t<p>\n" +
+    "\t\t\t\tUpon completion and submission of this order form, an ACT Aspire representative will contact you regarding preferred training date, availability and scheduling. \n" +
+    "\t\t\t</p>\n" +
+    "\t\t\t<p>\n" +
+    "\t\t\t\tIf you have questions regarding the order form below, please contact Orders@ActAspire.org or 1-855-730-0400. \n" +
+    "\t\t\t</p>\n" +
+    "\t\t\t<p>\n" +
     "\t\t\t\tPricing is valid through {{cost.validThrough}}\n" +
     "\t\t\t</p>\n" +
     "\t\t</div>\n" +
