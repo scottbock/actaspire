@@ -412,7 +412,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t\t\t<span ng-show=\"order.online.totalDiscountPerStudent\">\n" +
     "\t\t\t\t\t\t\t<div ng-show=\"order.online.discounts.volume\">{{order.online.discounts.volume | currency}} (Volume)</div>\n" +
     "\t\t\t\t\t\t\t<div ng-show=\"order.online.discounts.multiGrade\">{{order.online.discounts.multiGrade | currency}} (Multi-Grade)</div>\n" +
-    "\t\t\t\t\t\t\t<div ng-show=\"order.online.discounts.periodic\">{{order.online.discounts.periodic | currency}} ({{order.online.periodicNumberApplied }} Periodic @ {{cost.discounts.periodic.discountPer | currency}})</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.online.discounts.periodic\">{{order.online.discounts.periodic | currency}} ({{order.online.periodicNumberApplied | number : 1 }} Periodic @ {{cost.discounts.periodic.discountPer | currency}})</div>\n" +
     "\t\t\t\t\t\t\t<div ng-show=\"order.online.discounts.state\">{{order.online.discounts.state | currency}} (State)</div>\n" +
     "\t\t\t\t\t\t\t<div ng-show=\"order.online.discounts.special\">{{order.online.discounts.special | currency}} (Special)</div>\n" +
     "\t\t\t\t\t\t\t<hr />\n" +
@@ -439,7 +439,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t\t\t<span ng-show=\"order.paper.totalDiscountPerStudent\">\n" +
     "\t\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.volume\">{{order.paper.discounts.volume | currency}} (Volume)</div>\n" +
     "\t\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.multiGrade\">{{order.paper.discounts.multiGrade | currency}} (Multi-Grade)</div>\n" +
-    "\t\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.periodic\">{{order.paper.discounts.periodic | currency}} ({{order.paper.periodicNumberApplied }} Periodic @ {{cost.discounts.periodic.discountPer | currency}})</div>\n" +
+    "\t\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.periodic\">{{order.paper.discounts.periodic | currency}} ({{order.paper.periodicNumberApplied | number : 1 }} Periodic @ {{cost.discounts.periodic.discountPer | currency}})</div>\n" +
     "\t\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.state\">{{order.paper.discounts.state | currency}} (State)</div>\n" +
     "\t\t\t\t\t\t\t<div ng-show=\"order.paper.discounts.special\">{{order.paper.discounts.special | currency}} (Special)</div>\n" +
     "\t\t\t\t\t\t\t<hr />\n" +

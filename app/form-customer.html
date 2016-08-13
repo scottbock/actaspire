@@ -398,7 +398,7 @@
 						<span ng-show="order.online.totalDiscountPerStudent">
 							<div ng-show="order.online.discounts.volume">{{order.online.discounts.volume | currency}} (Volume)</div>
 							<div ng-show="order.online.discounts.multiGrade">{{order.online.discounts.multiGrade | currency}} (Multi-Grade)</div>
-							<div ng-show="order.online.discounts.periodic">{{order.online.discounts.periodic | currency}} ({{order.online.periodicNumberApplied }} Periodic @ {{cost.discounts.periodic.discountPer | currency}})</div>
+							<div ng-show="order.online.discounts.periodic">{{order.online.discounts.periodic | currency}} ({{order.online.periodicNumberApplied | number : 1 }} Periodic @ {{cost.discounts.periodic.discountPer | currency}})</div>
 							<div ng-show="order.online.discounts.state">{{order.online.discounts.state | currency}} (State)</div>
 							<div ng-show="order.online.discounts.special">{{order.online.discounts.special | currency}} (Special)</div>
 							<hr />
@@ -425,7 +425,7 @@
 						<span ng-show="order.paper.totalDiscountPerStudent">
 							<div ng-show="order.paper.discounts.volume">{{order.paper.discounts.volume | currency}} (Volume)</div>
 							<div ng-show="order.paper.discounts.multiGrade">{{order.paper.discounts.multiGrade | currency}} (Multi-Grade)</div>
-							<div ng-show="order.paper.discounts.periodic">{{order.paper.discounts.periodic | currency}} ({{order.paper.periodicNumberApplied }} Periodic @ {{cost.discounts.periodic.discountPer | currency}})</div>
+							<div ng-show="order.paper.discounts.periodic">{{order.paper.discounts.periodic | currency}} ({{order.paper.periodicNumberApplied | number : 1 }} Periodic @ {{cost.discounts.periodic.discountPer | currency}})</div>
 							<div ng-show="order.paper.discounts.state">{{order.paper.discounts.state | currency}} (State)</div>
 							<div ng-show="order.paper.discounts.special">{{order.paper.discounts.special | currency}} (Special)</div>
 							<hr />

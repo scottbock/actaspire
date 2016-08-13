@@ -290,10 +290,18 @@ angular.module('myApp', [
 				order.online.total = onlineTotal;
 				order.paper.total = paperTotal;	
 
-				var periodicOrder;
+				var periodicOrder = {};
 				angular.forEach($scope.orders.periodic.orders, function(periodic, periodicKey) {
 					if((order.administrationWindow == 'Fall' && periodic.calendarYear == order.calendarYear) ||  (order.administrationWindow == 'Spring' && (parseInt(periodic.calendarYear) + 1) == order.calendarYear)){
 						periodicOrder = periodic;
+					}
+				});
+
+				var summativeForSamePeriodic = {online:{}, paper:{}};
+				angular.forEach($scope.orders.summative.orders, function(otherSummative, periodicKey) {
+					if((order.administrationWindow == 'Fall' && otherSummative.administrationWindow == 'Spring' && parseInt(order.calendarYear) == parseInt(otherSummative.calendarYear) - 1)
+						|| (order.administrationWindow == 'Spring' && otherSummative.administrationWindow == 'Fall' && parseInt(order.calendarYear) == parseInt(otherSummative.calendarYear) + 1)){
+						summativeForSamePeriodic = otherSummative;
 					}
 				});
 
@@ -312,8 +320,8 @@ angular.module('myApp', [
 					order.online.discounts.volume = costService.getVolumeDiscount(order.online.total + order.paper.total);
 					order.online.discounts.multiGrade = costService.getMultigradeDiscount(gradeCount);
 					if(periodicOrder && periodicOrder.onlineTotal > 0){
-						order.online.discounts.periodic = costService.getPeriodicDiscount(order.online.total, periodicOrder.onlineTotal);
-						order.online.periodicNumberApplied = Math.min(order.online.total, periodicOrder.onlineTotal);
+						order.online.discounts.periodic = costService.getPeriodicDiscount(order.online.total, periodicOrder.onlineTotal, summativeForSamePeriodic.online.total);
+						order.online.periodicNumberApplied = costService.getPeriodicNumberApplied(order.online.total, periodicOrder.onlineTotal, summativeForSamePeriodic.online.total);
 					}
 					if($scope.formData.billing && $scope.formData.billing.address && $scope.formData.billing.address.state){
 						order.online.discounts.state = costService.getStateDiscount($scope.formData.billing.address.state, "summativeOnline", order.calendarYear, order.administrationWindow);
@@ -344,8 +352,8 @@ angular.module('myApp', [
 					order.paper.discounts.multiGrade = costService.getMultigradeDiscount(gradeCount);
 					if(periodicOrder && periodicOrder.onlineTotal > order.online.total){
 						//Only apply what's left after the online portion is disounted
-						order.paper.discounts.periodic = costService.getPeriodicDiscount(order.paper.total, periodicOrder.onlineTotal - order.online.total);
-						order.paper.periodicNumberApplied = Math.min(order.paper.total, periodicOrder.onlineTotal - order.online.total);
+						order.paper.discounts.periodic = costService.getPeriodicDiscount(order.paper.total, periodicOrder.onlineTotal - (order.online.total + (summativeForSamePeriodic.online.total ? summativeForSamePeriodic.online.total : 0)), summativeForSamePeriodic.paper.total);
+						order.paper.periodicNumberApplied = costService.getPeriodicNumberApplied(order.paper.total, periodicOrder.onlineTotal - (order.online.total + (summativeForSamePeriodic.online.total ? summativeForSamePeriodic.online.total : 0)), summativeForSamePeriodic.paper.total);
 					}
 					if($scope.formData.billing && $scope.formData.billing.address && $scope.formData.billing.address.state){
 						order.paper.discounts.state = costService.getStateDiscount($scope.formData.billing.address.state, "summativePaper", order.calendarYear, order.administrationWindow);
@@ -569,17 +577,29 @@ angular.module('myApp', [
 		return discountAmount;
 	};
 
-	var getPeriodicDiscount = function(summativeAmount, periodicAmount){
+	var getPeriodicDiscount = function(summativeAmount, periodicAmount, summativeForSamePeriodicAmount){
 		var discountAmount = 0;
+		var totalSummativeAmount = summativeAmount + (summativeForSamePeriodicAmount ? summativeForSamePeriodicAmount : 0);
 		if(cost.discounts){
 			discountAmount = cost.discounts.periodic.discountPer;
 		}
 
-		if(periodicAmount < summativeAmount){
-			discountAmount = discountAmount * periodicAmount / summativeAmount
+		if(periodicAmount < totalSummativeAmount){
+			discountAmount = discountAmount * getPeriodicNumberApplied(summativeAmount, periodicAmount, summativeForSamePeriodicAmount) / summativeAmount
 		}
 
 		return discountAmount;
+	};
+
+	var getPeriodicNumberApplied = function(summativeAmount, periodicAmount, summativeForSamePeriodicAmount){
+		summativeForSamePeriodicAmount = summativeForSamePeriodicAmount ? summativeForSamePeriodicAmount : 0;
+		var totalSummativeAmount = summativeAmount + summativeForSamePeriodicAmount;
+		if(totalSummativeAmount <= periodicAmount){
+			return summativeAmount;
+		}
+		else{
+			return periodicAmount * summativeAmount / (summativeAmount + summativeForSamePeriodicAmount);
+		}
 	};
 
 	var getStateDiscount = function(state, type, year, semester){
@@ -650,6 +670,7 @@ angular.module('myApp', [
 		'getVolumeDiscount':getVolumeDiscount,
 		'getMultigradeDiscount':getMultigradeDiscount,
 		'getPeriodicDiscount':getPeriodicDiscount,
+		'getPeriodicNumberApplied':getPeriodicNumberApplied,
 		'getSpecialDiscount':getSpecialDiscount,
 		'getStateDiscount': getStateDiscount
 	}
