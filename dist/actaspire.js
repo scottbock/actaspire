@@ -45880,11 +45880,34 @@ angular.module('myApp', [
 	}
 }])
 
-.factory('EmailService', ['$http', 'currencyFilter', 'dateFilter', 'schoolYearFilter', '$state', '$cookies', function ($http, currencyFilter, dateFilter, schoolYearFilter, $state, $cookies) {
+.filter('schoolYear', function() {
+
+  return function(year) {
+
+    // Ensure that the passed in data is a number
+    if(isNaN(year) || year < 1) {
+      return number;
+
+    } else {
+      var schoolYearStart = parseInt(year);
+      return schoolYearStart + ' - ' + (schoolYearStart + 1)
+    }
+  }
+});
+
+
+;angular.module('myApp').factory('EmailService', ['$http', 'currencyFilter', 'dateFilter', 'schoolYearFilter', '$state', '$cookies', function ($http, currencyFilter, dateFilter, schoolYearFilter, $state, $cookies) {
 
 	var buildEmail = function(formData, orders){
 		var emailBody = 'Dear ' + formData.customer.firstName + ' ' + formData.customer.lastName + 
-			',\n\nThank you for your ACT Aspire Order' +
+			',\n\nThank you for ordering ACT Aspire! We are thrilled to be your partner for measuring college and career readiness. Please take a moment to review the order confirmation at the end of this email and make sure your order was captured accurately.' +
+			'\n\nWhat’s Next?\nSeveral things will happen between now and test day.' +
+			'\n\n1)  Summative Users: You will be receiving a welcome email after the ordering window closes, containing more detailed setup information.' +
+			'\n\nPeriodic Users: If you ordered prior to 7/31, you will receive a welcome email in August. If you have ordered after 7/31 you will receive a welcome letter shortly after your order is placed.' +
+			'\n\n2)  If this is your first time testing with ACT Aspire we will reach out to you prior to testing to help you create and upload your Organizational (ORG) file. This will tell us what schools to include in your online tenant (account).' +
+			'\n\n3)  If Paper Testing: About 4 weeks before testing you will need to upload your students using the Student Data Upload (SDU) file and assign students to test sessions. More information will be provided as we near that date.' +
+			'\n\nIf Online Testing: About 3 weeks before testing, you will need to upload your students using the Student Data Upload (SDU) file and assign students to test sessions. More information will be provided as we near that date. Proctor caching is mandatory for online testing. You will need to set up proctor caching and pre-cache content after testing sessions have been set up (approximately 3 weeks prior to testing). Information on proctor caching can be found here in the ACT Aspire Portal Guide. http://actaspire.avocet.pearson.com/actaspire/home#5661' +
+			'\n\nIn the meantime, take a look at the ACT Aspire Landing Page (http://actaspire.pearson.com/allresources.html) to familiarize yourself with the testing process. If you have any questions, please call Bri Silver at 319-248-1422.' +
 			'\n\nContact: ' + formData.customer.firstName + ' ' + formData.customer.lastName + ', ' + formData.customer.jobTitle + ', ' + formData.customer.organization +
 			'\nEmail: ' + formData.customer.email;
 		if(formData.customer.groupOrder){
@@ -46530,25 +46553,7 @@ angular.module('myApp', [
 		'sendTrainingConfirmationEmail': sendTrainingConfirmationEmail,
 		'sendIsrConfirmationEmail': sendIsrConfirmationEmail
 	}
-}])
-
-.filter('schoolYear', function() {
-
-  return function(year) {
-
-    // Ensure that the passed in data is a number
-    if(isNaN(year) || year < 1) {
-      return number;
-
-    } else {
-      var schoolYearStart = parseInt(year);
-      return schoolYearStart + ' - ' + (schoolYearStart + 1)
-    }
-  }
-});
-
-
-;;angular.module('myApp').run(['$templateCache', function($templateCache) {
+}]);;angular.module('myApp').run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('app/confirmation.html',
