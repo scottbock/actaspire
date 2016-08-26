@@ -591,13 +591,16 @@ angular.module('myApp').factory('EmailService', ['$http', 'currencyFilter', 'dat
 	};
 
 	var buildIsrCsvFile = function(formData, cost){
-		var fileContent = 'NS Name,Internal ID,Grade,Date,line,School / Customer,Report Description,Price,Quantity,Total,Special Notes,Rev Rec,Rev Rec Date,Name,Job Title,Contact email,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions\n';
+		var fileContent = 'NS Name,Internal ID,Grade,Admin,Year,Date,line,School / Customer,Report Description,Price,Quantity,Total,Special Notes,Rev Rec,Rev Rec Date,Name,Job Title,Contact email,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions\n';
 
 		var index = 0;
         angular.forEach(cost.reportGroups, function(reportGroup, key) {
         	angular.forEach(reportGroup.reports, function(report, key) {
         		if(report.amount){
-					fileContent += ',,0,"' + today + colDelim 
+					fileContent += ',,0,"' 
+						+ cost.currentSemester + colDelim
+						+ cost.currentYear + colDelim
+						+ today + colDelim 
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ reportGroup.name + ' ' + report.number + 'x' + colDelim
