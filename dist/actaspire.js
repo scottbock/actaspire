@@ -46960,16 +46960,22 @@ angular.module('myApp', [
     "\t\t<div class=\"col-sm-12 form-group\">\n" +
     "\t\t    <label class=\"checkbox-inline\">\n" +
     "\t\t    \t<input type=\"checkbox\" ng-model=\"formData.acceptTerms\">\n" +
-    "\t\t    \tI agree to ACT Aspire's <a href=\"./json/ActAspireTermsAndConditions.pdf\" target=\"_blank\">Terms and Conditions</a>\n" +
+    "\t\t    \tI agree to ACT Aspire's <a href=\"./json/ActAspireTermsAndConditions.pdf\" target=\"_blank\">Terms and Conditions</a> as updated as of August 8th, 2016.\n" +
     "\t\t    </label>\n" +
     "\t\t</div>\n" +
     "\t</div>\n" +
+    "\n" +
     "\t<div class=\"row\" ng-show=\"formData.acceptTerms\">\n" +
     "\t    <div class=\"form-group col-sm-12 required\">\n" +
-    "\t        <label for=\"firstName\" class=\"control-label\">Signature:</label>\n" +
-    "\t        <input type=\"text\" class=\"form-control\" name=\"firstName\" ng-model=\"formData.customer.signature\" required=\"required\" placeholder=\"Enter your name as a signature\">\n" +
+    "\t        <label for=\"signature\" class=\"control-label\">Signature:</label>\n" +
+    "\t        <input type=\"text\" class=\"form-control\" name=\"signature\" ng-model=\"formData.customer.signature\" required=\"required\" placeholder=\"Enter your name as a signature\">\n" +
     "\t    </div>\n" +
     "\t</div>\n" +
+    "\n" +
+    "\t<div class=\"row\">\n" +
+    "\t<p>*Please note - all orders shall not be subject to a cancellation fee.</p>\n" +
+    "\t</div>\n" +
+    "\t\n" +
     "\t<div class=\"row\">\n" +
     "\t    <div class=\"col-sm-4\">\n" +
     "\t  \t\t<button type=\"submit\" class=\"btn btn-primary\" ng-disabled=\"customerForm.$invalid || customerForm.$pending || !formData.acceptTerms || !formData.summary.total\">Submit Order</button>\n" +
@@ -46978,9 +46984,7 @@ angular.module('myApp', [
     "\t  \t\t<button type=\"button\" class=\"btn btn-default\" ng-click=\"printPage()\">Print Page</button>\n" +
     "\t    </div>\n" +
     "\t</div>\n" +
-    "\t<div class=\"row\">\n" +
-    "\t<p>*ACT Aspire reserves the right to disallow a discount at any time if it is determined the orderor did not earn the discount based on actual volume of tested students. </p>\n" +
-    "\t</div>\n" +
+    "\n" +
     "</form>\n" +
     "</div>\n" +
     "<div ui-view></div>\n"
