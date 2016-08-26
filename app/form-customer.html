@@ -19,24 +19,24 @@
 	<div class="row"><div class="col-sm-12"><h4>Date: {{date | date:'yyyy-MM-dd'}}</h4></div></div>
 
 	<div class="row">
-	    <div class="form-group col-sm-3 required">
+	    <div class="form-group col-sm-4 required">
 	        <label for="firstName" class="control-label">First Name</label>
 	        <input type="text" class="form-control" name="firstName" ng-model="formData.customer.firstName" required="required">
 	    </div>
 
-	    <div class="form-group col-sm-3 required">
+	    <div class="form-group col-sm-4 required">
 	        <label for="lastName" class="control-label">Last Name</label>
 	        <input type="text" class="form-control" name="lastName" ng-model="formData.customer.lastName" required="required">
 	    </div>
 
-	    <div class="form-group col-sm-6 required">
+	    <div class="form-group col-sm-4 required">
 	        <label for="organization" class="control-label">School / District / Organization</label>
 	        <input type="text" class="form-control" name="organization" ng-model="formData.customer.organization" required="required">
 	    </div>
 	</div>
 
 	<div class="row">
-	    <div class="form-group col-sm-6 required">
+	    <div class="form-group col-sm-4 required">
 	        <label for="jobTitle" class="control-label">Job Title</label>
 	        <input type="text" class="form-control" name="jobTitle" ng-model="formData.customer.jobTitle" required="required">
 	    </div>
@@ -45,6 +45,12 @@
 	        <label for="email" class="control-label">Email</label>
 	        <input type="email" class="form-control" name="email" ng-model="formData.customer.email" required="required">
 	    </div>
+
+	    <div class="form-group col-sm-4">
+	        <label for="howHeard" class="control-label">Tell Us How You Heard About Us</label>
+	        <select class="form-control" name="howHeard" ng-model="formData.customer.howHeard" ng-options="option for option in cost.howHeardOptions"/>
+	    </div>
+	    
 	</div>
 
 	<div class="row">

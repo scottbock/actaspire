@@ -105,6 +105,21 @@
 			}
 		}
 	},
+	"howHeardOptions":[
+		"Article",
+		"Blog",
+		"Conference",
+		"Colleague",
+		"Email",
+		"Print Ad",
+		"Sales Representative/Regional Director",
+		"Website",
+		"Press Release",
+		"Social Media",
+		"YouTube",
+		"Webinar",
+		"Other"
+	],
 	"ordersInbox":"l.scott.bock@gmail.com",
 	"ordersBcc":"scott.bock@objectpartners.com"
 }

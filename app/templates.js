@@ -33,24 +33,24 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t<div class=\"row\"><div class=\"col-sm-12\"><h4>Date: {{date | date:'yyyy-MM-dd'}}</h4></div></div>\n" +
     "\n" +
     "\t<div class=\"row\">\n" +
-    "\t    <div class=\"form-group col-sm-3 required\">\n" +
+    "\t    <div class=\"form-group col-sm-4 required\">\n" +
     "\t        <label for=\"firstName\" class=\"control-label\">First Name</label>\n" +
     "\t        <input type=\"text\" class=\"form-control\" name=\"firstName\" ng-model=\"formData.customer.firstName\" required=\"required\">\n" +
     "\t    </div>\n" +
     "\n" +
-    "\t    <div class=\"form-group col-sm-3 required\">\n" +
+    "\t    <div class=\"form-group col-sm-4 required\">\n" +
     "\t        <label for=\"lastName\" class=\"control-label\">Last Name</label>\n" +
     "\t        <input type=\"text\" class=\"form-control\" name=\"lastName\" ng-model=\"formData.customer.lastName\" required=\"required\">\n" +
     "\t    </div>\n" +
     "\n" +
-    "\t    <div class=\"form-group col-sm-6 required\">\n" +
+    "\t    <div class=\"form-group col-sm-4 required\">\n" +
     "\t        <label for=\"organization\" class=\"control-label\">School / District / Organization</label>\n" +
     "\t        <input type=\"text\" class=\"form-control\" name=\"organization\" ng-model=\"formData.customer.organization\" required=\"required\">\n" +
     "\t    </div>\n" +
     "\t</div>\n" +
     "\n" +
     "\t<div class=\"row\">\n" +
-    "\t    <div class=\"form-group col-sm-6 required\">\n" +
+    "\t    <div class=\"form-group col-sm-4 required\">\n" +
     "\t        <label for=\"jobTitle\" class=\"control-label\">Job Title</label>\n" +
     "\t        <input type=\"text\" class=\"form-control\" name=\"jobTitle\" ng-model=\"formData.customer.jobTitle\" required=\"required\">\n" +
     "\t    </div>\n" +
@@ -59,6 +59,12 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t        <label for=\"email\" class=\"control-label\">Email</label>\n" +
     "\t        <input type=\"email\" class=\"form-control\" name=\"email\" ng-model=\"formData.customer.email\" required=\"required\">\n" +
     "\t    </div>\n" +
+    "\n" +
+    "\t    <div class=\"form-group col-sm-4\">\n" +
+    "\t        <label for=\"howHeard\" class=\"control-label\">Tell Us How You Heard About Us</label>\n" +
+    "\t        <select class=\"form-control\" name=\"howHeard\" ng-model=\"formData.customer.howHeard\" ng-options=\"option for option in cost.howHeardOptions\"/>\n" +
+    "\t    </div>\n" +
+    "\t    \n" +
     "\t</div>\n" +
     "\n" +
     "\t<div class=\"row\">\n" +
