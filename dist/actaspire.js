@@ -45657,7 +45657,10 @@ angular.module('myApp', [
 		var index = 0;
         angular.forEach(trainingOrders, function(training, key) {
 
-			fileContent += ',,,,"' + today + colDelim 
+			fileContent += ',,"' 
+				+ cost.currentSemester + colDelim
+				+ cost.currentYear + colDelim	
+				+ today + colDelim 
 				+ (index++) + colDelim
 				+ formData.customer.organization + colDelim
 				+ training.title + colDelim
@@ -47571,6 +47574,8 @@ angular.module('myApp', [
 		cost.ordersInbox = response.data.ordersInbox;
 		cost.ordersBcc = response.data.ordersBcc;
 		cost.validThrough = response.data.validThrough;
+    	cost.currentSemester = response.data.currentSemester;
+    	cost.currentYear = response.data.currentYear;
 	});
 
 	return {

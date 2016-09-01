@@ -5,6 +5,8 @@ angular.module('myApp').factory('TrainingCostService', ['$http', function ($http
 		cost.ordersInbox = response.data.ordersInbox;
 		cost.ordersBcc = response.data.ordersBcc;
 		cost.validThrough = response.data.validThrough;
+    	cost.currentSemester = response.data.currentSemester;
+    	cost.currentYear = response.data.currentYear;
 	});
 
 	return {

@@ -287,7 +287,10 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 		var index = 0;
         angular.forEach(trainingOrders, function(training, key) {
 
-			fileContent += ',,,,"' + today + colDelim 
+			fileContent += ',,"' 
+				+ cost.currentSemester + colDelim
+				+ cost.currentYear + colDelim	
+				+ today + colDelim 
 				+ (index++) + colDelim
 				+ formData.customer.organization + colDelim
 				+ training.title + colDelim

@@ -77,6 +77,8 @@
 			}
 		]
 	},
+	"currentSemester":"Spring",
+	"currentYear":2016,	
 	"ordersInbox":"l.scott.bock@gmail.com",
 	"ordersBcc":"scott.bock@objectpartners.com",
 	"validThrough":"December 16, 2016"
