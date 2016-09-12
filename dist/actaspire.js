@@ -45481,7 +45481,7 @@ angular.module('myApp', [
 						+ 'Individual Score Reports 1x' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
-						+ 'Online' + colDelim
+						+ colDelim
 						+ 'Ancillary Rev Rec Template' + colDelim
 						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 						+ (order.cost.isr) + colDelim
@@ -45504,7 +45504,7 @@ angular.module('myApp', [
 						+ 'Score Labels 1x' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
-						+ 'Online' + colDelim
+						+ colDelim
 						+ 'Ancillary Rev Rec Template' + colDelim
 						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 						+ (order.cost.labels) + colDelim
@@ -45558,7 +45558,7 @@ angular.module('myApp', [
 						+ 'Individual Score Reports 1x' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
-						+ 'Paper' + colDelim
+						+ colDelim
 						+ 'Ancillary Rev Rec Template' + colDelim
 						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim	
 						+ (order.cost.isr) + colDelim
@@ -45581,7 +45581,7 @@ angular.module('myApp', [
 						+ 'Score Labels 1x' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
-						+ 'Paper' + colDelim
+						+ colDelim
 						+ 'Ancillary Rev Rec Template' + colDelim
 						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 						+ (order.cost.labels) + colDelim
