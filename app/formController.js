@@ -1,6 +1,6 @@
 angular.module('myApp')// our controller for the form
 // =============================================================================
-.controller('formController', ['$scope', '$state', '$http', '$cookies', 'CostService', 'EmailService', 'schoolYearFilter', function($scope, $state, $http, $cookies, costService, emailService, schoolYearFilter) {
+.controller('formController', ['$scope', '$state', '$http', '$cookies', 'CostService', 'EmailService', 'TaxService', 'schoolYearFilter', function($scope, $state, $http, $cookies, costService, emailService, taxService, schoolYearFilter) {
 
 	$http.get('json/states.json').success(function(data) { 
     	$scope.states = data;
@@ -354,9 +354,31 @@ angular.module('myApp')// our controller for the form
 	$scope.$watch('formData.billing.address.state', function(newValue, oldValue){
 		$scope.updatePeriodicOrders();
 	}, true);
+	//update sales tax when billing zip changes
+	$scope.$watch('formData.billing.address.zip', function(newValue, oldValue){
+		if($scope.customerForm.zip.$valid){
+			taxService.getTaxRateByZip('f9enTVGueFK3ekajO7leE5+9Mc5hnM1t3dJ0jLpjTLJW+9J/F9TL+k5CVRQZq3cD3DXcm5/inU0eRWLDGCrpJQ==', 'usa', $scope.formData.billing.address.zip, function(res){
+				alert(res.data.totalRate);
+			},
+			function(res){
+				alert(JSON.stringify(res));
+			})
+		}
+	}, true);
 	//TODO: uncomment when adding back sales tax
 	//Update sales tax when billing zip or taxExempt status changes
 	// $scope.$watchCollection('[formData.billing.taxExempt, formData.billing.address.zip]', function(newValue, oldValue){
 	// 	$scope.updateTotals();
 	// }, true); 
+
+	$scope.testTaxRates = function(){
+		if($scope.formData.billing.address.zip){
+			taxService.getTaxRateByZip('f9enTVGueFK3ekajO7leE5+9Mc5hnM1t3dJ0jLpjTLJW+9J/F9TL+k5CVRQZq3cD3DXcm5/inU0eRWLDGCrpJQ==', 'usa', $scope.formData.billing.address.zip, function(res){
+				alert(res.data.totalRate);
+			},
+			function(res){
+				alert(JSON.stringify(res));
+			})
+		}
+	};
 }]);

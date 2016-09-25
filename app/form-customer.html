@@ -10,6 +10,11 @@
   <p>
     Pricing valid through {{cost.pricing.validThrough}}
   </p>
+
+	<button type="button" class="pull-left btn btn-primary" aria-label="Remove" ng-click="testTaxRates()">
+		Test Tax Rates
+	</button>
+
 </div>
 <!-- use ng-submit to catch the form submission and use our Angular function -->
 <form id="customerForm" name="customerForm" ng-submit="processForm()"> 
@@ -155,7 +160,7 @@
 
 	            <div class="form-group col-sm-4 required">
 	                <label for="zip" class="control-label">Zip</label>
-	                <input type="text" class="form-control" name="zip" ng-model="formData.billing.address.zip" required="required">
+	                <input type="text" class="form-control" name="zip" ng-model="formData.billing.address.zip" required="required" ng-pattern="/^(\d{5}-\d{4}|\d{5})$/">
 	            </div>
 	        </div> 
 	        <div class="row">

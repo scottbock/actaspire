@@ -24,6 +24,11 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "  <p>\n" +
     "    Pricing valid through {{cost.pricing.validThrough}}\n" +
     "  </p>\n" +
+    "\n" +
+    "\t<button type=\"button\" class=\"pull-left btn btn-primary\" aria-label=\"Remove\" ng-click=\"testTaxRates()\">\n" +
+    "\t\tTest Tax Rates\n" +
+    "\t</button>\n" +
+    "\n" +
     "</div>\n" +
     "<!-- use ng-submit to catch the form submission and use our Angular function -->\n" +
     "<form id=\"customerForm\" name=\"customerForm\" ng-submit=\"processForm()\"> \n" +
@@ -169,7 +174,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\n" +
     "\t            <div class=\"form-group col-sm-4 required\">\n" +
     "\t                <label for=\"zip\" class=\"control-label\">Zip</label>\n" +
-    "\t                <input type=\"text\" class=\"form-control\" name=\"zip\" ng-model=\"formData.billing.address.zip\" required=\"required\">\n" +
+    "\t                <input type=\"text\" class=\"form-control\" name=\"zip\" ng-model=\"formData.billing.address.zip\" required=\"required\" ng-pattern=\"/^(\\d{5}-\\d{4}|\\d{5})$/\">\n" +
     "\t            </div>\n" +
     "\t        </div> \n" +
     "\t        <div class=\"row\">\n" +

@@ -46042,7 +46042,7 @@ angular.module('myApp', [
 	}
 }]);;angular.module('myApp')// our controller for the form
 // =============================================================================
-.controller('formController', ['$scope', '$state', '$http', '$cookies', 'CostService', 'EmailService', 'schoolYearFilter', function($scope, $state, $http, $cookies, costService, emailService, schoolYearFilter) {
+.controller('formController', ['$scope', '$state', '$http', '$cookies', 'CostService', 'EmailService', 'TaxService', 'schoolYearFilter', function($scope, $state, $http, $cookies, costService, emailService, taxService, schoolYearFilter) {
 
 	$http.get('json/states.json').success(function(data) { 
     	$scope.states = data;
@@ -46396,11 +46396,33 @@ angular.module('myApp', [
 	$scope.$watch('formData.billing.address.state', function(newValue, oldValue){
 		$scope.updatePeriodicOrders();
 	}, true);
+	//update sales tax when billing zip changes
+	$scope.$watch('formData.billing.address.zip', function(newValue, oldValue){
+		if($scope.customerForm.zip.$valid){
+			taxService.getTaxRateByZip('f9enTVGueFK3ekajO7leE5+9Mc5hnM1t3dJ0jLpjTLJW+9J/F9TL+k5CVRQZq3cD3DXcm5/inU0eRWLDGCrpJQ==', 'usa', $scope.formData.billing.address.zip, function(res){
+				alert(res.data.totalRate);
+			},
+			function(res){
+				alert(JSON.stringify(res));
+			})
+		}
+	}, true);
 	//TODO: uncomment when adding back sales tax
 	//Update sales tax when billing zip or taxExempt status changes
 	// $scope.$watchCollection('[formData.billing.taxExempt, formData.billing.address.zip]', function(newValue, oldValue){
 	// 	$scope.updateTotals();
 	// }, true); 
+
+	$scope.testTaxRates = function(){
+		if($scope.formData.billing.address.zip){
+			taxService.getTaxRateByZip('f9enTVGueFK3ekajO7leE5+9Mc5hnM1t3dJ0jLpjTLJW+9J/F9TL+k5CVRQZq3cD3DXcm5/inU0eRWLDGCrpJQ==', 'usa', $scope.formData.billing.address.zip, function(res){
+				alert(res.data.totalRate);
+			},
+			function(res){
+				alert(JSON.stringify(res));
+			})
+		}
+	};
 }]);;angular.module('myApp')
 .controller('isrController', ['$scope', '$state', '$http', '$cookies', 'IsrCostService', 'EmailService', 'schoolYearFilter', function($scope, $state, $http, $cookies, isrCostService, emailService, schoolYearFilter) {
 	$scope.cost = isrCostService.cost;
@@ -46470,7 +46492,31 @@ angular.module('myApp', [
       return schoolYearStart + ' - ' + (schoolYearStart + 1)
     }
   }
-});;angular.module('myApp').run(['$templateCache', function($templateCache) {
+});;angular.module('myApp').factory('TaxService', ['$http', function ($http) {	
+
+	var getTaxRateByZip = function(APIKey, country, postal, callback) {
+		// country = validateCountry(country);
+		// if (country === "ERR"){
+		// 	errorDeath(errors.BAD_COUNTRY_ZIP,arguments)
+		// }
+		// if((postal.length > 10)||(postal.length < 5)){
+		// 	errorDeath(errors.ZIP_ERROR,arguments);
+		// 	};
+
+		//build request url
+		var requri = "https://taxrates.api.avalara.com/postal?country=" + encodeURIComponent(country);
+	    requri += "&postal=" + encodeURIComponent(postal);
+		requri += "&apikey=" + encodeURIComponent(APIKey);	
+
+		$http.get(requri).then(callback);
+
+
+	}
+
+	return {
+		'getTaxRateByZip':getTaxRateByZip
+	}
+}]);;angular.module('myApp').run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('app/confirmation.html',
@@ -46496,6 +46542,11 @@ angular.module('myApp', [
     "  <p>\n" +
     "    Pricing valid through {{cost.pricing.validThrough}}\n" +
     "  </p>\n" +
+    "\n" +
+    "\t<button type=\"button\" class=\"pull-left btn btn-primary\" aria-label=\"Remove\" ng-click=\"testTaxRates()\">\n" +
+    "\t\tTest Tax Rates\n" +
+    "\t</button>\n" +
+    "\n" +
     "</div>\n" +
     "<!-- use ng-submit to catch the form submission and use our Angular function -->\n" +
     "<form id=\"customerForm\" name=\"customerForm\" ng-submit=\"processForm()\"> \n" +
@@ -46641,7 +46692,7 @@ angular.module('myApp', [
     "\n" +
     "\t            <div class=\"form-group col-sm-4 required\">\n" +
     "\t                <label for=\"zip\" class=\"control-label\">Zip</label>\n" +
-    "\t                <input type=\"text\" class=\"form-control\" name=\"zip\" ng-model=\"formData.billing.address.zip\" required=\"required\">\n" +
+    "\t                <input type=\"text\" class=\"form-control\" name=\"zip\" ng-model=\"formData.billing.address.zip\" required=\"required\" ng-pattern=\"/^(\\d{5}-\\d{4}|\\d{5})$/\">\n" +
     "\t            </div>\n" +
     "\t        </div> \n" +
     "\t        <div class=\"row\">\n" +
