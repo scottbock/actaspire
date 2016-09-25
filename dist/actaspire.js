@@ -47036,7 +47036,7 @@ angular.module('myApp', [
     "\t</div>\n" +
     "\n" +
     "\t<div class=\"row\">\n" +
-    "\t<p>*Please note - all orders shall not be subject to a cancellation fee.</p>\n" +
+    "\t<p>*Please note - all orders shall be subject to a cancellation fee.</p>\n" +
     "\t</div>\n" +
     "\t\n" +
     "\t<div class=\"row\">\n" +
