@@ -45647,6 +45647,24 @@ angular.module('myApp', [
 			}
 		});
 
+		//Tax
+		if(formData.summary.tax){
+			fileContent += ',,"' + today + colDelim 
+				+ 0 + colDelim
+				+ formData.customer.organization + colDelim
+				+ 0 + colDelim
+				+ 1 + colDelim
+				+ 'Tax' + colDelim + colDelim + colDelim + colDelim + colDelim + colDelim
+				+ formData.summary.tax + colDelim
+				+ formData.summary.tax + colDelim
+				+ yesNo(true) + colDelim
+				+ yesNo(true) + colDelim
+				+ yesNo(true) + colDelim
+				+ yesNo(true) + colDelim
+				+ yesNo(true) + colDelim
+				+ writeCommonData(formData);
+		}
+
 		return fileContent;
 		
 	};
@@ -45884,7 +45902,7 @@ angular.module('myApp', [
 		
 		emailBody += '\n\nTotal: ' + currencyFilter(formData.summary.total);
 		if(formData.summary.tax){
-			emailBody += ' + ' + currencyFilter(formData.summary.tax) + ' (' + formData.summary.taxRate + ' Sales Tax) = ' + currencyFilter(formData.summary.totalWithTax);
+			emailBody += ' + ' + currencyFilter(formData.summary.tax) + ' (' + formData.summary.taxRate + '% Sales Tax) = ' + currencyFilter(formData.summary.totalWithTax);
 		}
 
 		if(formData.comments){
@@ -46080,7 +46098,8 @@ angular.module('myApp', [
 	$scope.formData = {
 		customer: {},
 		summary:{
-			discount:{}
+			discount:{},
+			taxRate:0.0
 		}
 	};
 	$scope.orders = {
@@ -46123,15 +46142,12 @@ angular.module('myApp', [
 
 		$scope.formData.summary.tax = 0.0;
 
-		//TODO: Uncomment this code when ready to include sales tax
-		/*if($scope.formData.billing && !$scope.formData.billing.taxExempt && $scope.cost.salesTax){
-			var taxRate = $scope.cost.salesTax[$scope.formData.billing.address.zip];
-			if(taxRate){
-				$scope.formData.summary.taxRate = taxRate;
-				$scope.formData.summary.tax = taxRate * $scope.formData.summary.total;
+		if($scope.formData.billing && !$scope.formData.billing.taxExempt){
+			if($scope.formData.summary.taxRate){
+				$scope.formData.summary.tax = $scope.formData.summary.taxRate / 100.0 * $scope.formData.summary.total;
 				$scope.formData.summary.totalWithTax = $scope.formData.summary.tax + $scope.formData.summary.total;
 			}
-		}*/
+		}
 	};
 
 	var getCost = function(administrationWindow, calendarYear, pricing){
@@ -46382,7 +46398,7 @@ angular.module('myApp', [
 
 
 	$scope.$watch('orders.summative.orders', function(newValue, oldValue){
-		$scope.updatePeriodicOrders();		
+		$scope.updatePeriodicOrders();
 	}, true);
 
 	$scope.$watch('orders.periodic.orders', function(newValue, oldValue){
@@ -46397,32 +46413,17 @@ angular.module('myApp', [
 		$scope.updatePeriodicOrders();
 	}, true);
 	//update sales tax when billing zip changes
-	$scope.$watch('formData.billing.address.zip', function(newValue, oldValue){
+	$scope.$watch('[formData.billing.address.zip, formData.billing.taxExempt]', function(newValue, oldValue){
 		if($scope.customerForm.zip.$valid){
 			taxService.getTaxRateByZip('f9enTVGueFK3ekajO7leE5+9Mc5hnM1t3dJ0jLpjTLJW+9J/F9TL+k5CVRQZq3cD3DXcm5/inU0eRWLDGCrpJQ==', 'usa', $scope.formData.billing.address.zip, function(res){
-				alert(res.data.totalRate);
+				$scope.formData.summary.taxRate = res.data.totalRate;
+				$scope.updateTotals();
 			},
 			function(res){
-				alert(JSON.stringify(res));
+				alert(JSON.stringify(res)); //TODO: deal with taxes
 			})
 		}
 	}, true);
-	//TODO: uncomment when adding back sales tax
-	//Update sales tax when billing zip or taxExempt status changes
-	// $scope.$watchCollection('[formData.billing.taxExempt, formData.billing.address.zip]', function(newValue, oldValue){
-	// 	$scope.updateTotals();
-	// }, true); 
-
-	$scope.testTaxRates = function(){
-		if($scope.formData.billing.address.zip){
-			taxService.getTaxRateByZip('f9enTVGueFK3ekajO7leE5+9Mc5hnM1t3dJ0jLpjTLJW+9J/F9TL+k5CVRQZq3cD3DXcm5/inU0eRWLDGCrpJQ==', 'usa', $scope.formData.billing.address.zip, function(res){
-				alert(res.data.totalRate);
-			},
-			function(res){
-				alert(JSON.stringify(res));
-			})
-		}
-	};
 }]);;angular.module('myApp')
 .controller('isrController', ['$scope', '$state', '$http', '$cookies', 'IsrCostService', 'EmailService', 'schoolYearFilter', function($scope, $state, $http, $cookies, isrCostService, emailService, schoolYearFilter) {
 	$scope.cost = isrCostService.cost;
@@ -46509,12 +46510,16 @@ angular.module('myApp', [
 		requri += "&apikey=" + encodeURIComponent(APIKey);	
 
 		$http.get(requri).then(callback);
+	}
 
-
+	var uploadCert = function(file, callback){
+		var requri = "http://api.certcapture.com/v2/certificates";
+		$htpp.post(requri, file).then(callback);
 	}
 
 	return {
-		'getTaxRateByZip':getTaxRateByZip
+		'getTaxRateByZip':getTaxRateByZip,
+		'uploadCert':uploadCert
 	}
 }]);;angular.module('myApp').run(['$templateCache', function($templateCache) {
   'use strict';
@@ -46542,11 +46547,6 @@ angular.module('myApp', [
     "  <p>\n" +
     "    Pricing valid through {{cost.pricing.validThrough}}\n" +
     "  </p>\n" +
-    "\n" +
-    "\t<button type=\"button\" class=\"pull-left btn btn-primary\" aria-label=\"Remove\" ng-click=\"testTaxRates()\">\n" +
-    "\t\tTest Tax Rates\n" +
-    "\t</button>\n" +
-    "\n" +
     "</div>\n" +
     "<!-- use ng-submit to catch the form submission and use our Angular function -->\n" +
     "<form id=\"customerForm\" name=\"customerForm\" ng-submit=\"processForm()\"> \n" +
@@ -47005,7 +47005,7 @@ angular.module('myApp', [
     "\t\t\t\t</tr>\n" +
     "\t\t\t\t<tr>\n" +
     "\t\t\t\t\t<td colspan=\"7\">\n" +
-    "\t\t\t\t\t\t<h4>Total: {{formData.summary.total | currency}} <span ng-show=\"formData.summary.tax\"> + {{formData.summary.tax | currency}} ({{formData.summary.taxRate}} Sales Tax) = {{formData.summary.totalWithTax | currency}}</span></h4>\n" +
+    "\t\t\t\t\t\t<h4>Total: {{formData.summary.total | currency}} <span ng-show=\"formData.summary.tax\"> + {{formData.summary.tax | currency}} ({{formData.summary.taxRate}}% Sales Tax) = {{formData.summary.totalWithTax | currency}}</span></h4>\n" +
     "\t\t\t\t\t</td>\n" +
     "\t\t\t\t</tr>\n" +
     "\t\t\t</tbody>\n" +

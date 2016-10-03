@@ -277,6 +277,24 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 			}
 		});
 
+		//Tax
+		if(formData.summary.tax){
+			fileContent += ',,"' + today + colDelim 
+				+ 0 + colDelim
+				+ formData.customer.organization + colDelim
+				+ 0 + colDelim
+				+ 1 + colDelim
+				+ 'Tax' + colDelim + colDelim + colDelim + colDelim + colDelim + colDelim
+				+ formData.summary.tax + colDelim
+				+ formData.summary.tax + colDelim
+				+ yesNo(true) + colDelim
+				+ yesNo(true) + colDelim
+				+ yesNo(true) + colDelim
+				+ yesNo(true) + colDelim
+				+ yesNo(true) + colDelim
+				+ writeCommonData(formData);
+		}
+
 		return fileContent;
 		
 	};

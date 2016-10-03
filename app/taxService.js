@@ -15,11 +15,15 @@ angular.module('myApp').factory('TaxService', ['$http', function ($http) {
 		requri += "&apikey=" + encodeURIComponent(APIKey);	
 
 		$http.get(requri).then(callback);
+	}
 
-
+	var uploadCert = function(file, callback){
+		var requri = "http://api.certcapture.com/v2/certificates";
+		$htpp.post(requri, file).then(callback);
 	}
 
 	return {
-		'getTaxRateByZip':getTaxRateByZip
+		'getTaxRateByZip':getTaxRateByZip,
+		'uploadCert':uploadCert
 	}
 }]);

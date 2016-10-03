@@ -38,7 +38,8 @@ angular.module('myApp')// our controller for the form
 	$scope.formData = {
 		customer: {},
 		summary:{
-			discount:{}
+			discount:{},
+			taxRate:0.0
 		}
 	};
 	$scope.orders = {
@@ -81,15 +82,12 @@ angular.module('myApp')// our controller for the form
 
 		$scope.formData.summary.tax = 0.0;
 
-		//TODO: Uncomment this code when ready to include sales tax
-		/*if($scope.formData.billing && !$scope.formData.billing.taxExempt && $scope.cost.salesTax){
-			var taxRate = $scope.cost.salesTax[$scope.formData.billing.address.zip];
-			if(taxRate){
-				$scope.formData.summary.taxRate = taxRate;
-				$scope.formData.summary.tax = taxRate * $scope.formData.summary.total;
+		if($scope.formData.billing && !$scope.formData.billing.taxExempt){
+			if($scope.formData.summary.taxRate){
+				$scope.formData.summary.tax = $scope.formData.summary.taxRate / 100.0 * $scope.formData.summary.total;
 				$scope.formData.summary.totalWithTax = $scope.formData.summary.tax + $scope.formData.summary.total;
 			}
-		}*/
+		}
 	};
 
 	var getCost = function(administrationWindow, calendarYear, pricing){
@@ -340,7 +338,7 @@ angular.module('myApp')// our controller for the form
 
 
 	$scope.$watch('orders.summative.orders', function(newValue, oldValue){
-		$scope.updatePeriodicOrders();		
+		$scope.updatePeriodicOrders();
 	}, true);
 
 	$scope.$watch('orders.periodic.orders', function(newValue, oldValue){
@@ -355,30 +353,15 @@ angular.module('myApp')// our controller for the form
 		$scope.updatePeriodicOrders();
 	}, true);
 	//update sales tax when billing zip changes
-	$scope.$watch('formData.billing.address.zip', function(newValue, oldValue){
+	$scope.$watch('[formData.billing.address.zip, formData.billing.taxExempt]', function(newValue, oldValue){
 		if($scope.customerForm.zip.$valid){
 			taxService.getTaxRateByZip('f9enTVGueFK3ekajO7leE5+9Mc5hnM1t3dJ0jLpjTLJW+9J/F9TL+k5CVRQZq3cD3DXcm5/inU0eRWLDGCrpJQ==', 'usa', $scope.formData.billing.address.zip, function(res){
-				alert(res.data.totalRate);
+				$scope.formData.summary.taxRate = res.data.totalRate;
+				$scope.updateTotals();
 			},
 			function(res){
-				alert(JSON.stringify(res));
+				alert(JSON.stringify(res)); //TODO: deal with taxes
 			})
 		}
 	}, true);
-	//TODO: uncomment when adding back sales tax
-	//Update sales tax when billing zip or taxExempt status changes
-	// $scope.$watchCollection('[formData.billing.taxExempt, formData.billing.address.zip]', function(newValue, oldValue){
-	// 	$scope.updateTotals();
-	// }, true); 
-
-	$scope.testTaxRates = function(){
-		if($scope.formData.billing.address.zip){
-			taxService.getTaxRateByZip('f9enTVGueFK3ekajO7leE5+9Mc5hnM1t3dJ0jLpjTLJW+9J/F9TL+k5CVRQZq3cD3DXcm5/inU0eRWLDGCrpJQ==', 'usa', $scope.formData.billing.address.zip, function(res){
-				alert(res.data.totalRate);
-			},
-			function(res){
-				alert(JSON.stringify(res));
-			})
-		}
-	};
 }]);

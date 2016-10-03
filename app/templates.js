@@ -24,11 +24,6 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "  <p>\n" +
     "    Pricing valid through {{cost.pricing.validThrough}}\n" +
     "  </p>\n" +
-    "\n" +
-    "\t<button type=\"button\" class=\"pull-left btn btn-primary\" aria-label=\"Remove\" ng-click=\"testTaxRates()\">\n" +
-    "\t\tTest Tax Rates\n" +
-    "\t</button>\n" +
-    "\n" +
     "</div>\n" +
     "<!-- use ng-submit to catch the form submission and use our Angular function -->\n" +
     "<form id=\"customerForm\" name=\"customerForm\" ng-submit=\"processForm()\"> \n" +
@@ -487,7 +482,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t</tr>\n" +
     "\t\t\t\t<tr>\n" +
     "\t\t\t\t\t<td colspan=\"7\">\n" +
-    "\t\t\t\t\t\t<h4>Total: {{formData.summary.total | currency}} <span ng-show=\"formData.summary.tax\"> + {{formData.summary.tax | currency}} ({{formData.summary.taxRate}} Sales Tax) = {{formData.summary.totalWithTax | currency}}</span></h4>\n" +
+    "\t\t\t\t\t\t<h4>Total: {{formData.summary.total | currency}} <span ng-show=\"formData.summary.tax\"> + {{formData.summary.tax | currency}} ({{formData.summary.taxRate}}% Sales Tax) = {{formData.summary.totalWithTax | currency}}</span></h4>\n" +
     "\t\t\t\t\t</td>\n" +
     "\t\t\t\t</tr>\n" +
     "\t\t\t</tbody>\n" +

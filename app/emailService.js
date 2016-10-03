@@ -137,7 +137,7 @@ angular.module('myApp').factory('EmailService', ['$http', 'currencyFilter', 'dat
 		
 		emailBody += '\n\nTotal: ' + currencyFilter(formData.summary.total);
 		if(formData.summary.tax){
-			emailBody += ' + ' + currencyFilter(formData.summary.tax) + ' (' + formData.summary.taxRate + ' Sales Tax) = ' + currencyFilter(formData.summary.totalWithTax);
+			emailBody += ' + ' + currencyFilter(formData.summary.tax) + ' (' + formData.summary.taxRate + '% Sales Tax) = ' + currencyFilter(formData.summary.totalWithTax);
 		}
 
 		if(formData.comments){
