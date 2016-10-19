@@ -1,0 +1,24 @@
+ <div id="form-container">
+     <h2>Order Summary</h2>
+
+     <div ng-show="formData.calculatingTax">Calculating tax. Please wait while we finish.<img src="images/ring.gif" /></div>
+     <div ng-show="!formData.calculatingTax">
+         <p>Order Total : {{formData.summary.total | currency}}</p>
+         <p>Tax : {{formData.summary.tax | currency}}</p>
+         <p>Total with Tax : {{formData.summary.totalWithTax | currency}}</p>
+         <div class="row">
+             <div class="col-sm-2">
+                 <button type="button" class="btn btn-default btn-warning" aria-label="Remove" ng-click="goBackToTheForm()">
+                     <span class="glyphicon glyphicon-arrow-left"></span>
+                     Make Changes
+                 </button>
+             </div>
+             <div class="col-sm-2">
+                 <button type="button" class="btn btn-default btn-primary" aria-label="Remove" ng-click="finalizeAndSubmit()">
+                     <span class="glyphicon glyphicon-ok"></span>
+                     Finish and Submit Order
+                 </button>
+             </div>
+         </div>
+     </div>
+</div>

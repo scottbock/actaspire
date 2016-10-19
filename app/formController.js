@@ -18,13 +18,17 @@ angular.module('myApp')// our controller for the form
 		'schoolYear' : ''
 	};
 
-	/**
+
 	//Save Draft
 	$scope.saveDraft = function(){
 		localStorage.setItem('formData', angular.toJson($scope.formData));
 		localStorage.setItem('summative', angular.toJson($scope.orders.summative));
 		localStorage.setItem('periodic', angular.toJson($scope.orders.periodic));
-	};**/
+	};
+
+	$scope.testValidateAddress = function(){
+		taxService.validateAddress($scope.formData.billing.address, function(){alert('whatever');});
+	}
 
 	$scope.printPage = function(){
 		window.print();
@@ -51,7 +55,7 @@ angular.module('myApp')// our controller for the form
 		}
 	}
 
-/*	//Load saved draft if available
+	//Load saved draft if available
 	var cookieFormData = localStorage.getItem('formData');
 	if(cookieFormData){
 		$scope.formData = angular.fromJson(cookieFormData);
@@ -65,7 +69,7 @@ angular.module('myApp')// our controller for the form
 	var periodicData = localStorage.getItem('periodic');
 	if(periodicData){
 		$scope.orders.periodic = angular.fromJson(periodicData);
-	}*/
+	}
 
 	$scope.updateTotals = function(){	
 		$scope.formData.summary.total = 0.0;
@@ -79,15 +83,14 @@ angular.module('myApp')// our controller for the form
 		angular.forEach($scope.orders.periodic.orders, function(order, key) {
 			$scope.formData.summary.total += order.balance;
 		});
-
-		$scope.formData.summary.tax = 0.0;
-
-		if($scope.formData.billing && !$scope.formData.billing.taxExempt){
-			if($scope.formData.summary.taxRate){
-				$scope.formData.summary.tax = $scope.formData.summary.taxRate / 100.0 * $scope.formData.summary.total;
-				$scope.formData.summary.totalWithTax = $scope.formData.summary.tax + $scope.formData.summary.total;
-			}
-		}
+		// $scope.formData.summary.tax = 0.0;
+        //
+		// if($scope.formData.billing && !$scope.formData.billing.taxExempt){
+		// 	if($scope.formData.summary.taxRate){
+		// 		$scope.formData.summary.tax = $scope.formData.summary.taxRate / 100.0 * $scope.formData.summary.total;
+		// 		$scope.formData.summary.totalWithTax = $scope.formData.summary.tax + $scope.formData.summary.total;
+		// 	}
+		// }
 	};
 
 	var getCost = function(administrationWindow, calendarYear, pricing){
@@ -329,12 +332,66 @@ angular.module('myApp')// our controller for the form
 		$scope.formData.summary.discount.special.code = code.toUpperCase();
 
 		$scope.updatePeriodicOrders();
+	};
+
+	$scope.goBackToTheForm = function(){
+		$state.go('form.customer');
+	};
+
+	$scope.finalizeAndSubmit = function(){
+		taxService.uploadCert($scope.formData.certFile,
+			function(response) {
+				alert(JSON.stringify(response));
+				emailService.sendConfirmationEmail($scope.formData, $scope.orders, $scope.cost);
+			},
+			function(error){
+				alert(JSON.stringify(error));
+			}
+		);
 	}
     
 	// function to process the form
-	$scope.processForm = function() {
-		emailService.sendConfirmationEmail($scope.formData, $scope.orders, $scope.cost);
-	};   
+	$scope.processForm = function(formData) {
+		formData.addressValidationError = undefined;
+
+		var taxCalculated = function(result){
+			formData.calculatingTax = false;
+
+			if(result.data.ResultCode === 'Success'){
+				formData.summary.tax = parseInt(result.data.TotalTax);
+
+				formData.summary.totalWithTax = formData.summary.total + formData.summary.tax;
+			}
+			else{
+				formData.addressValidationError = result.data.Messages;
+			}
+		};
+
+		var taxCalculatedError = function(result){
+			formData.calculatingTax = false;
+			alert(JSON.stringify(result));
+		};
+
+		var addressValidatedResult = function(result){
+			if(result.data.ResultCode === 'Success'){
+				formData.calculatingTax = true;
+				$state.go('form.customer.tax');
+				//TODO if exempt skip taxes
+				taxService.calculateTax(formData.billing.address, formData.summary.total, taxCalculated, taxCalculatedError);
+
+			}
+			else{
+				formData.addressValidationError = result.data.Messages;
+			}
+
+		};
+
+		var addressValidatedError = function(result){
+			alert(result);
+		};
+
+		taxService.validateAddress(formData.billing.address, addressValidatedResult, addressValidatedError);
+	};
 
 
 	$scope.$watch('orders.summative.orders', function(newValue, oldValue){
@@ -353,15 +410,15 @@ angular.module('myApp')// our controller for the form
 		$scope.updatePeriodicOrders();
 	}, true);
 	//update sales tax when billing zip changes
-	$scope.$watch('[formData.billing.address.zip, formData.billing.taxExempt]', function(newValue, oldValue){
-		if($scope.customerForm.zip.$valid){
-			taxService.getTaxRateByZip('f9enTVGueFK3ekajO7leE5+9Mc5hnM1t3dJ0jLpjTLJW+9J/F9TL+k5CVRQZq3cD3DXcm5/inU0eRWLDGCrpJQ==', 'usa', $scope.formData.billing.address.zip, function(res){
-				$scope.formData.summary.taxRate = res.data.totalRate;
-				$scope.updateTotals();
-			},
-			function(res){
-				alert(JSON.stringify(res)); //TODO: deal with taxes
-			})
-		}
-	}, true);
+	// $scope.$watch('[formData.billing.address.zip, formData.billing.taxExempt]', function(newValue, oldValue){
+	// 	if($scope.customerForm.zip.$valid){
+	// 		taxService.getTaxRateByZip('f9enTVGueFK3ekajO7leE5+9Mc5hnM1t3dJ0jLpjTLJW+9J/F9TL+k5CVRQZq3cD3DXcm5/inU0eRWLDGCrpJQ==', 'usa', $scope.formData.billing.address.zip, function(res){
+	// 			$scope.formData.summary.taxRate = res.data.totalRate;
+	// 			$scope.updateTotals();
+	// 		},
+	// 		function(res){
+	// 			alert(JSON.stringify(res)); //TODO: deal with taxes
+	// 		})
+	// 	}
+	// }, true);
 }]);

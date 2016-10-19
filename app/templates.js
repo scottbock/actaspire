@@ -24,9 +24,14 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "  <p>\n" +
     "    Pricing valid through {{cost.pricing.validThrough}}\n" +
     "  </p>\n" +
+    "\t<p>\n" +
+    "\t\t<button type=\"button\" class=\"pull-right btn btn-default btn-xs\" aria-label=\"Remove\" ng-click=\"saveDraft()\">\n" +
+    "\t\t\tSave Draft\n" +
+    "\t\t</button>\n" +
+    "\t</p>\n" +
     "</div>\n" +
     "<!-- use ng-submit to catch the form submission and use our Angular function -->\n" +
-    "<form id=\"customerForm\" name=\"customerForm\" ng-submit=\"processForm()\"> \n" +
+    "<form id=\"customerForm\" name=\"customerForm\" ng-submit=\"processForm(formData)\">\n" +
     "\n" +
     "\t<h3>1. Contact Information</h3>\n" +
     "\n" +
@@ -127,6 +132,20 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t    <div class=\"col-sm-12\">\n" +
     "\t\t\t\t    <p>If you are tax exempt, please email a copy of your exemption certificate to <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a></p>\n" +
     "\t\t\t    </div>\n" +
+    "\t\t\t</div>\n" +
+    "\t\t\t<div class=\"row\">\n" +
+    "\t\t\t\t<div class=\"col-sm-2 form-group\">\n" +
+    "\t\t\t\t\t<label class=\"checkbox-inline\">\n" +
+    "\t\t\t\t\t\t<input type=\"checkbox\" ng-model=\"formData.taxExempt\">\n" +
+    "\t\t\t\t\t\tTax Exempt\n" +
+    "\t\t\t\t\t</label>\n" +
+    "\t\t\t\t</div>\n" +
+    "\t\t\t</div>\n" +
+    "\t\t\t<div class=\"row\">\n" +
+    "\t\t\t\t<div class=\"col-sm-4 form-group required\">\n" +
+    "\t\t\t\t\t<label for=\"certFile\" class=\"control-label\">Exemption Certificate</label>\n" +
+    "\t\t\t\t\t<input type = \"file\" class=\"form-control\" file-model=\"formData.certFile\" required=\"formData.taxExempt\"/>\n" +
+    "\t\t\t\t</div>\n" +
     "\t\t\t</div>\n" +
     "\t        <div class=\"row\">\n" +
     "\t            <div class=\"form-group col-sm-4 required\">\n" +
@@ -515,7 +534,19 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t<div class=\"row\">\n" +
     "\t<p>*Please note - all orders shall be subject to a cancellation fee.</p>\n" +
     "\t</div>\n" +
-    "\t\n" +
+    "\n" +
+    "\t<div class=\"row\" ng-show=\"formData.addressValidationError\">\n" +
+    "\t\t<div class=\"col-sm-12 alert alert-danger\" role=\"alert\">\n" +
+    "\t\t\t<h4><span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span><span class=\"sr-only\">Error:</span>Invalid Billing Address</h4>\n" +
+    "\t\t\t<div ng-repeat=\"error in formData.addressValidationError\">\n" +
+    "\t\t\t\t{{error.Summary}} - {{error.Details}}\n" +
+    "\t\t\t</div>\n" +
+    "\t\t\t<div>\n" +
+    "\t\t\t\t** Please correct billing address and try again.\n" +
+    "\t\t\t</div>\n" +
+    "\t\t</div>\n" +
+    "\t</div>\n" +
+    "\n" +
     "\t<div class=\"row\">\n" +
     "\t    <div class=\"col-sm-4\">\n" +
     "\t  \t\t<button type=\"submit\" class=\"btn btn-primary\" ng-disabled=\"customerForm.$invalid || customerForm.$pending || !formData.acceptTerms || !formData.summary.total\">Submit Order</button>\n" +
@@ -1021,6 +1052,34 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\n" +
     "</body>\n" +
     "</html>"
+  );
+
+
+  $templateCache.put('app/tax.html',
+    " <div id=\"form-container\">\n" +
+    "     <h2>Order Summary</h2>\n" +
+    "\n" +
+    "     <div ng-show=\"formData.calculatingTax\">Calculating tax. Please wait while we finish.<img src=\"images/ring.gif\" /></div>\n" +
+    "     <div ng-show=\"!formData.calculatingTax\">\n" +
+    "         <p>Order Total : {{formData.summary.total | currency}}</p>\n" +
+    "         <p>Tax : {{formData.summary.tax | currency}}</p>\n" +
+    "         <p>Total with Tax : {{formData.summary.totalWithTax | currency}}</p>\n" +
+    "         <div class=\"row\">\n" +
+    "             <div class=\"col-sm-2\">\n" +
+    "                 <button type=\"button\" class=\"btn btn-default btn-warning\" aria-label=\"Remove\" ng-click=\"goBackToTheForm()\">\n" +
+    "                     <span class=\"glyphicon glyphicon-arrow-left\"></span>\n" +
+    "                     Make Changes\n" +
+    "                 </button>\n" +
+    "             </div>\n" +
+    "             <div class=\"col-sm-2\">\n" +
+    "                 <button type=\"button\" class=\"btn btn-default btn-primary\" aria-label=\"Remove\" ng-click=\"finalizeAndSubmit()\">\n" +
+    "                     <span class=\"glyphicon glyphicon-ok\"></span>\n" +
+    "                     Finish and Submit Order\n" +
+    "                 </button>\n" +
+    "             </div>\n" +
+    "         </div>\n" +
+    "     </div>\n" +
+    "</div>"
   );
 
 }]);

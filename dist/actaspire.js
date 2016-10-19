@@ -45197,6 +45197,11 @@ angular.module('myApp', [
             controller: 'formController'
 		})
 
+		.state('form.customer.tax', {
+			url: '/tax',
+			templateUrl: 'app/tax.html'
+		})
+
 		.state('form.customer.confirmation', {
 			url: '/confirmation',
 			templateUrl: 'app/confirmation.html'
@@ -46059,6 +46064,20 @@ angular.module('myApp', [
 		'sendTrainingConfirmationEmail': sendTrainingConfirmationEmail,
 		'sendIsrConfirmationEmail': sendIsrConfirmationEmail
 	}
+}]);;angular.module('myApp').directive('fileModel', ['$parse', function ($parse) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            var model = $parse(attrs.fileModel);
+            var modelSetter = model.assign;
+
+            element.bind('change', function(){
+                scope.$apply(function(){
+                    modelSetter(scope, element[0].files[0]);
+                });
+            });
+        }
+    };
 }]);;angular.module('myApp')// our controller for the form
 // =============================================================================
 .controller('formController', ['$scope', '$state', '$http', '$cookies', 'CostService', 'EmailService', 'TaxService', 'schoolYearFilter', function($scope, $state, $http, $cookies, costService, emailService, taxService, schoolYearFilter) {
@@ -46079,13 +46098,17 @@ angular.module('myApp', [
 		'schoolYear' : ''
 	};
 
-	/**
+
 	//Save Draft
 	$scope.saveDraft = function(){
 		localStorage.setItem('formData', angular.toJson($scope.formData));
 		localStorage.setItem('summative', angular.toJson($scope.orders.summative));
 		localStorage.setItem('periodic', angular.toJson($scope.orders.periodic));
-	};**/
+	};
+
+	$scope.testValidateAddress = function(){
+		taxService.validateAddress($scope.formData.billing.address, function(){alert('whatever');});
+	}
 
 	$scope.printPage = function(){
 		window.print();
@@ -46112,7 +46135,7 @@ angular.module('myApp', [
 		}
 	}
 
-/*	//Load saved draft if available
+	//Load saved draft if available
 	var cookieFormData = localStorage.getItem('formData');
 	if(cookieFormData){
 		$scope.formData = angular.fromJson(cookieFormData);
@@ -46126,7 +46149,7 @@ angular.module('myApp', [
 	var periodicData = localStorage.getItem('periodic');
 	if(periodicData){
 		$scope.orders.periodic = angular.fromJson(periodicData);
-	}*/
+	}
 
 	$scope.updateTotals = function(){	
 		$scope.formData.summary.total = 0.0;
@@ -46140,15 +46163,14 @@ angular.module('myApp', [
 		angular.forEach($scope.orders.periodic.orders, function(order, key) {
 			$scope.formData.summary.total += order.balance;
 		});
-
-		$scope.formData.summary.tax = 0.0;
-
-		if($scope.formData.billing && !$scope.formData.billing.taxExempt){
-			if($scope.formData.summary.taxRate){
-				$scope.formData.summary.tax = $scope.formData.summary.taxRate / 100.0 * $scope.formData.summary.total;
-				$scope.formData.summary.totalWithTax = $scope.formData.summary.tax + $scope.formData.summary.total;
-			}
-		}
+		// $scope.formData.summary.tax = 0.0;
+        //
+		// if($scope.formData.billing && !$scope.formData.billing.taxExempt){
+		// 	if($scope.formData.summary.taxRate){
+		// 		$scope.formData.summary.tax = $scope.formData.summary.taxRate / 100.0 * $scope.formData.summary.total;
+		// 		$scope.formData.summary.totalWithTax = $scope.formData.summary.tax + $scope.formData.summary.total;
+		// 	}
+		// }
 	};
 
 	var getCost = function(administrationWindow, calendarYear, pricing){
@@ -46390,12 +46412,66 @@ angular.module('myApp', [
 		$scope.formData.summary.discount.special.code = code.toUpperCase();
 
 		$scope.updatePeriodicOrders();
+	};
+
+	$scope.goBackToTheForm = function(){
+		$state.go('form.customer');
+	};
+
+	$scope.finalizeAndSubmit = function(){
+		taxService.uploadCert($scope.formData.certFile,
+			function(response) {
+				alert(JSON.stringify(response));
+				emailService.sendConfirmationEmail($scope.formData, $scope.orders, $scope.cost);
+			},
+			function(error){
+				alert(JSON.stringify(error));
+			}
+		);
 	}
     
 	// function to process the form
-	$scope.processForm = function() {
-		emailService.sendConfirmationEmail($scope.formData, $scope.orders, $scope.cost);
-	};   
+	$scope.processForm = function(formData) {
+		formData.addressValidationError = undefined;
+
+		var taxCalculated = function(result){
+			formData.calculatingTax = false;
+
+			if(result.data.ResultCode === 'Success'){
+				formData.summary.tax = parseInt(result.data.TotalTax);
+
+				formData.summary.totalWithTax = formData.summary.total + formData.summary.tax;
+			}
+			else{
+				formData.addressValidationError = result.data.Messages;
+			}
+		};
+
+		var taxCalculatedError = function(result){
+			formData.calculatingTax = false;
+			alert(JSON.stringify(result));
+		};
+
+		var addressValidatedResult = function(result){
+			if(result.data.ResultCode === 'Success'){
+				formData.calculatingTax = true;
+				$state.go('form.customer.tax');
+				//TODO if exempt skip taxes
+				taxService.calculateTax(formData.billing.address, formData.summary.total, taxCalculated, taxCalculatedError);
+
+			}
+			else{
+				formData.addressValidationError = result.data.Messages;
+			}
+
+		};
+
+		var addressValidatedError = function(result){
+			alert(result);
+		};
+
+		taxService.validateAddress(formData.billing.address, addressValidatedResult, addressValidatedError);
+	};
 
 
 	$scope.$watch('orders.summative.orders', function(newValue, oldValue){
@@ -46414,17 +46490,17 @@ angular.module('myApp', [
 		$scope.updatePeriodicOrders();
 	}, true);
 	//update sales tax when billing zip changes
-	$scope.$watch('[formData.billing.address.zip, formData.billing.taxExempt]', function(newValue, oldValue){
-		if($scope.customerForm.zip.$valid){
-			taxService.getTaxRateByZip('f9enTVGueFK3ekajO7leE5+9Mc5hnM1t3dJ0jLpjTLJW+9J/F9TL+k5CVRQZq3cD3DXcm5/inU0eRWLDGCrpJQ==', 'usa', $scope.formData.billing.address.zip, function(res){
-				$scope.formData.summary.taxRate = res.data.totalRate;
-				$scope.updateTotals();
-			},
-			function(res){
-				alert(JSON.stringify(res)); //TODO: deal with taxes
-			})
-		}
-	}, true);
+	// $scope.$watch('[formData.billing.address.zip, formData.billing.taxExempt]', function(newValue, oldValue){
+	// 	if($scope.customerForm.zip.$valid){
+	// 		taxService.getTaxRateByZip('f9enTVGueFK3ekajO7leE5+9Mc5hnM1t3dJ0jLpjTLJW+9J/F9TL+k5CVRQZq3cD3DXcm5/inU0eRWLDGCrpJQ==', 'usa', $scope.formData.billing.address.zip, function(res){
+	// 			$scope.formData.summary.taxRate = res.data.totalRate;
+	// 			$scope.updateTotals();
+	// 		},
+	// 		function(res){
+	// 			alert(JSON.stringify(res)); //TODO: deal with taxes
+	// 		})
+	// 	}
+	// }, true);
 }]);;angular.module('myApp')
 .controller('isrController', ['$scope', '$state', '$http', '$cookies', 'IsrCostService', 'EmailService', 'schoolYearFilter', function($scope, $state, $http, $cookies, isrCostService, emailService, schoolYearFilter) {
 	$scope.cost = isrCostService.cost;
@@ -46513,14 +46589,86 @@ angular.module('myApp', [
 		$http.get(requri).then(callback);
 	}
 
-	var uploadCert = function(file, callback){
-		var requri = "http://api.certcapture.com/v2/certificates";
-		$htpp.post(requri, file).then(callback);
+	var uploadCert = function(file, callback, errorCallback) {
+		// var requri = "http://api.certcapture.com/v2/certificates";
+
+		var requri = "../../wp-json/wp/v2/uploadCert/";
+
+		// var requri = 'http://localhost:8888/wordpress/wp-content/plugins/act-aspire-order-form/upload_cert.php';
+
+		var fd = new FormData();
+		fd.append('file', file);
+
+		$http.post(requri, fd, {
+			transformRequest: angular.identity,
+			headers: {'Content-Type': undefined}
+		}).then(callback, errorCallback);
+
+	}
+
+	var calculateTax = function(billingAddress, totalAmount, callback, errorCallback){
+
+		var uri = '../../wp-json/wp/v2/calculateTax/';
+
+		var data = {
+			"Commit": "false",
+			"CustomerCode": "CustomerCode",
+			"Addresses": [
+				{
+					"AddressCode": "01",
+					"Line1": billingAddress.line1,
+					"Line2": billingAddress.line2,
+					"City": billingAddress.city,
+					"Region": billingAddress.state,
+					"Country": "US",
+					"PostalCode": billingAddress.zip
+				}
+			],
+			"Lines": [
+				{
+					"LineNo": "1",
+					"DestinationCode": "01",
+					"Amount": totalAmount
+				}
+			]
+		};
+
+		var req = {
+			method: 'POST',
+			url: uri,
+			data: data
+		}
+
+		$http(req).then(callback, errorCallback);
+	}
+
+
+	var validateAddress= function(billingAddress, callback, errorCallback){
+
+		var uri = '../../wp-json/wp/v2/validateAddress';
+
+		uri += '?Line1=' + encodeURIComponent(billingAddress.line1);
+		if(billingAddress.line2) {
+			uri += '&Line2=' + encodeURIComponent(billingAddress.line2);
+		}
+		uri += '&City=' + encodeURIComponent(billingAddress.city);
+		uri += '&Region=' + encodeURIComponent(billingAddress.state);
+		uri += '&PostalCode=' + encodeURIComponent(billingAddress.zip);
+
+		var req = {
+			method: 'GET',
+			url: uri
+		}
+
+		$http(req).then(callback, errorCallback);
+
 	}
 
 	return {
 		'getTaxRateByZip':getTaxRateByZip,
-		'uploadCert':uploadCert
+		'uploadCert':uploadCert,
+		'validateAddress':validateAddress,
+		'calculateTax': calculateTax
 	}
 }]);;angular.module('myApp').run(['$templateCache', function($templateCache) {
   'use strict';
@@ -46548,9 +46696,14 @@ angular.module('myApp', [
     "  <p>\n" +
     "    Pricing valid through {{cost.pricing.validThrough}}\n" +
     "  </p>\n" +
+    "\t<p>\n" +
+    "\t\t<button type=\"button\" class=\"pull-right btn btn-default btn-xs\" aria-label=\"Remove\" ng-click=\"saveDraft()\">\n" +
+    "\t\t\tSave Draft\n" +
+    "\t\t</button>\n" +
+    "\t</p>\n" +
     "</div>\n" +
     "<!-- use ng-submit to catch the form submission and use our Angular function -->\n" +
-    "<form id=\"customerForm\" name=\"customerForm\" ng-submit=\"processForm()\"> \n" +
+    "<form id=\"customerForm\" name=\"customerForm\" ng-submit=\"processForm(formData)\">\n" +
     "\n" +
     "\t<h3>1. Contact Information</h3>\n" +
     "\n" +
@@ -46651,6 +46804,20 @@ angular.module('myApp', [
     "\t\t\t    <div class=\"col-sm-12\">\n" +
     "\t\t\t\t    <p>If you are tax exempt, please email a copy of your exemption certificate to <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a></p>\n" +
     "\t\t\t    </div>\n" +
+    "\t\t\t</div>\n" +
+    "\t\t\t<div class=\"row\">\n" +
+    "\t\t\t\t<div class=\"col-sm-2 form-group\">\n" +
+    "\t\t\t\t\t<label class=\"checkbox-inline\">\n" +
+    "\t\t\t\t\t\t<input type=\"checkbox\" ng-model=\"formData.taxExempt\">\n" +
+    "\t\t\t\t\t\tTax Exempt\n" +
+    "\t\t\t\t\t</label>\n" +
+    "\t\t\t\t</div>\n" +
+    "\t\t\t</div>\n" +
+    "\t\t\t<div class=\"row\">\n" +
+    "\t\t\t\t<div class=\"col-sm-4 form-group required\">\n" +
+    "\t\t\t\t\t<label for=\"certFile\" class=\"control-label\">Exemption Certificate</label>\n" +
+    "\t\t\t\t\t<input type = \"file\" class=\"form-control\" file-model=\"formData.certFile\" required=\"formData.taxExempt\"/>\n" +
+    "\t\t\t\t</div>\n" +
     "\t\t\t</div>\n" +
     "\t        <div class=\"row\">\n" +
     "\t            <div class=\"form-group col-sm-4 required\">\n" +
@@ -47039,7 +47206,19 @@ angular.module('myApp', [
     "\t<div class=\"row\">\n" +
     "\t<p>*Please note - all orders shall be subject to a cancellation fee.</p>\n" +
     "\t</div>\n" +
-    "\t\n" +
+    "\n" +
+    "\t<div class=\"row\" ng-show=\"formData.addressValidationError\">\n" +
+    "\t\t<div class=\"col-sm-12 alert alert-danger\" role=\"alert\">\n" +
+    "\t\t\t<h4><span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span><span class=\"sr-only\">Error:</span>Invalid Billing Address</h4>\n" +
+    "\t\t\t<div ng-repeat=\"error in formData.addressValidationError\">\n" +
+    "\t\t\t\t{{error.Summary}} - {{error.Details}}\n" +
+    "\t\t\t</div>\n" +
+    "\t\t\t<div>\n" +
+    "\t\t\t\t** Please correct billing address and try again.\n" +
+    "\t\t\t</div>\n" +
+    "\t\t</div>\n" +
+    "\t</div>\n" +
+    "\n" +
     "\t<div class=\"row\">\n" +
     "\t    <div class=\"col-sm-4\">\n" +
     "\t  \t\t<button type=\"submit\" class=\"btn btn-primary\" ng-disabled=\"customerForm.$invalid || customerForm.$pending || !formData.acceptTerms || !formData.summary.total\">Submit Order</button>\n" +
@@ -47545,6 +47724,34 @@ angular.module('myApp', [
     "\n" +
     "</body>\n" +
     "</html>"
+  );
+
+
+  $templateCache.put('app/tax.html',
+    " <div id=\"form-container\">\n" +
+    "     <h2>Order Summary</h2>\n" +
+    "\n" +
+    "     <div ng-show=\"formData.calculatingTax\">Calculating tax. Please wait while we finish.<img src=\"images/ring.gif\" /></div>\n" +
+    "     <div ng-show=\"!formData.calculatingTax\">\n" +
+    "         <p>Order Total : {{formData.summary.total | currency}}</p>\n" +
+    "         <p>Tax : {{formData.summary.tax | currency}}</p>\n" +
+    "         <p>Total with Tax : {{formData.summary.totalWithTax | currency}}</p>\n" +
+    "         <div class=\"row\">\n" +
+    "             <div class=\"col-sm-2\">\n" +
+    "                 <button type=\"button\" class=\"btn btn-default btn-warning\" aria-label=\"Remove\" ng-click=\"goBackToTheForm()\">\n" +
+    "                     <span class=\"glyphicon glyphicon-arrow-left\"></span>\n" +
+    "                     Make Changes\n" +
+    "                 </button>\n" +
+    "             </div>\n" +
+    "             <div class=\"col-sm-2\">\n" +
+    "                 <button type=\"button\" class=\"btn btn-default btn-primary\" aria-label=\"Remove\" ng-click=\"finalizeAndSubmit()\">\n" +
+    "                     <span class=\"glyphicon glyphicon-ok\"></span>\n" +
+    "                     Finish and Submit Order\n" +
+    "                 </button>\n" +
+    "             </div>\n" +
+    "         </div>\n" +
+    "     </div>\n" +
+    "</div>"
   );
 
 }]);

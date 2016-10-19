@@ -10,9 +10,14 @@
   <p>
     Pricing valid through {{cost.pricing.validThrough}}
   </p>
+	<p>
+		<button type="button" class="pull-right btn btn-default btn-xs" aria-label="Remove" ng-click="saveDraft()">
+			Save Draft
+		</button>
+	</p>
 </div>
 <!-- use ng-submit to catch the form submission and use our Angular function -->
-<form id="customerForm" name="customerForm" ng-submit="processForm()"> 
+<form id="customerForm" name="customerForm" ng-submit="processForm(formData)">
 
 	<h3>1. Contact Information</h3>
 
@@ -113,6 +118,20 @@
 			    <div class="col-sm-12">
 				    <p>If you are tax exempt, please email a copy of your exemption certificate to <a href="mailto:Orders@ActAspire.org">Orders@ActAspire.org</a></p>
 			    </div>
+			</div>
+			<div class="row">
+				<div class="col-sm-2 form-group">
+					<label class="checkbox-inline">
+						<input type="checkbox" ng-model="formData.taxExempt">
+						Tax Exempt
+					</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-4 form-group required">
+					<label for="certFile" class="control-label">Exemption Certificate</label>
+					<input type = "file" class="form-control" file-model="formData.certFile" required="formData.taxExempt"/>
+				</div>
 			</div>
 	        <div class="row">
 	            <div class="form-group col-sm-4 required">
@@ -501,7 +520,19 @@
 	<div class="row">
 	<p>*Please note - all orders shall be subject to a cancellation fee.</p>
 	</div>
-	
+
+	<div class="row" ng-show="formData.addressValidationError">
+		<div class="col-sm-12 alert alert-danger" role="alert">
+			<h4><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><span class="sr-only">Error:</span>Invalid Billing Address</h4>
+			<div ng-repeat="error in formData.addressValidationError">
+				{{error.Summary}} - {{error.Details}}
+			</div>
+			<div>
+				** Please correct billing address and try again.
+			</div>
+		</div>
+	</div>
+
 	<div class="row">
 	    <div class="col-sm-4">
 	  		<button type="submit" class="btn btn-primary" ng-disabled="customerForm.$invalid || customerForm.$pending || !formData.acceptTerms || !formData.summary.total">Submit Order</button>
