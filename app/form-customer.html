@@ -182,8 +182,13 @@
 	                <label for="purchaseOrderNumber" class="control-label">Purchase Order #</label>
 	                <input type="text" class="form-control" name="city" ng-model="formData.billing.purchaseOrderNumber">
 	            </div>	        
-	        </div>   
-	    </div>
+	        </div>
+			<div class="row">
+				<div class="col-sm-12">
+					<p>* Providing contact information subscribes users to ACT Aspire communications.</p>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<h3>2. Summative Order Data</h3>
@@ -518,7 +523,7 @@
 	</div>
 
 	<div class="row">
-	<p>*Please note - all orders shall be subject to a cancellation fee.</p>
+	<p>* Please note - all orders shall be subject to a cancellation fee.</p>
 	</div>
 
 	<div class="row" ng-show="formData.addressValidationError">
@@ -541,7 +546,6 @@
 	  		<button type="button" class="btn btn-default" ng-click="printPage()">Print Page</button>
 	    </div>
 	</div>
-
 </form>
 </div>
 <div ui-view></div>
