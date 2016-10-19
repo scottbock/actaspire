@@ -177,8 +177,13 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t                <label for=\"purchaseOrderNumber\" class=\"control-label\">Purchase Order #</label>\n" +
     "\t                <input type=\"text\" class=\"form-control\" name=\"city\" ng-model=\"formData.billing.purchaseOrderNumber\">\n" +
     "\t            </div>\t        \n" +
-    "\t        </div>   \n" +
-    "\t    </div>\n" +
+    "\t        </div>\n" +
+    "\t\t\t<div class=\"row\">\n" +
+    "\t\t\t\t<div class=\"col-sm-12\">\n" +
+    "\t\t\t\t\t<p>* Providing contact information subscribes users to ACT Aspire communications.</p>\n" +
+    "\t\t\t\t</div>\n" +
+    "\t\t\t</div>\n" +
+    "\t\t</div>\n" +
     "\t</div>\n" +
     "\n" +
     "\t<h3>2. Summative Order Data</h3>\n" +
@@ -513,7 +518,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t</div>\n" +
     "\n" +
     "\t<div class=\"row\">\n" +
-    "\t<p>*Please note - all orders shall be subject to a cancellation fee.</p>\n" +
+    "\t<p>* Please note - all orders shall be subject to a cancellation fee.</p>\n" +
     "\t</div>\n" +
     "\t\n" +
     "\t<div class=\"row\">\n" +
