@@ -127,10 +127,10 @@
 					</label>
 				</div>
 			</div>
-			<div class="row">
+			<div class="row" ng-show="formData.taxExempt">
 				<div class="col-sm-4 form-group required">
 					<label for="certFile" class="control-label">Exemption Certificate</label>
-					<input type = "file" class="form-control" file-model="formData.certFile" required="formData.taxExempt"/>
+					<input type = "file" class="form-control" file-model="formData.certFile" ng-required="formData.taxExempt"/>
 				</div>
 			</div>
 	        <div class="row">

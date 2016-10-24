@@ -141,10 +141,10 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t\t</label>\n" +
     "\t\t\t\t</div>\n" +
     "\t\t\t</div>\n" +
-    "\t\t\t<div class=\"row\">\n" +
+    "\t\t\t<div class=\"row\" ng-show=\"formData.taxExempt\">\n" +
     "\t\t\t\t<div class=\"col-sm-4 form-group required\">\n" +
     "\t\t\t\t\t<label for=\"certFile\" class=\"control-label\">Exemption Certificate</label>\n" +
-    "\t\t\t\t\t<input type = \"file\" class=\"form-control\" file-model=\"formData.certFile\" required=\"formData.taxExempt\"/>\n" +
+    "\t\t\t\t\t<input type = \"file\" class=\"form-control\" file-model=\"formData.certFile\" ng-required=\"formData.taxExempt\"/>\n" +
     "\t\t\t\t</div>\n" +
     "\t\t\t</div>\n" +
     "\t        <div class=\"row\">\n" +
