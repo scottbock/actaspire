@@ -128,11 +128,6 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t<div class=\"panel panel-default\">\n" +
     "\t    <div class=\"panel-heading\">Billing Information</div>\n" +
     "\t    <div class=\"panel-body\">\n" +
-    "\t    \t<div class=\"row\">\n" +
-    "\t\t\t    <div class=\"col-sm-12\">\n" +
-    "\t\t\t\t    <p>If you are tax exempt, please email a copy of your exemption certificate to <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a></p>\n" +
-    "\t\t\t    </div>\n" +
-    "\t\t\t</div>\n" +
     "\t\t\t<div class=\"row\">\n" +
     "\t\t\t\t<div class=\"col-sm-2 form-group\">\n" +
     "\t\t\t\t\t<label class=\"checkbox-inline\">\n" +
