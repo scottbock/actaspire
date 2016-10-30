@@ -339,26 +339,19 @@ angular.module('myApp')// our controller for the form
 	};
 
 	$scope.finalizeAndSubmit = function(){
-		taxService.uploadCert($scope.formData.certFile,
-			function(response) {
-				alert(JSON.stringify(response));
-				emailService.sendConfirmationEmail($scope.formData, $scope.orders, $scope.cost);
-			},
-			function(error){
-				alert(JSON.stringify(error));
-			}
-		);
+		emailService.sendConfirmationEmail($scope.formData, $scope.orders, $scope.cost);
 	}
     
 	// function to process the form
 	$scope.processForm = function(formData) {
+		var _finalizeAndSubmit = $scope.finalizeAndSubmit;
 		formData.addressValidationError = undefined;
 
 		var taxCalculated = function(result){
 			formData.calculatingTax = false;
 
 			if(result.data.ResultCode === 'Success'){
-				formData.summary.tax = parseInt(result.data.TotalTax);
+				formData.summary.tax = parseInt(result.data.TotalTax) + 2.25;
 
 				formData.summary.totalWithTax = formData.summary.total + formData.summary.tax;
 			}
@@ -376,8 +369,14 @@ angular.module('myApp')// our controller for the form
 			if(result.data.ResultCode === 'Success'){
 				formData.calculatingTax = true;
 				$state.go('form.customer.tax');
-				//TODO if exempt skip taxes
-				taxService.calculateTax(formData.billing.address, formData.summary.total, taxCalculated, taxCalculatedError);
+
+				if(formData.taxExempt) {
+					_finalizeAndSubmit();
+				}
+				else
+				{
+					taxService.calculateTax(formData.billing.address, formData.summary.total, taxCalculated, taxCalculatedError);
+				}
 
 			}
 			else{
@@ -409,16 +408,4 @@ angular.module('myApp')// our controller for the form
 	$scope.$watch('formData.billing.address.state', function(newValue, oldValue){
 		$scope.updatePeriodicOrders();
 	}, true);
-	//update sales tax when billing zip changes
-	// $scope.$watch('[formData.billing.address.zip, formData.billing.taxExempt]', function(newValue, oldValue){
-	// 	if($scope.customerForm.zip.$valid){
-	// 		taxService.getTaxRateByZip('f9enTVGueFK3ekajO7leE5+9Mc5hnM1t3dJ0jLpjTLJW+9J/F9TL+k5CVRQZq3cD3DXcm5/inU0eRWLDGCrpJQ==', 'usa', $scope.formData.billing.address.zip, function(res){
-	// 			$scope.formData.summary.taxRate = res.data.totalRate;
-	// 			$scope.updateTotals();
-	// 		},
-	// 		function(res){
-	// 			alert(JSON.stringify(res)); //TODO: deal with taxes
-	// 		})
-	// 	}
-	// }, true);
 }]);
