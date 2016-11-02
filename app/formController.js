@@ -351,7 +351,7 @@ angular.module('myApp')// our controller for the form
 			formData.calculatingTax = false;
 
 			if(result.data.ResultCode === 'Success'){
-				formData.summary.tax = parseInt(result.data.TotalTax) + 2.25;
+				formData.summary.tax = parseInt(result.data.TotalTax);
 
 				formData.summary.totalWithTax = formData.summary.total + formData.summary.tax;
 			}
