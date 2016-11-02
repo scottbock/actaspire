@@ -46664,7 +46664,7 @@ angular.module('myApp', [
     "\t\t<div class=\"col-sm-12\">\n" +
     "\t  \t\t<h5>ACT Aspire Summative Test</h5>\n" +
     "\t  \t\t<ul>\n" +
-    "\t\t\t    <li>Is a vertically scaled, standards-based battery of achievement test that are linked to the College and Career Readiness Standard in the subject areas of: English, mathematics, reading, science and writing.</li>\t\t\t\t\n" +
+    "\t\t\t    <li>Is a vertically scaled, standards-based battery of achievement test that are linked to the College and Career Readiness Standard in the subject areas of: English, mathematics, reading, science and writing.</li>\n" +
     "\t\t\t    <li>Designed for Grades 3 - 10 and can be taken Online or in Paper form (paper administration requires an additional fee).</li>\n" +
     "\t\t\t    <li>Can be administered in a Spring test administration window or a Fall test administration window.</li>\n" +
     "\t\t\t    <li>When ordering Summative assessments, the following discounts are available*:\n" +
@@ -46780,7 +46780,7 @@ angular.module('myApp', [
     "\t  \t\t<ul>\n" +
     "\t\t\t    <li>Is a complement to the ACT Aspire Summative test, offered via ACT Aspire’s Online platform.</li>\n" +
     "\t\t\t    <li>Includes access to Classroom quizzes (designed for grades 3 – 8) as well as Interim Assessments (designed for grades 3 – 10)</li>\n" +
-    "\t\t\t    <li>Is a subscription to access a series of interim tests and classroom quizzes in the subject areas of: English, mathematics, reading, science and writing. The subscription is effective from September through June of each school year.</li>\n" +
+    "\t\t\t    <li>Is a subscription to access a series of interim tests and classroom quizzes in the subject areas of: English, mathematics, reading, and science. The subscription is effective from September through June of each school year.</li>\n" +
     "\t\t\t    <li>Can be administered to students throughout the year and provides immediate performance analysis and score reporting.</li>\n" +
     "\t\t\t\t<li>Can be bundled with ACT Aspire Summative test at a per-student discount off of the Summative test (discount will be automatically applied. Refer to Order Summary below).</li>\t\t\t\t\n" +
     "\t\t\t</ul>\n" +
