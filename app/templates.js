@@ -671,7 +671,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t<h4>Important Next Steps:</h4>\n" +
     "\t\t\t<ul>\n" +
     "\t\t\t\t<li>You will be invoiced upon receipt of your order</li>\n" +
-    "\t\t\t\t<li>If you would like to purchase printed reports and/or score labels for future testing adminstrations please call 1-855-733-0400 .</li>\n" +
+    "\t\t\t\t<li>If you would like to purchase printed reports and/or score labels for future testing adminstrations please call 1-855-730-0400 .</li>\n" +
     "\t\t\t</ul>\n" +
     "\t\t</div>\n" +
     "\n" +
