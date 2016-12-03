@@ -4,8 +4,14 @@
      <div ng-show="formData.calculatingTax">Calculating tax. Please wait while we finish.<img src="images/ring.gif" /></div>
      <div ng-show="!formData.calculatingTax">
          <p>Order Total : {{formData.summary.total | currency}}</p>
-         <p>Tax : {{formData.summary.tax | currency}}</p>
+         <span ng-show="formData.summary.exemption">
+             <p>Taxable: {{formData.summary.taxable | currency}}</p>
+             <p>Tax Exempt: {{formData.summary.exemption | currency}}</p>
+         </span>
+         <p>Estimated Sales Tax<sup>*</sup> : {{formData.summary.tax | currency}}</p>
          <p>Total with Tax : {{formData.summary.totalWithTax | currency}}</p>
+         <p>* Final sales tax calculation will be presented on the invoice you receive.</p>
+         <p>* To avoid incurring sales tax please send you Certificate of Sales Tax Exemption to orders@actaspire.org or fax them to (206) 492-2752. Thank you for your purchase of ACT Aspire!</p>
          <div class="row">
              <div class="col-sm-2">
                  <button type="button" class="btn btn-default btn-warning" aria-label="Remove" ng-click="goBackToTheForm()">

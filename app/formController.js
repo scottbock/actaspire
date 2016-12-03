@@ -343,7 +343,7 @@ angular.module('myApp')// our controller for the form
 	}
     
 	// function to process the form
-	$scope.processForm = function(formData) {
+	$scope.processForm = function(formData, orders) {
 		var _finalizeAndSubmit = $scope.finalizeAndSubmit;
 		formData.addressValidationError = undefined;
 
@@ -352,6 +352,9 @@ angular.module('myApp')// our controller for the form
 
 			if(result.data.ResultCode === 'Success'){
 				formData.summary.tax = parseInt(result.data.TotalTax);
+
+				formData.summary.taxable = parseInt(result.data.TotalTaxable)
+				formData.summary.exemption = parseInt(result.data.TotalExemption)
 
 				formData.summary.totalWithTax = formData.summary.total + formData.summary.tax;
 			}
@@ -375,7 +378,7 @@ angular.module('myApp')// our controller for the form
 				}
 				else
 				{
-					taxService.calculateTax(formData.billing.address, formData.summary.total, taxCalculated, taxCalculatedError);
+					taxService.calculateTax(formData.billing.address, orders, taxCalculated, taxCalculatedError);
 				}
 
 			}

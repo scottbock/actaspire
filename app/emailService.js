@@ -138,7 +138,7 @@ angular.module('myApp').factory('EmailService', ['$http', 'currencyFilter', 'dat
 		
 		emailBody += '\n\nTotal: ' + currencyFilter(formData.summary.total);
 		if(formData.summary.tax){
-			emailBody += '\n + ' + currencyFilter(formData.summary.tax) + ' Sales Tax\n' + currencyFilter(formData.summary.totalWithTax);
+			emailBody += '\n + ' + currencyFilter(formData.summary.tax) + ' Estimated Sales Tax * Final sales tax calculation will be presented on the invoice you receive.\n' + currencyFilter(formData.summary.totalWithTax);
 		}
 
 		if(formData.comments){

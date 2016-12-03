@@ -10,14 +10,14 @@
   <p>
     Pricing valid through {{cost.pricing.validThrough}}
   </p>
-	<p>
+	<p ng-show="false">
 		<button type="button" class="pull-right btn btn-default btn-xs" aria-label="Remove" ng-click="saveDraft()">
 			Save Draft
 		</button>
 	</p>
 </div>
 <!-- use ng-submit to catch the form submission and use our Angular function -->
-<form id="customerForm" name="customerForm" ng-submit="processForm(formData)">
+<form id="customerForm" name="customerForm" ng-submit="processForm(formData, orders)">
 
 	<h3>1. Contact Information</h3>
 
