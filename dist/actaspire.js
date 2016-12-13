@@ -45477,14 +45477,14 @@ angular.module('myApp', [
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
-						+ (order.online.total * order.reportsPerStudent) + colDelim
-						+ 'Individual Score Reports 1x' + colDelim
+						+ order.online.total + colDelim
+						+ 'Individual Score Reports ' + order.reportsPerStudent + 'x' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ colDelim
 						+ 'Ancillary Rev Rec Template' + colDelim
 						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
-						+ (order.cost.isr) + colDelim
+						+ (order.cost.isr * order.reportsPerStudent) + colDelim
 						+ ((order.cost.isr) * order.online.total * order.reportsPerStudent) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
 						+ yesNo(order.subjects.Math) + colDelim
@@ -45554,13 +45554,13 @@ angular.module('myApp', [
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
-						+ (order.paper.total * order.reportsPerStudent) + colDelim
+						+ (order.online.total * order.reportsPerStudent) + colDelim
 						+ 'Individual Score Reports 1x' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ colDelim
 						+ 'Ancillary Rev Rec Template' + colDelim
-						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim	
+						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 						+ (order.cost.isr) + colDelim
 						+ ((order.cost.isr) * order.paper.total * order.reportsPerStudent) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
