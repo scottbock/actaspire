@@ -45652,7 +45652,7 @@ angular.module('myApp', [
 	};
 
 	var buildTrainingCsvFile = function(formData, trainingOrders, cost){
-		var fileContent = 'NS Name,Internal ID,Admin,Year,Date,line,School / Customer,Training Description,Length (hours),Mode,Capacity,Preferred Date,Preferred Year,Preferred Time,Price,Quantity,Total,Rev Rec,Start Date,End Date,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2\n';
+		var fileContent = 'NS Name,Internal ID,Admin,Year,Date,line,School / Customer,Training Description,Length (hours),Mode,Capacity,Preferred Date,Preferred Year,Preferred Time,Price,Quantity,Total,Rev Rec,Start Date,End Date,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,Memo 2\n';
 
 		var index = 0;
         angular.forEach(trainingOrders, function(training, key) {
@@ -45670,9 +45670,9 @@ angular.module('myApp', [
 				+ (training.preferredDate.getMonth() + 1) + ' - ' + training.preferredDate.getDate() + colDelim
 				+ training.preferredDate.getFullYear() + colDelim
 				+ training.preferredTime + colDelim
-				+ currencyFilter(training.cost) + colDelim
+				+ training.cost + colDelim
 				+ training.quantity + colDelim
-				+ currencyFilter(training.cost * training.quantity) + colDelim
+				+ (training.cost * training.quantity) + colDelim
 				+ 'Training Rev Rec Template' + colDelim
 				+ dateFilter(training.preferredDate, 'MM/dd/yy') + colDelim
 				+ dateFilter(training.preferredDate, 'MM/dd/yy') + colDelim
@@ -45685,7 +45685,7 @@ angular.module('myApp', [
 					fileContent += formData.billing.address.line2
 				}
 
-				fileContent += rowDelim;
+				fileContent += colDelim + rowDelim;
 
 		});
 
@@ -45693,7 +45693,7 @@ angular.module('myApp', [
 	}
 
 	var buildIsrCsvFile = function(formData, cost){
-		var fileContent = 'NS Name,Internal ID,Grade,Admin,Year,Date,line,School / Customer,Report Description,Price,Quantity,Total,Special Notes,Rev Rec,Rev Rec Date,Name,Job Title,Contact email,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions\n';
+		var fileContent = 'NS Name,Internal ID,Grade,Admin,Year,Date,line,School / Customer,Report Description,Price,Quantity,Total,Special Notes,Rev Rec,Rev Rec Date,Name,Job Title,Contact email,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions,Memo 2\n';
 
 		var index = 0;
         angular.forEach(cost.reportGroups, function(reportGroup, key) {
@@ -45706,9 +45706,9 @@ angular.module('myApp', [
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ reportGroup.name + ' ' + report.number + 'x' + colDelim
-						+ currencyFilter(report.cost) + colDelim
+						+ report.cost + colDelim
 						+ report.amount + colDelim
-						+ currencyFilter(report.cost * report.amount ) + colDelim
+						+ (report.cost * report.amount) + colDelim
 						+ formData.comments + colDelim
 						+ 'Ancillary Rev Rec Template' + colDelim
 						+ revRecDate(cost.currentYear, cost.currentSemester) + colDelim
@@ -45730,8 +45730,7 @@ angular.module('myApp', [
 					fileContent +=	formData.billing.address.city + colDelim
 						+ formData.billing.address.state + colDelim
 						+ formData.billing.address.zip + colDelim
-						+ yesNo(formData.acceptTerms) + rowDelim;
-						// + yesNo(formData.billing.taxExempt) + colDelim;
+						+ yesNo(formData.acceptTerms) + colDelim + rowDelim;
 				}	
 			});
 
