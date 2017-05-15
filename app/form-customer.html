@@ -10,33 +10,38 @@
   <p>
     Pricing valid through {{cost.pricing.validThrough}}
   </p>
+	<p ng-show="false">
+		<button type="button" class="pull-right btn btn-default btn-xs" aria-label="Remove" ng-click="saveDraft()">
+			Save Draft
+		</button>
+	</p>
 </div>
 <!-- use ng-submit to catch the form submission and use our Angular function -->
-<form id="customerForm" name="customerForm" ng-submit="processForm()"> 
+<form id="customerForm" name="customerForm" ng-submit="processForm(formData, orders)">
 
 	<h3>1. Contact Information</h3>
 
 	<div class="row"><div class="col-sm-12"><h4>Date: {{date | date:'yyyy-MM-dd'}}</h4></div></div>
 
 	<div class="row">
-	    <div class="form-group col-sm-3 required">
+	    <div class="form-group col-sm-4 required">
 	        <label for="firstName" class="control-label">First Name</label>
 	        <input type="text" class="form-control" name="firstName" ng-model="formData.customer.firstName" required="required">
 	    </div>
 
-	    <div class="form-group col-sm-3 required">
+	    <div class="form-group col-sm-4 required">
 	        <label for="lastName" class="control-label">Last Name</label>
 	        <input type="text" class="form-control" name="lastName" ng-model="formData.customer.lastName" required="required">
 	    </div>
 
-	    <div class="form-group col-sm-6 required">
+	    <div class="form-group col-sm-4 required">
 	        <label for="organization" class="control-label">School / District / Organization</label>
 	        <input type="text" class="form-control" name="organization" ng-model="formData.customer.organization" required="required">
 	    </div>
 	</div>
 
 	<div class="row">
-	    <div class="form-group col-sm-6 required">
+	    <div class="form-group col-sm-4 required">
 	        <label for="jobTitle" class="control-label">Job Title</label>
 	        <input type="text" class="form-control" name="jobTitle" ng-model="formData.customer.jobTitle" required="required">
 	    </div>
@@ -45,6 +50,12 @@
 	        <label for="email" class="control-label">Email</label>
 	        <input type="email" class="form-control" name="email" ng-model="formData.customer.email" required="required">
 	    </div>
+
+	    <div class="form-group col-sm-4">
+	        <label for="howHeard" class="control-label">Tell Us How You Heard About Us</label>
+	        <select class="form-control" name="howHeard" ng-model="formData.customer.howHeard" ng-options="option for option in cost.howHeardOptions"/>
+	    </div>
+	    
 	</div>
 
 	<div class="row">
@@ -103,10 +114,19 @@
 	<div class="panel panel-default">
 	    <div class="panel-heading">Billing Information</div>
 	    <div class="panel-body">
-	    	<div class="row">
-			    <div class="col-sm-12">
-				    <p>If you are tax exempt, please email a copy of your exemption certificate to <a href="mailto:Orders@ActAspire.org">Orders@ActAspire.org</a></p>
-			    </div>
+			<div class="row">
+				<div class="col-sm-2 form-group">
+					<label class="checkbox-inline">
+						<input type="checkbox" ng-model="formData.taxExempt">
+						Tax Exempt
+					</label>
+				</div>
+			</div>
+			<div class="row" ng-show="formData.taxExempt">
+				<div class="col-sm-4 form-group required">
+					<label for="certFile" class="control-label">PDF Exemption Certificate</label>
+					<input type = "file" class="form-control" file-model="formData.certFile" ng-required="formData.taxExempt" accept=".pdf"/>
+				</div>
 			</div>
 	        <div class="row">
 	            <div class="form-group col-sm-4 required">
@@ -149,7 +169,7 @@
 
 	            <div class="form-group col-sm-4 required">
 	                <label for="zip" class="control-label">Zip</label>
-	                <input type="text" class="form-control" name="zip" ng-model="formData.billing.address.zip" required="required">
+	                <input type="text" class="form-control" name="zip" ng-model="formData.billing.address.zip" required="required" ng-pattern="/^(\d{5}-\d{4}|\d{5})$/">
 	            </div>
 	        </div> 
 	        <div class="row">
@@ -157,8 +177,13 @@
 	                <label for="purchaseOrderNumber" class="control-label">Purchase Order #</label>
 	                <input type="text" class="form-control" name="city" ng-model="formData.billing.purchaseOrderNumber">
 	            </div>	        
-	        </div>   
-	    </div>
+	        </div>
+			<div class="row">
+				<div class="col-sm-12">
+					<p>* Providing contact information subscribes users to ACT Aspire communications.</p>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<h3>2. Summative Order Data</h3>
@@ -166,7 +191,7 @@
 		<div class="col-sm-12">
 	  		<h5>ACT Aspire Summative Test</h5>
 	  		<ul>
-			    <li>Is a vertically scaled, standards-based battery of achievement test that are linked to the College and Career Readiness Standard in the subject areas of: English, mathematics, reading, science and writing.</li>				
+			    <li>Is a vertically scaled, standards-based battery of achievement test that are linked to the College and Career Readiness Standard in the subject areas of: English, mathematics, reading, science and writing.</li>
 			    <li>Designed for Grades 3 - 10 and can be taken Online or in Paper form (paper administration requires an additional fee).</li>
 			    <li>Can be administered in a Spring test administration window or a Fall test administration window.</li>
 			    <li>When ordering Summative assessments, the following discounts are available*:
@@ -282,7 +307,7 @@
 	  		<ul>
 			    <li>Is a complement to the ACT Aspire Summative test, offered via ACT Aspire’s Online platform.</li>
 			    <li>Includes access to Classroom quizzes (designed for grades 3 – 8) as well as Interim Assessments (designed for grades 3 – 10)</li>
-			    <li>Is a subscription to access a series of interim tests and classroom quizzes in the subject areas of: English, mathematics, reading, science and writing. The subscription is effective from September through June of each school year.</li>
+			    <li>Is a subscription to access a series of interim tests and classroom quizzes in the subject areas of: English, mathematics, reading, and science. The subscription is effective from September through June of each school year.</li>
 			    <li>Can be administered to students throughout the year and provides immediate performance analysis and score reporting.</li>
 				<li>Can be bundled with ACT Aspire Summative test at a per-student discount off of the Summative test (discount will be automatically applied. Refer to Order Summary below).</li>				
 			</ul>
@@ -398,7 +423,7 @@
 						<span ng-show="order.online.totalDiscountPerStudent">
 							<div ng-show="order.online.discounts.volume">{{order.online.discounts.volume | currency}} (Volume)</div>
 							<div ng-show="order.online.discounts.multiGrade">{{order.online.discounts.multiGrade | currency}} (Multi-Grade)</div>
-							<div ng-show="order.online.discounts.periodic">{{order.online.discounts.periodic | currency}} ({{order.online.periodicNumberApplied }} Periodic @ {{cost.discounts.periodic.discountPer | currency}})</div>
+							<div ng-show="order.online.discounts.periodic">{{order.online.discounts.periodic | currency}} ({{order.online.periodicNumberApplied | number : 1 }} Periodic @ {{cost.discounts.periodic.discountPer | currency}})</div>
 							<div ng-show="order.online.discounts.state">{{order.online.discounts.state | currency}} (State)</div>
 							<div ng-show="order.online.discounts.special">{{order.online.discounts.special | currency}} (Special)</div>
 							<hr />
@@ -425,7 +450,7 @@
 						<span ng-show="order.paper.totalDiscountPerStudent">
 							<div ng-show="order.paper.discounts.volume">{{order.paper.discounts.volume | currency}} (Volume)</div>
 							<div ng-show="order.paper.discounts.multiGrade">{{order.paper.discounts.multiGrade | currency}} (Multi-Grade)</div>
-							<div ng-show="order.paper.discounts.periodic">{{order.paper.discounts.periodic | currency}} ({{order.paper.periodicNumberApplied }} Periodic @ {{cost.discounts.periodic.discountPer | currency}})</div>
+							<div ng-show="order.paper.discounts.periodic">{{order.paper.discounts.periodic | currency}} ({{order.paper.periodicNumberApplied | number : 1 }} Periodic @ {{cost.discounts.periodic.discountPer | currency}})</div>
 							<div ng-show="order.paper.discounts.state">{{order.paper.discounts.state | currency}} (State)</div>
 							<div ng-show="order.paper.discounts.special">{{order.paper.discounts.special | currency}} (Special)</div>
 							<hr />
@@ -462,7 +487,7 @@
 				</tr>
 				<tr>
 					<td colspan="7">
-						<h4>Total: {{formData.summary.total | currency}} <span ng-show="formData.summary.tax"> + {{formData.summary.tax | currency}} ({{formData.summary.taxRate}} Sales Tax) = {{formData.summary.totalWithTax | currency}}</span></h4>
+						<h4>Total: {{formData.summary.total | currency}}</h4>
 					</td>
 				</tr>
 			</tbody>
@@ -480,16 +505,34 @@
 		<div class="col-sm-12 form-group">
 		    <label class="checkbox-inline">
 		    	<input type="checkbox" ng-model="formData.acceptTerms">
-		    	I agree to ACT Aspire's <a href="./json/ActAspireTermsAndConditions.pdf" target="_blank">Terms and Conditions</a>
+		    	I agree to ACT Aspire's <a href="./json/ActAspireTermsAndConditions.pdf" target="_blank">Terms and Conditions</a> as updated as of August 8th, 2016.
 		    </label>
 		</div>
 	</div>
+
 	<div class="row" ng-show="formData.acceptTerms">
 	    <div class="form-group col-sm-12 required">
-	        <label for="firstName" class="control-label">Signature:</label>
-	        <input type="text" class="form-control" name="firstName" ng-model="formData.customer.signature" required="required" placeholder="Enter your name as a signature">
+	        <label for="signature" class="control-label">Signature:</label>
+	        <input type="text" class="form-control" name="signature" ng-model="formData.customer.signature" required="required" placeholder="Enter your name as a signature">
 	    </div>
 	</div>
+
+	<div class="row">
+	<p>* Please note - all orders shall be subject to a cancellation fee.</p>
+	</div>
+
+	<div class="row" ng-show="formData.addressValidationError">
+		<div class="col-sm-12 alert alert-danger" role="alert">
+			<h4><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><span class="sr-only">Error:</span>Invalid Billing Address</h4>
+			<div ng-repeat="error in formData.addressValidationError">
+				{{error.Summary}} - {{error.Details}}
+			</div>
+			<div>
+				** Please correct billing address and try again.
+			</div>
+		</div>
+	</div>
+
 	<div class="row">
 	    <div class="col-sm-4">
 	  		<button type="submit" class="btn btn-primary" ng-disabled="customerForm.$invalid || customerForm.$pending || !formData.acceptTerms || !formData.summary.total">Submit Order</button>
@@ -497,9 +540,6 @@
 		<div class="col-sm-4">
 	  		<button type="button" class="btn btn-default" ng-click="printPage()">Print Page</button>
 	    </div>
-	</div>
-	<div class="row">
-	<p>*ACT Aspire reserves the right to disallow a discount at any time if it is determined the orderor did not earn the discount based on actual volume of tested students. </p>
 	</div>
 </form>
 </div>
