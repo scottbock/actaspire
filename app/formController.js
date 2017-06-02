@@ -176,7 +176,12 @@ angular.module('myApp')// our controller for the form
 				{
 					order.cost = $scope.formData.summary.discount.special.pricing.periodic;
 					if($scope.orders.summative.orders != null && $scope.orders.summative.orders.length > 0 && $scope.formData.summary.discount.special.pricing.periodicWithSummative){
-						order.cost = $scope.formData.summary.discount.special.pricing.periodicWithSummative;
+            var summativeBalances = $scope.orders.summative.orders.reduce(function(acc, order) {
+              return acc + order.online.balance + order.paper.balance;
+            }, 0);
+						if(summativeBalances > 0) {
+              order.cost = $scope.formData.summary.discount.special.pricing.periodicWithSummative;
+            }
 					}
 					order.overrideCost = true;
 				}
