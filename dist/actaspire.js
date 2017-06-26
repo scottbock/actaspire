@@ -45482,14 +45482,14 @@ angular.module('myApp', [
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
-						+ (order.online.total * order.reportsPerStudent) + colDelim
-						+ 'Individual Score Reports 1x' + colDelim
+						+ order.online.total + colDelim
+						+ 'Individual Score Reports ' + order.reportsPerStudent + 'x' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ colDelim
 						+ 'Ancillary Rev Rec Template' + colDelim
 						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
-						+ (order.cost.isr) + colDelim
+						+ (order.cost.isr * order.reportsPerStudent) + colDelim
 						+ ((order.cost.isr) * order.online.total * order.reportsPerStudent) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
 						+ yesNo(order.subjects.Math) + colDelim
@@ -45559,14 +45559,14 @@ angular.module('myApp', [
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
-						+ (order.paper.total * order.reportsPerStudent) + colDelim
-						+ 'Individual Score Reports 1x' + colDelim
+						+ order.paper.total + colDelim
+						+ 'Individual Score Reports ' + order.reportsPerStudent + 'x' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ colDelim
 						+ 'Ancillary Rev Rec Template' + colDelim
-						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim	
-						+ (order.cost.isr) + colDelim
+						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
+						+ (order.cost.isr * order.reportsPerStudent) + colDelim
 						+ ((order.cost.isr) * order.paper.total * order.reportsPerStudent) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
 						+ yesNo(order.subjects.Math) + colDelim
@@ -45675,7 +45675,7 @@ angular.module('myApp', [
 	};
 
 	var buildTrainingCsvFile = function(formData, trainingOrders, cost){
-		var fileContent = 'NS Name,Internal ID,Admin,Year,Date,line,School / Customer,Training Description,Length (hours),Mode,Capacity,Preferred Date,Preferred Year,Preferred Time,Price,Quantity,Total,Rev Rec,Start Date,End Date,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2\n';
+		var fileContent = 'NS Name,Internal ID,Admin,Year,Date,line,School / Customer,Training Description,Length (hours),Mode,Capacity,Preferred Date,Preferred Year,Preferred Time,Price,Quantity,Total,Rev Rec,Start Date,End Date,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,Memo 2\n';
 
 		var index = 0;
         angular.forEach(trainingOrders, function(training, key) {
@@ -45693,9 +45693,9 @@ angular.module('myApp', [
 				+ (training.preferredDate.getMonth() + 1) + ' - ' + training.preferredDate.getDate() + colDelim
 				+ training.preferredDate.getFullYear() + colDelim
 				+ training.preferredTime + colDelim
-				+ currencyFilter(training.cost) + colDelim
+				+ training.cost + colDelim
 				+ training.quantity + colDelim
-				+ currencyFilter(training.cost * training.quantity) + colDelim
+				+ (training.cost * training.quantity) + colDelim
 				+ 'Training Rev Rec Template' + colDelim
 				+ dateFilter(training.preferredDate, 'MM/dd/yy') + colDelim
 				+ dateFilter(training.preferredDate, 'MM/dd/yy') + colDelim
@@ -45708,7 +45708,7 @@ angular.module('myApp', [
 					fileContent += formData.billing.address.line2
 				}
 
-				fileContent += rowDelim;
+				fileContent += colDelim + rowDelim;
 
 		});
 
@@ -45716,7 +45716,7 @@ angular.module('myApp', [
 	}
 
 	var buildIsrCsvFile = function(formData, cost){
-		var fileContent = 'NS Name,Internal ID,Grade,Admin,Year,Date,line,School / Customer,Report Description,Price,Quantity,Total,Special Notes,Rev Rec,Rev Rec Date,Name,Job Title,Contact email,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions\n';
+		var fileContent = 'NS Name,Internal ID,Grade,Admin,Year,Date,line,School / Customer,Report Description,Price,Quantity,Total,Special Notes,Rev Rec,Rev Rec Date,Name,Job Title,Contact email,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions,Memo 2\n';
 
 		var index = 0;
         angular.forEach(cost.reportGroups, function(reportGroup, key) {
@@ -45729,9 +45729,9 @@ angular.module('myApp', [
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ reportGroup.name + ' ' + report.number + 'x' + colDelim
-						+ currencyFilter(report.cost) + colDelim
+						+ report.cost + colDelim
 						+ report.amount + colDelim
-						+ currencyFilter(report.cost * report.amount ) + colDelim
+						+ (report.cost * report.amount) + colDelim
 						+ formData.comments + colDelim
 						+ 'Ancillary Rev Rec Template' + colDelim
 						+ revRecDate(cost.currentYear, cost.currentSemester) + colDelim
@@ -45753,8 +45753,7 @@ angular.module('myApp', [
 					fileContent +=	formData.billing.address.city + colDelim
 						+ formData.billing.address.state + colDelim
 						+ formData.billing.address.zip + colDelim
-						+ yesNo(formData.acceptTerms) + rowDelim;
-						// + yesNo(formData.billing.taxExempt) + colDelim;
+						+ yesNo(formData.acceptTerms) + colDelim + rowDelim;
 				}	
 			});
 
@@ -45780,7 +45779,7 @@ angular.module('myApp', [
 			'\n\n3)  If Paper Testing: About 4 weeks before testing you will need to upload your students using the Student Data Upload (SDU) file and assign students to test sessions. ' +
 			' Be mindful that there will be further set-up steps such as: setting up sessions and adding students to sessions to trigger the printing (complete test sessions before Monday 7:00 AM CST to meet the weekly printing deadline, sessions created after this deadline will be produced the following week.) More information will be provided as we near that date.' +
 			'\n\nIf Online Testing: About 3 weeks before testing, you will need to upload your students using the Student Data Upload (SDU) file and assign students to test sessions. More information will be provided as we near that date. Proctor caching is mandatory for online testing. You will need to set up proctor caching and pre-cache content after testing sessions have been set up (approximately 3 weeks prior to testing). Information on proctor caching can be found here in the ACT Aspire Portal Guide. http://actaspire.avocet.pearson.com/actaspire/home#5661' +
-			'\n\nIn the meantime, take a look at the ACT Aspire Landing Page (http://actaspire.pearson.com/allresources.html) to familiarize yourself with the testing process. If you have any questions, please call Bri Silver at 319-248-1422 or email at bri.silver@actaspire.org' +
+			'\n\nIn the meantime, take a look at the ACT Aspire Landing Page (http://actaspire.pearson.com/allresources.html) to familiarize yourself with the testing process. If you have any questions, please call ACT Aspire at 1-855-730-0400.' +
 			'\n\nContact: ' + formData.customer.firstName + ' ' + formData.customer.lastName + ', ' + formData.customer.jobTitle + ', ' + formData.customer.organization +
 			'\nEmail: ' + formData.customer.email;
 		if(formData.customer.groupOrder){
@@ -47410,7 +47409,7 @@ angular.module('myApp', [
     "\t\t\t<h4>Important Next Steps:</h4>\n" +
     "\t\t\t<ul>\n" +
     "\t\t\t\t<li>You will be invoiced upon receipt of your order</li>\n" +
-    "\t\t\t\t<li>If you would like to purchase printed reports and/or score labels for future testing adminstrations please call 1-855-733-0400 .</li>\n" +
+    "\t\t\t\t<li>If you would like to purchase printed reports and/or score labels for future testing adminstrations please call 1-855-730-0400 .</li>\n" +
     "\t\t\t</ul>\n" +
     "\t\t</div>\n" +
     "\n" +
@@ -47668,7 +47667,7 @@ angular.module('myApp', [
 
   $templateCache.put('app/form.html',
     "<div id=\"form-container\">\n" +
-    "  <img src=\"http://www.discoveractaspire.org/wp-content/uploads/2014/07/ACTAspire_WebsiteLogo.png\" alt=\"\" width=\"233\">\n" +
+    "  <img src=\"images/ACT_Aspire_color.jpg\" alt=\"\" width=\"233\">\n" +
     "  <div ui-view></div>\n" +
     "</div>\n" +
     "<div id=\"footer\">\n" +
