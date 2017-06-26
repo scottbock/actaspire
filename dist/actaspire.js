@@ -46623,10 +46623,10 @@ angular.module('myApp', [
 		angular.forEach(orders.summative.orders, function(order, key) {
 			var onlineCost = (order.cost.online - order.online.totalDiscountPerStudent) * order.online.total;
 			var paperCost = (order.cost.paper - order.paper.totalDiscountPerStudent) * order.paper.total;
-			var onlineISR = ((order.cost.isr) * order.online.total * order.reportsPerStudent);
-			var paperISR = ((order.cost.isr) * order.paper.total * order.reportsPerStudent);
-			var onlineLabel = ((order.cost.labels) * order.online.total);
-			var paperLabel = ((order.cost.labels) * order.paper.total);
+			var onlineISR = order.individualReports ? ((order.cost.isr) * order.online.total * order.reportsPerStudent) : 0;
+			var paperISR = order.individualReports ? ((order.cost.isr) * order.paper.total * order.reportsPerStudent) : 0;
+			var onlineLabel = order.scoreLabels ? ((order.cost.labels) * order.online.total) : 0;
+			var paperLabel = order.scoreLabels ? ((order.cost.labels) * order.paper.total) : 0;
 
 			data.Lines.push({
 				"LineNo": lineNo++,
