@@ -929,7 +929,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
 
   $templateCache.put('app/form.html',
     "<div id=\"form-container\">\n" +
-    "  <img src=\"http://www.discoveractaspire.org/wp-content/uploads/2014/07/ACTAspire_WebsiteLogo.png\" alt=\"\" width=\"233\">\n" +
+    "  <img src=\"images/ACT_Aspire_color.jpg\" alt=\"\" width=\"233\">\n" +
     "  <div ui-view></div>\n" +
     "</div>\n" +
     "<div id=\"footer\">\n" +
