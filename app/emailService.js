@@ -199,6 +199,7 @@ angular.module('myApp').factory('EmailService', ['$http', 'currencyFilter', 'dat
 		// var postData = {};
 		fd.append('clientEmail', formData.customer.email);
 		fd.append('orderInbox', cost.ordersInbox);
+    fd.append('taxInbox', cost.taxInbox);
 		fd.append('orderBcc', cost.ordersBcc);
 		fd.append('message', buildEmail(formData, orders));
 		fd.append('csv', CsvService.buildCsvFile(formData, orders, cost));

@@ -10,19 +10,19 @@
          </span>
          <p>Estimated Sales Tax<sup>*</sup> : {{formData.summary.tax | currency}}</p>
          <p>Total with Tax : {{formData.summary.totalWithTax | currency}}</p>
-         <p>* Final sales tax calculation will be presented on the invoice you receive.</p>
-         <p>* To avoid incurring sales tax please send you Certificate of Sales Tax Exemption to orders@actaspire.org or fax them to (206) 492-2752. Thank you for your purchase of ACT Aspire!</p>
+         <p>* Sales tax estimated above will appear on your initial invoice and will be reconciled to the actual amount once final test volumes are known.</p>
+         <p>* If your organization is exempt from sales tax, please ensure you have attached a copy of your current Certificate of Sales Tax Exemption on the previous page.</p>
          <div class="row">
              <div class="col-sm-2">
                  <button type="button" class="btn btn-default btn-warning" aria-label="Remove" ng-click="goBackToTheForm()">
                      <span class="glyphicon glyphicon-arrow-left"></span>
-                     Make Changes
+                     Edit Order
                  </button>
              </div>
              <div class="col-sm-2">
                  <button type="button" class="btn btn-default btn-primary" aria-label="Remove" ng-click="finalizeAndSubmit()">
-                     <span class="glyphicon glyphicon-ok"></span>
                      Finish and Submit Order
+                     <span class="glyphicon glyphicon-arrow-right"></span>
                  </button>
              </div>
          </div>

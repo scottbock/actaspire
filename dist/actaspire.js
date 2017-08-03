@@ -45241,6 +45241,7 @@ angular.module('myApp', [
 		cost.ordersInbox = response.data.ordersInbox;
 		cost.ordersBcc = response.data.ordersBcc;
 		cost.howHeardOptions = response.data.howHeardOptions;
+		cost.taxInbox = response.data.taxInbox;
 	});
 
 	//todo: uncomment this code when ready to include sales tax
@@ -45968,6 +45969,7 @@ angular.module('myApp', [
 		// var postData = {};
 		fd.append('clientEmail', formData.customer.email);
 		fd.append('orderInbox', cost.ordersInbox);
+    fd.append('taxInbox', cost.taxInbox);
 		fd.append('orderBcc', cost.ordersBcc);
 		fd.append('message', buildEmail(formData, orders));
 		fd.append('csv', CsvService.buildCsvFile(formData, orders, cost));
@@ -46842,10 +46844,10 @@ angular.module('myApp', [
     "\t    <div class=\"panel-heading\">Billing Information</div>\n" +
     "\t    <div class=\"panel-body\">\n" +
     "\t\t\t<div class=\"row\">\n" +
-    "\t\t\t\t<div class=\"col-sm-2 form-group\">\n" +
+    "\t\t\t\t<div class=\"col-sm-12 form-group\">\n" +
     "\t\t\t\t\t<label class=\"checkbox-inline\">\n" +
     "\t\t\t\t\t\t<input type=\"checkbox\" ng-model=\"formData.taxExempt\">\n" +
-    "\t\t\t\t\t\tTax Exempt\n" +
+    "\t\t\t\t\t\tClick here if your organization is exempt from sales tax\n" +
     "\t\t\t\t\t</label>\n" +
     "\t\t\t\t</div>\n" +
     "\t\t\t</div>\n" +
@@ -47262,7 +47264,7 @@ angular.module('myApp', [
     "\n" +
     "\t<div class=\"row\">\n" +
     "\t    <div class=\"col-sm-4\">\n" +
-    "\t  \t\t<button type=\"submit\" class=\"btn btn-primary\" ng-disabled=\"customerForm.$invalid || customerForm.$pending || !formData.acceptTerms || !formData.summary.total\">Submit Order</button>\n" +
+    "\t  \t\t<button type=\"submit\" class=\"btn btn-primary\" ng-disabled=\"customerForm.$invalid || customerForm.$pending || !formData.acceptTerms || !formData.summary.total\">Continue to Order Summary</button>\n" +
     "\t    </div>\n" +
     "\t\t<div class=\"col-sm-4\">\n" +
     "\t  \t\t<button type=\"button\" class=\"btn btn-default\" ng-click=\"printPage()\">Print Page</button>\n" +
@@ -47780,19 +47782,19 @@ angular.module('myApp', [
     "         </span>\n" +
     "         <p>Estimated Sales Tax<sup>*</sup> : {{formData.summary.tax | currency}}</p>\n" +
     "         <p>Total with Tax : {{formData.summary.totalWithTax | currency}}</p>\n" +
-    "         <p>* Final sales tax calculation will be presented on the invoice you receive.</p>\n" +
-    "         <p>* To avoid incurring sales tax please send you Certificate of Sales Tax Exemption to orders@actaspire.org or fax them to (206) 492-2752. Thank you for your purchase of ACT Aspire!</p>\n" +
+    "         <p>* Sales tax estimated above will appear on your initial invoice and will be reconciled to the actual amount once final test volumes are known.</p>\n" +
+    "         <p>* If your organization is exempt from sales tax, please ensure you have attached a copy of your current Certificate of Sales Tax Exemption on the previous page.</p>\n" +
     "         <div class=\"row\">\n" +
     "             <div class=\"col-sm-2\">\n" +
     "                 <button type=\"button\" class=\"btn btn-default btn-warning\" aria-label=\"Remove\" ng-click=\"goBackToTheForm()\">\n" +
     "                     <span class=\"glyphicon glyphicon-arrow-left\"></span>\n" +
-    "                     Make Changes\n" +
+    "                     Edit Order\n" +
     "                 </button>\n" +
     "             </div>\n" +
     "             <div class=\"col-sm-2\">\n" +
     "                 <button type=\"button\" class=\"btn btn-default btn-primary\" aria-label=\"Remove\" ng-click=\"finalizeAndSubmit()\">\n" +
-    "                     <span class=\"glyphicon glyphicon-ok\"></span>\n" +
     "                     Finish and Submit Order\n" +
+    "                     <span class=\"glyphicon glyphicon-arrow-right\"></span>\n" +
     "                 </button>\n" +
     "             </div>\n" +
     "         </div>\n" +

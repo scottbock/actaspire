@@ -115,10 +115,10 @@
 	    <div class="panel-heading">Billing Information</div>
 	    <div class="panel-body">
 			<div class="row">
-				<div class="col-sm-2 form-group">
+				<div class="col-sm-12 form-group">
 					<label class="checkbox-inline">
 						<input type="checkbox" ng-model="formData.taxExempt">
-						Tax Exempt
+						Click here if your organization is exempt from sales tax
 					</label>
 				</div>
 			</div>
@@ -535,7 +535,7 @@
 
 	<div class="row">
 	    <div class="col-sm-4">
-	  		<button type="submit" class="btn btn-primary" ng-disabled="customerForm.$invalid || customerForm.$pending || !formData.acceptTerms || !formData.summary.total">Submit Order</button>
+	  		<button type="submit" class="btn btn-primary" ng-disabled="customerForm.$invalid || customerForm.$pending || !formData.acceptTerms || !formData.summary.total">Continue to Order Summary</button>
 	    </div>
 		<div class="col-sm-4">
 	  		<button type="button" class="btn btn-default" ng-click="printPage()">Print Page</button>
