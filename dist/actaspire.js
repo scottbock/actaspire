@@ -46491,7 +46491,7 @@ angular.module('myApp', [
 				}
 				else
 				{
-					taxService.calculateTax(formData.billing.address, orders, taxCalculated, taxCalculatedError);
+					taxService.calculateTax(formData.billing.address, orders, $scope.cost.pricing.taxCode, taxCalculated, taxCalculatedError);
 				}
 
 			}
@@ -46595,7 +46595,7 @@ angular.module('myApp', [
   }
 });;angular.module('myApp').factory('TaxService', ['$http', function ($http) {
 
-	var calculateTax = function(billingAddress, orders, callback, errorCallback){
+	var calculateTax = function(billingAddress, orders, taxCode, callback, errorCallback){
 
 		var uri = '../../wp-json/wp/v2/calculateTax/';
 
@@ -46619,7 +46619,7 @@ angular.module('myApp', [
 		};
 
 		var lineNo = 1;
-		var summativeAndPeriodicTaxCode = "SE020000";
+		var summativeAndPeriodicTaxCode = taxCode;
 
 		angular.forEach(orders.summative.orders, function(order, key) {
 			var onlineCost = (order.cost.online - order.online.totalDiscountPerStudent) * order.online.total;

@@ -383,7 +383,7 @@ angular.module('myApp')// our controller for the form
 				}
 				else
 				{
-					taxService.calculateTax(formData.billing.address, orders, taxCalculated, taxCalculatedError);
+					taxService.calculateTax(formData.billing.address, orders, $scope.cost.pricing.taxCode, taxCalculated, taxCalculatedError);
 				}
 
 			}

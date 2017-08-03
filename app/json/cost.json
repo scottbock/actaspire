@@ -57,7 +57,8 @@
 			"2016":9.0,
 			"2017":9.0
 		},
-		"validThrough":"June 15, 2016"
+		"validThrough":"June 15, 2016",
+		"taxCode":"SE020001"
 	},
 	"discounts":{
 		"volume":[
