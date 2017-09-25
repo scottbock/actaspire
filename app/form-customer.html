@@ -10,14 +10,9 @@
   <p>
     Pricing valid through {{cost.pricing.validThrough}}
   </p>
-	<p ng-show="false">
-		<button type="button" class="pull-right btn btn-default btn-xs" aria-label="Remove" ng-click="saveDraft()">
-			Save Draft
-		</button>
-	</p>
 </div>
 <!-- use ng-submit to catch the form submission and use our Angular function -->
-<form id="customerForm" name="customerForm" ng-submit="processForm(formData, orders)">
+<form id="customerForm" name="customerForm" ng-submit="processForm()"> 
 
 	<h3>1. Contact Information</h3>
 
@@ -114,19 +109,10 @@
 	<div class="panel panel-default">
 	    <div class="panel-heading">Billing Information</div>
 	    <div class="panel-body">
-			<div class="row">
-				<div class="col-sm-12 form-group">
-					<label class="checkbox-inline">
-						<input type="checkbox" ng-model="formData.taxExempt">
-						Click here if your organization is exempt from sales tax
-					</label>
-				</div>
-			</div>
-			<div class="row" ng-show="formData.taxExempt">
-				<div class="col-sm-4 form-group required">
-					<label for="certFile" class="control-label">PDF Exemption Certificate</label>
-					<input type = "file" class="form-control" file-model="formData.certFile" ng-required="formData.taxExempt" accept=".pdf"/>
-				</div>
+	    	<div class="row">
+			    <div class="col-sm-12">
+				    <p>If you are tax exempt, please email a copy of your exemption certificate to <a href="mailto:Orders@ActAspire.org">Orders@ActAspire.org</a></p>
+			    </div>
 			</div>
 	        <div class="row">
 	            <div class="form-group col-sm-4 required">
@@ -169,7 +155,7 @@
 
 	            <div class="form-group col-sm-4 required">
 	                <label for="zip" class="control-label">Zip</label>
-	                <input type="text" class="form-control" name="zip" ng-model="formData.billing.address.zip" required="required" ng-pattern="/^(\d{5}-\d{4}|\d{5})$/">
+	                <input type="text" class="form-control" name="zip" ng-model="formData.billing.address.zip" required="required">
 	            </div>
 	        </div> 
 	        <div class="row">
@@ -487,7 +473,7 @@
 				</tr>
 				<tr>
 					<td colspan="7">
-						<h4>Total: {{formData.summary.total | currency}}</h4>
+						<h4>Total: {{formData.summary.total | currency}} <span ng-show="formData.summary.tax"> + {{formData.summary.tax | currency}} ({{formData.summary.taxRate}} Sales Tax) = {{formData.summary.totalWithTax | currency}}</span></h4>
 					</td>
 				</tr>
 			</tbody>
@@ -520,27 +506,16 @@
 	<div class="row">
 	<p>* Please note - all orders shall be subject to a cancellation fee.</p>
 	</div>
-
-	<div class="row" ng-show="formData.addressValidationError">
-		<div class="col-sm-12 alert alert-danger" role="alert">
-			<h4><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><span class="sr-only">Error:</span>Invalid Billing Address</h4>
-			<div ng-repeat="error in formData.addressValidationError">
-				{{error.Summary}} - {{error.Details}}
-			</div>
-			<div>
-				** Please correct billing address and try again.
-			</div>
-		</div>
-	</div>
-
+	
 	<div class="row">
 	    <div class="col-sm-4">
-	  		<button type="submit" class="btn btn-primary" ng-disabled="customerForm.$invalid || customerForm.$pending || !formData.acceptTerms || !formData.summary.total">Continue to Order Summary</button>
+	  		<button type="submit" class="btn btn-primary" ng-disabled="customerForm.$invalid || customerForm.$pending || !formData.acceptTerms || !formData.summary.total">Submit Order</button>
 	    </div>
 		<div class="col-sm-4">
 	  		<button type="button" class="btn btn-default" ng-click="printPage()">Print Page</button>
 	    </div>
 	</div>
+
 </form>
 </div>
 <div ui-view></div>

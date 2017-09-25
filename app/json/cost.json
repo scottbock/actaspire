@@ -57,8 +57,7 @@
 			"2016":9.0,
 			"2017":9.0
 		},
-		"validThrough":"June 15, 2016",
-		"taxCode":"SE020001"
+		"validThrough":"June 15, 2016"
 	},
 	"discounts":{
 		"volume":[
@@ -122,6 +121,5 @@
 		"Other"
 	],
 	"ordersInbox":"l.scott.bock@gmail.com",
-	"ordersBcc":"scott.bock@objectpartners.com",
-	"taxInbox":"scottbock@yahoo.com"
+	"ordersBcc":"scott.bock@objectpartners.com"
 }
