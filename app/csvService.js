@@ -79,7 +79,7 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 	        	var index = 0;
 				angular.forEach(order.grade, function(grade, gradeKey) {
 					if(grade.online){
-						fileContent += ',,"' + today + colDelim 
+						fileContent += ',,"' + today + colDelim
 							+ (index++) + colDelim
 							+ formData.customer.organization + colDelim
 							+ gradeKey + colDelim
@@ -103,7 +103,7 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 
 				//ISR
 				if(order.individualReports){
-					fileContent += ',,"' + today + colDelim 
+					fileContent += ',,"' + today + colDelim
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
@@ -126,7 +126,7 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 
 				//Score Label
 				if(order.scoreLabels){
-					fileContent += ',,"' + today + colDelim 
+					fileContent += ',,"' + today + colDelim
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
@@ -155,7 +155,7 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 	        	var index = 0;
 				angular.forEach(order.grade, function(grade, gradeKey) {
 					if(grade.paper){
-						fileContent += ',,"' + today + colDelim 
+						fileContent += ',,"' + today + colDelim
 							+ (index++) + colDelim
 							+ formData.customer.organization + colDelim
 							+ gradeKey + colDelim
@@ -180,7 +180,7 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 				
 				//ISR
 				if(order.individualReports){
-					fileContent += ',,"' + today + colDelim 
+					fileContent += ',,"' + today + colDelim
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
@@ -203,7 +203,7 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 
 				//Score Label
 				if(order.scoreLabels){
-					fileContent += ',,"' + today + colDelim 
+					fileContent += ',,"' + today + colDelim
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
@@ -231,7 +231,7 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 	        	var index = 0;
 				angular.forEach(order.grade, function(grade, gradeKey) {
 					if(grade.online){
-						fileContent += ',,"' + today + colDelim 
+						fileContent += ',,"' + today + colDelim
 							+ (index++) + colDelim
 							+ formData.customer.organization + colDelim
 							+ gradeKey + colDelim
@@ -258,7 +258,7 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 		//Late Fee
 		angular.forEach(orders.summative.orders, function(order, key) {
         	if(order.cost.lateFee){
-				fileContent += ',,"' + today + colDelim 
+				fileContent += ',,"' + today + colDelim
 					+ 0 + colDelim
 					+ formData.customer.organization + colDelim
 					+ 0 + colDelim
@@ -277,6 +277,24 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 			}
 		});
 
+		//Tax
+		if(formData.summary.tax){
+			fileContent += ',,"' + today + colDelim
+				+ 0 + colDelim
+				+ formData.customer.organization + colDelim
+				+ 0 + colDelim
+				+ 1 + colDelim
+				+ 'Tax' + colDelim + colDelim + colDelim + colDelim + colDelim + colDelim
+				+ formData.summary.tax + colDelim
+				+ formData.summary.tax + colDelim
+				+ yesNo(true) + colDelim
+				+ yesNo(true) + colDelim
+				+ yesNo(true) + colDelim
+				+ yesNo(true) + colDelim
+				+ yesNo(true) + colDelim
+				+ writeCommonData(formData);
+		}
+
 		return fileContent;
 		
 	};
@@ -287,7 +305,7 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 		var index = 0;
         angular.forEach(trainingOrders, function(training, key) {
 
-			fileContent += ',,"' 
+			fileContent += ',,"'
 				+ cost.currentSemester + colDelim
 				+ cost.currentYear + colDelim	
 				+ today + colDelim 
@@ -329,7 +347,7 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
         angular.forEach(cost.reportGroups, function(reportGroup, key) {
         	angular.forEach(reportGroup.reports, function(report, key) {
         		if(report.amount){
-					fileContent += ',,0,"' 
+					fileContent += ',,0,"'
 						+ cost.currentSemester + colDelim
 						+ cost.currentYear + colDelim
 						+ today + colDelim 

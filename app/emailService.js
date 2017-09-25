@@ -138,7 +138,7 @@ angular.module('myApp').factory('EmailService', ['$http', 'currencyFilter', 'dat
 		
 		emailBody += '\n\nTotal: ' + currencyFilter(formData.summary.total);
 		if(formData.summary.tax){
-			emailBody += ' + ' + currencyFilter(formData.summary.tax) + ' (' + formData.summary.taxRate + ' Sales Tax) = ' + currencyFilter(formData.summary.totalWithTax);
+			emailBody += '\n + ' + currencyFilter(formData.summary.tax) + ' Estimated Sales Tax * Final sales tax calculation will be presented on the invoice you receive.\n' + currencyFilter(formData.summary.totalWithTax);
 		}
 
 		if(formData.comments){
@@ -169,17 +169,42 @@ angular.module('myApp').factory('EmailService', ['$http', 'currencyFilter', 'dat
 			}
 		);
 	}
+
+	var postFormDataConfirmationEmail = function(fd, formData){
+		$http.post(url, fd, {
+			transformRequest: angular.identity,
+			headers: {'Content-Type': undefined}
+		}).then(
+			function(){
+				formData.submitComplete = true;
+				formData.submitSuccess = true;
+				localStorage.removeItem('formData');
+				localStorage.removeItem('summative');
+				localStorage.removeItem('periodic');
+			},
+			function(){
+				formData.submitComplete = true;
+				formData.submitSuccess = false;
+			}
+		);
+	}
+
 	var sendConfirmationEmail = function(formData, orders, cost){
 		$state.go('form.customer.confirmation');
 
-		var postData = {};
-		postData.clientEmail = formData.customer.email;
-		postData.orderInbox = cost.ordersInbox;
-		postData.orderBcc = cost.ordersBcc;
-		postData.message = buildEmail(formData, orders);
-		postData.csv = CsvService.buildCsvFile(formData, orders, cost);
-		postData.csvFileName = formData.customer.lastName + formData.customer.organization + new Date().getTime() + '.csv';
-		postData.csvFileName = postData.csvFileName.replace(/[/\\\\]/g, '');;
+		var fd = new FormData();
+		fd.append('file', formData.certFile);
+
+		var csvFileName = formData.customer.lastName + formData.customer.organization + new Date().getTime() + '.csv';
+		// var postData = {};
+		fd.append('clientEmail', formData.customer.email);
+		fd.append('orderInbox', cost.ordersInbox);
+    fd.append('taxInbox', cost.taxInbox);
+		fd.append('orderBcc', cost.ordersBcc);
+		fd.append('message', buildEmail(formData, orders));
+		fd.append('csv', CsvService.buildCsvFile(formData, orders, cost));
+		fd.append('taxExempt', formData.taxExempt);
+		fd.append('csvFileName', csvFileName.replace(/[/\\\\]/g, ''));
 
 		if(formData.summary.discount.special && formData.summary.discount.special.code && !formData.summary.discount.special.error){
 			$http.get('json/couponUses.json?'+ new Date().getTime(), { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
@@ -192,12 +217,15 @@ angular.module('myApp').factory('EmailService', ['$http', 'currencyFilter', 'dat
 	    		}
 				couponUses[formData.summary.discount.special.code].push(formData.customer.firstName + ' ' + formData.customer.lastName + ', ' + formData.customer.jobTitle + ', ' + formData.customer.organization);
 
-				postData.couponUses = angular.toJson(couponUses, true);
-				postConfirmationEmail(postData, formData);
+				fd.append('couponUses', angular.toJson(couponUses, true));
+				// postConfirmationEmail(postData, formData);
+
+				postFormDataConfirmationEmail(fd, formData);
 			});
 		}
 		else{
-			postConfirmationEmail(postData, formData);
+			// postConfirmationEmail(postData, formData);
+			postFormDataConfirmationEmail(fd, formData);
 		}
 	};
 

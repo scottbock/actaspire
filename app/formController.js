@@ -1,6 +1,6 @@
 angular.module('myApp')// our controller for the form
 // =============================================================================
-.controller('formController', ['$scope', '$state', '$http', '$cookies', 'CostService', 'EmailService', 'schoolYearFilter', function($scope, $state, $http, $cookies, costService, emailService, schoolYearFilter) {
+.controller('formController', ['$scope', '$state', '$http', '$cookies', 'CostService', 'EmailService', 'TaxService', 'schoolYearFilter', function($scope, $state, $http, $cookies, costService, emailService, taxService, schoolYearFilter) {
 
 	$http.get('json/states.json').success(function(data) { 
     	$scope.states = data;
@@ -18,13 +18,17 @@ angular.module('myApp')// our controller for the form
 		'schoolYear' : ''
 	};
 
-	/**
+
 	//Save Draft
 	$scope.saveDraft = function(){
 		localStorage.setItem('formData', angular.toJson($scope.formData));
 		localStorage.setItem('summative', angular.toJson($scope.orders.summative));
 		localStorage.setItem('periodic', angular.toJson($scope.orders.periodic));
-	};**/
+	};
+
+	$scope.testValidateAddress = function(){
+		taxService.validateAddress($scope.formData.billing.address, function(){alert('whatever');});
+	}
 
 	$scope.printPage = function(){
 		window.print();
@@ -38,7 +42,8 @@ angular.module('myApp')// our controller for the form
 	$scope.formData = {
 		customer: {},
 		summary:{
-			discount:{}
+			discount:{},
+			taxRate:0.0
 		}
 	};
 	$scope.orders = {
@@ -50,7 +55,7 @@ angular.module('myApp')// our controller for the form
 		}
 	}
 
-/*	//Load saved draft if available
+	//Load saved draft if available
 	var cookieFormData = localStorage.getItem('formData');
 	if(cookieFormData){
 		$scope.formData = angular.fromJson(cookieFormData);
@@ -64,7 +69,7 @@ angular.module('myApp')// our controller for the form
 	var periodicData = localStorage.getItem('periodic');
 	if(periodicData){
 		$scope.orders.periodic = angular.fromJson(periodicData);
-	}*/
+	}
 
 	$scope.updateTotals = function(){	
 		$scope.formData.summary.total = 0.0;
@@ -78,18 +83,14 @@ angular.module('myApp')// our controller for the form
 		angular.forEach($scope.orders.periodic.orders, function(order, key) {
 			$scope.formData.summary.total += order.balance;
 		});
-
-		$scope.formData.summary.tax = 0.0;
-
-		//TODO: Uncomment this code when ready to include sales tax
-		/*if($scope.formData.billing && !$scope.formData.billing.taxExempt && $scope.cost.salesTax){
-			var taxRate = $scope.cost.salesTax[$scope.formData.billing.address.zip];
-			if(taxRate){
-				$scope.formData.summary.taxRate = taxRate;
-				$scope.formData.summary.tax = taxRate * $scope.formData.summary.total;
-				$scope.formData.summary.totalWithTax = $scope.formData.summary.tax + $scope.formData.summary.total;
-			}
-		}*/
+		// $scope.formData.summary.tax = 0.0;
+        //
+		// if($scope.formData.billing && !$scope.formData.billing.taxExempt){
+		// 	if($scope.formData.summary.taxRate){
+		// 		$scope.formData.summary.tax = $scope.formData.summary.taxRate / 100.0 * $scope.formData.summary.total;
+		// 		$scope.formData.summary.totalWithTax = $scope.formData.summary.tax + $scope.formData.summary.total;
+		// 	}
+		// }
 	};
 
 	var getCost = function(administrationWindow, calendarYear, pricing){
@@ -175,7 +176,12 @@ angular.module('myApp')// our controller for the form
 				{
 					order.cost = $scope.formData.summary.discount.special.pricing.periodic;
 					if($scope.orders.summative.orders != null && $scope.orders.summative.orders.length > 0 && $scope.formData.summary.discount.special.pricing.periodicWithSummative){
-						order.cost = $scope.formData.summary.discount.special.pricing.periodicWithSummative;
+            var summativeBalances = $scope.orders.summative.orders.reduce(function(acc, order) {
+              return acc + order.online.balance + order.paper.balance;
+            }, 0);
+						if(summativeBalances > 0) {
+              order.cost = $scope.formData.summary.discount.special.pricing.periodicWithSummative;
+            }
 					}
 					order.overrideCost = true;
 				}
@@ -331,16 +337,57 @@ angular.module('myApp')// our controller for the form
 		$scope.formData.summary.discount.special.code = code.toUpperCase();
 
 		$scope.updatePeriodicOrders();
+	};
+
+	$scope.goBackToTheForm = function(){
+		$state.go('form.customer');
+	};
+
+	$scope.finalizeAndSubmit = function(){
+		emailService.sendConfirmationEmail($scope.formData, $scope.orders, $scope.cost);
 	}
     
 	// function to process the form
-	$scope.processForm = function() {
-		emailService.sendConfirmationEmail($scope.formData, $scope.orders, $scope.cost);
-	};   
+	$scope.processForm = function(formData, orders) {
+		var _finalizeAndSubmit = $scope.finalizeAndSubmit;
+		formData.addressValidationError = undefined;
+
+		var taxCalculated = function(result){
+			formData.calculatingTax = false;
+
+			if(result.data.ResultCode === 'Success'){
+				formData.summary.tax = parseInt(result.data.TotalTax);
+
+				formData.summary.taxable = parseInt(result.data.TotalTaxable)
+				formData.summary.exemption = parseInt(result.data.TotalExemption)
+
+				formData.summary.totalWithTax = formData.summary.total + formData.summary.tax;
+			}
+			else{
+				formData.addressValidationError = result.data.Messages;
+			}
+		};
+
+		var taxCalculatedError = function(result){
+			formData.calculatingTax = false;
+			alert(JSON.stringify(result));
+		};
+
+    formData.calculatingTax = true;
+    $state.go('form.customer.tax');
+
+    if(formData.taxExempt) {
+      _finalizeAndSubmit();
+    }
+    else
+    {
+      taxService.calculateTax(formData.billing.address, orders, $scope.cost.pricing.taxCode, taxCalculated, taxCalculatedError);
+    }
+	};
 
 
 	$scope.$watch('orders.summative.orders', function(newValue, oldValue){
-		$scope.updatePeriodicOrders();		
+		$scope.updatePeriodicOrders();
 	}, true);
 
 	$scope.$watch('orders.periodic.orders', function(newValue, oldValue){
@@ -354,9 +401,4 @@ angular.module('myApp')// our controller for the form
 	$scope.$watch('formData.billing.address.state', function(newValue, oldValue){
 		$scope.updatePeriodicOrders();
 	}, true);
-	//TODO: uncomment when adding back sales tax
-	//Update sales tax when billing zip or taxExempt status changes
-	// $scope.$watchCollection('[formData.billing.taxExempt, formData.billing.address.zip]', function(newValue, oldValue){
-	// 	$scope.updateTotals();
-	// }, true); 
 }]);

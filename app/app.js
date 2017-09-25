@@ -22,6 +22,11 @@ angular.module('myApp', [
             controller: 'formController'
 		})
 
+		.state('form.customer.tax', {
+			url: '/tax',
+			templateUrl: 'app/tax.html'
+		})
+
 		.state('form.customer.confirmation', {
 			url: '/confirmation',
 			templateUrl: 'app/confirmation.html'
