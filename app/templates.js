@@ -231,6 +231,14 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t<div ng-show=\"order.cost.lateFee\" class=\"alert alert-danger\">\n" +
     "\t\tA late fee of {{order.cost.lateFee | currency}} will be applied to this order.\n" +
     "\t\t</div>\n" +
+    "        <div ng-show=\"order.cost.dates\">\n" +
+    "            <div class=\"row\">\n" +
+    "                <div class=\"form-group col-sm-4\">\n" +
+    "                    <label for=\"preferredDate\" class=\"control-label\">What is your preferred date to administer the assessments?</label>\n" +
+    "                    <select class=\"form-control\" name=\"preferredDate\" ng-model=\"order.preferredDate\" ng-options=\"option for option in order.cost.dates\"/>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
     "\t\t<h5>Subjects</h5>\n" +
     "\t\t<div class=\"row\">\n" +
     "\t    \t<div class=\"col-sm-2 form-group\" ng-repeat=\"(subject,enabled) in order.subjects\">\n" +
