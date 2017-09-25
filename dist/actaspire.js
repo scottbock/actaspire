@@ -45197,11 +45197,6 @@ angular.module('myApp', [
             controller: 'formController'
 		})
 
-		.state('form.customer.tax', {
-			url: '/tax',
-			templateUrl: 'app/tax.html'
-		})
-
 		.state('form.customer.confirmation', {
 			url: '/confirmation',
 			templateUrl: 'app/confirmation.html'
@@ -45241,7 +45236,6 @@ angular.module('myApp', [
 		cost.ordersInbox = response.data.ordersInbox;
 		cost.ordersBcc = response.data.ordersBcc;
 		cost.howHeardOptions = response.data.howHeardOptions;
-		cost.taxInbox = response.data.taxInbox;
 	});
 
 	//todo: uncomment this code when ready to include sales tax
@@ -45448,14 +45442,14 @@ angular.module('myApp', [
 	}
 
 	var buildCsvFile = function(formData, orders, cost){
-        var fileContent = 'NS Name,Internal ID,Date,line ,School / Customer,Grade,Quantity,Item,Test Administration,Test Admin Year,Test Mode,Rev Rec,Rev Rec Date,Item Rate,Amount,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,Test Coordinator Name,Test Coordinator Email,Test Coordinator Phone,Backup Coordinator Name,Backup Coordinator Email,Backup Coordinator Phone,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,Purchase Order #,City,State,Zip,Terms And Conditions,How Heard,Discount Code,Memo\n';
+        var fileContent = 'NS Name,Internal ID,Date,line ,School / Customer,Grade,Quantity,Item,Test Administration,Test Admin Year,Test Mode,Rev Rec,Rev Rec Date,Item Rate,Amount,Preferred Test Date,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,Test Coordinator Name,Test Coordinator Email,Test Coordinator Phone,Backup Coordinator Name,Backup Coordinator Email,Backup Coordinator Phone,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,Purchase Order #,City,State,Zip,Terms And Conditions,How Heard,Discount Code,Memo\n';
 
         angular.forEach(orders.summative.orders, function(order, key) {
         	if(order.online.total){
 	        	var index = 0;
 				angular.forEach(order.grade, function(grade, gradeKey) {
 					if(grade.online){
-						fileContent += ',,"' + today + colDelim
+						fileContent += ',,"' + today + colDelim 
 							+ (index++) + colDelim
 							+ formData.customer.organization + colDelim
 							+ gradeKey + colDelim
@@ -45468,6 +45462,7 @@ angular.module('myApp', [
 							+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 							+ (order.cost.online - order.online.totalDiscountPerStudent) + colDelim
 							+ ((order.cost.online - order.online.totalDiscountPerStudent) * grade.online) + colDelim
+							+ ((order.preferredDate || '')) + colDelim
 							+ yesNo(order.subjects.English) + colDelim
 							+ yesNo(order.subjects.Math) + colDelim
 							+ yesNo(order.subjects.Reading) + colDelim
@@ -45479,7 +45474,7 @@ angular.module('myApp', [
 
 				//ISR
 				if(order.individualReports){
-					fileContent += ',,"' + today + colDelim
+					fileContent += ',,"' + today + colDelim 
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
@@ -45492,6 +45487,7 @@ angular.module('myApp', [
 						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 						+ (order.cost.isr * order.reportsPerStudent) + colDelim
 						+ ((order.cost.isr) * order.online.total * order.reportsPerStudent) + colDelim
+            + ((order.preferredDate || '')) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
 						+ yesNo(order.subjects.Math) + colDelim
 						+ yesNo(order.subjects.Reading) + colDelim
@@ -45502,7 +45498,7 @@ angular.module('myApp', [
 
 				//Score Label
 				if(order.scoreLabels){
-					fileContent += ',,"' + today + colDelim
+					fileContent += ',,"' + today + colDelim 
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
@@ -45515,6 +45511,7 @@ angular.module('myApp', [
 						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 						+ (order.cost.labels) + colDelim
 						+ ((order.cost.labels) * order.online.total) + colDelim
+            + ((order.preferredDate || '')) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
 						+ yesNo(order.subjects.Math) + colDelim
 						+ yesNo(order.subjects.Reading) + colDelim
@@ -45531,7 +45528,7 @@ angular.module('myApp', [
 	        	var index = 0;
 				angular.forEach(order.grade, function(grade, gradeKey) {
 					if(grade.paper){
-						fileContent += ',,"' + today + colDelim
+						fileContent += ',,"' + today + colDelim 
 							+ (index++) + colDelim
 							+ formData.customer.organization + colDelim
 							+ gradeKey + colDelim
@@ -45544,6 +45541,7 @@ angular.module('myApp', [
 							+ revRecDate(order.calendarYear, order.administrationWindow)+ colDelim
 							+ (order.cost.paper - order.paper.totalDiscountPerStudent) + colDelim
 							+ ((order.cost.paper - order.paper.totalDiscountPerStudent) * grade.paper) + colDelim
+              + ((order.preferredDate || '')) + colDelim
 							+ yesNo(order.subjects.English) + colDelim
 							+ yesNo(order.subjects.Math) + colDelim
 							+ yesNo(order.subjects.Reading) + colDelim
@@ -45556,7 +45554,7 @@ angular.module('myApp', [
 				
 				//ISR
 				if(order.individualReports){
-					fileContent += ',,"' + today + colDelim
+					fileContent += ',,"' + today + colDelim 
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
@@ -45569,6 +45567,7 @@ angular.module('myApp', [
 						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 						+ (order.cost.isr * order.reportsPerStudent) + colDelim
 						+ ((order.cost.isr) * order.paper.total * order.reportsPerStudent) + colDelim
+            + ((order.preferredDate || '')) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
 						+ yesNo(order.subjects.Math) + colDelim
 						+ yesNo(order.subjects.Reading) + colDelim
@@ -45579,7 +45578,7 @@ angular.module('myApp', [
 
 				//Score Label
 				if(order.scoreLabels){
-					fileContent += ',,"' + today + colDelim
+					fileContent += ',,"' + today + colDelim 
 						+ (index++) + colDelim
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
@@ -45592,6 +45591,7 @@ angular.module('myApp', [
 						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 						+ (order.cost.labels) + colDelim
 						+ ((order.cost.labels) * order.paper.total) + colDelim
+            + ((order.preferredDate || '')) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
 						+ yesNo(order.subjects.Math) + colDelim
 						+ yesNo(order.subjects.Reading) + colDelim
@@ -45607,7 +45607,7 @@ angular.module('myApp', [
 	        	var index = 0;
 				angular.forEach(order.grade, function(grade, gradeKey) {
 					if(grade.online){
-						fileContent += ',,"' + today + colDelim
+						fileContent += ',,"' + today + colDelim 
 							+ (index++) + colDelim
 							+ formData.customer.organization + colDelim
 							+ gradeKey + colDelim
@@ -45620,6 +45620,7 @@ angular.module('myApp', [
 							+ revRecDate(order.calendarYear)+ colDelim
 							+ (order.cost - order.totalDiscountPerStudent) + colDelim
 							+ ((order.cost - order.totalDiscountPerStudent) * grade.online) + colDelim
+              + ((order.preferredDate || '')) + colDelim
 							+ yesNo(true) + colDelim
 							+ yesNo(true) + colDelim
 							+ yesNo(true) + colDelim
@@ -45634,7 +45635,7 @@ angular.module('myApp', [
 		//Late Fee
 		angular.forEach(orders.summative.orders, function(order, key) {
         	if(order.cost.lateFee){
-				fileContent += ',,"' + today + colDelim
+				fileContent += ',,"' + today + colDelim 
 					+ 0 + colDelim
 					+ formData.customer.organization + colDelim
 					+ 0 + colDelim
@@ -45644,6 +45645,7 @@ angular.module('myApp', [
 					+ order.calendarYear + colDelim + colDelim + colDelim + colDelim
 					+ order.cost.lateFee + colDelim
 					+ order.cost.lateFee + colDelim
+          + ((order.preferredDate || '')) + colDelim
 					+ yesNo(true) + colDelim
 					+ yesNo(true) + colDelim
 					+ yesNo(true) + colDelim
@@ -45652,24 +45654,6 @@ angular.module('myApp', [
 					+ writeCommonData(formData);
 			}
 		});
-
-		//Tax
-		if(formData.summary.tax){
-			fileContent += ',,"' + today + colDelim
-				+ 0 + colDelim
-				+ formData.customer.organization + colDelim
-				+ 0 + colDelim
-				+ 1 + colDelim
-				+ 'Tax' + colDelim + colDelim + colDelim + colDelim + colDelim + colDelim
-				+ formData.summary.tax + colDelim
-				+ formData.summary.tax + colDelim
-				+ yesNo(true) + colDelim
-				+ yesNo(true) + colDelim
-				+ yesNo(true) + colDelim
-				+ yesNo(true) + colDelim
-				+ yesNo(true) + colDelim
-				+ writeCommonData(formData);
-		}
 
 		return fileContent;
 		
@@ -45681,7 +45665,7 @@ angular.module('myApp', [
 		var index = 0;
         angular.forEach(trainingOrders, function(training, key) {
 
-			fileContent += ',,"'
+			fileContent += ',,"' 
 				+ cost.currentSemester + colDelim
 				+ cost.currentYear + colDelim	
 				+ today + colDelim 
@@ -45723,7 +45707,7 @@ angular.module('myApp', [
         angular.forEach(cost.reportGroups, function(reportGroup, key) {
         	angular.forEach(reportGroup.reports, function(report, key) {
         		if(report.amount){
-					fileContent += ',,0,"'
+					fileContent += ',,0,"' 
 						+ cost.currentSemester + colDelim
 						+ cost.currentYear + colDelim
 						+ today + colDelim 
@@ -45908,7 +45892,7 @@ angular.module('myApp', [
 		
 		emailBody += '\n\nTotal: ' + currencyFilter(formData.summary.total);
 		if(formData.summary.tax){
-			emailBody += '\n + ' + currencyFilter(formData.summary.tax) + ' Estimated Sales Tax * Final sales tax calculation will be presented on the invoice you receive.\n' + currencyFilter(formData.summary.totalWithTax);
+			emailBody += ' + ' + currencyFilter(formData.summary.tax) + ' (' + formData.summary.taxRate + ' Sales Tax) = ' + currencyFilter(formData.summary.totalWithTax);
 		}
 
 		if(formData.comments){
@@ -45939,42 +45923,17 @@ angular.module('myApp', [
 			}
 		);
 	}
-
-	var postFormDataConfirmationEmail = function(fd, formData){
-		$http.post(url, fd, {
-			transformRequest: angular.identity,
-			headers: {'Content-Type': undefined}
-		}).then(
-			function(){
-				formData.submitComplete = true;
-				formData.submitSuccess = true;
-				localStorage.removeItem('formData');
-				localStorage.removeItem('summative');
-				localStorage.removeItem('periodic');
-			},
-			function(){
-				formData.submitComplete = true;
-				formData.submitSuccess = false;
-			}
-		);
-	}
-
 	var sendConfirmationEmail = function(formData, orders, cost){
 		$state.go('form.customer.confirmation');
 
-		var fd = new FormData();
-		fd.append('file', formData.certFile);
-
-		var csvFileName = formData.customer.lastName + formData.customer.organization + new Date().getTime() + '.csv';
-		// var postData = {};
-		fd.append('clientEmail', formData.customer.email);
-		fd.append('orderInbox', cost.ordersInbox);
-    fd.append('taxInbox', cost.taxInbox);
-		fd.append('orderBcc', cost.ordersBcc);
-		fd.append('message', buildEmail(formData, orders));
-		fd.append('csv', CsvService.buildCsvFile(formData, orders, cost));
-		fd.append('taxExempt', formData.taxExempt);
-		fd.append('csvFileName', csvFileName.replace(/[/\\\\]/g, ''));
+		var postData = {};
+		postData.clientEmail = formData.customer.email;
+		postData.orderInbox = cost.ordersInbox;
+		postData.orderBcc = cost.ordersBcc;
+		postData.message = buildEmail(formData, orders);
+		postData.csv = CsvService.buildCsvFile(formData, orders, cost);
+		postData.csvFileName = formData.customer.lastName + formData.customer.organization + new Date().getTime() + '.csv';
+		postData.csvFileName = postData.csvFileName.replace(/[/\\\\]/g, '');;
 
 		if(formData.summary.discount.special && formData.summary.discount.special.code && !formData.summary.discount.special.error){
 			$http.get('json/couponUses.json?'+ new Date().getTime(), { headers: { 'Cache-Control' : 'no-cache' } }).then(function(response) { 
@@ -45987,15 +45946,12 @@ angular.module('myApp', [
 	    		}
 				couponUses[formData.summary.discount.special.code].push(formData.customer.firstName + ' ' + formData.customer.lastName + ', ' + formData.customer.jobTitle + ', ' + formData.customer.organization);
 
-				fd.append('couponUses', angular.toJson(couponUses, true));
-				// postConfirmationEmail(postData, formData);
-
-				postFormDataConfirmationEmail(fd, formData);
+				postData.couponUses = angular.toJson(couponUses, true);
+				postConfirmationEmail(postData, formData);
 			});
 		}
 		else{
-			// postConfirmationEmail(postData, formData);
-			postFormDataConfirmationEmail(fd, formData);
+			postConfirmationEmail(postData, formData);
 		}
 	};
 
@@ -46092,23 +46048,9 @@ angular.module('myApp', [
 		'sendTrainingConfirmationEmail': sendTrainingConfirmationEmail,
 		'sendIsrConfirmationEmail': sendIsrConfirmationEmail
 	}
-}]);;angular.module('myApp').directive('fileModel', ['$parse', function ($parse) {
-    return {
-        restrict: 'A',
-        link: function(scope, element, attrs) {
-            var model = $parse(attrs.fileModel);
-            var modelSetter = model.assign;
-
-            element.bind('change', function(){
-                scope.$apply(function(){
-                    modelSetter(scope, element[0].files[0]);
-                });
-            });
-        }
-    };
 }]);;angular.module('myApp')// our controller for the form
 // =============================================================================
-.controller('formController', ['$scope', '$state', '$http', '$cookies', 'CostService', 'EmailService', 'TaxService', 'schoolYearFilter', function($scope, $state, $http, $cookies, costService, emailService, taxService, schoolYearFilter) {
+.controller('formController', ['$scope', '$state', '$http', '$cookies', 'CostService', 'EmailService', 'schoolYearFilter', function($scope, $state, $http, $cookies, costService, emailService, schoolYearFilter) {
 
 	$http.get('json/states.json').success(function(data) { 
     	$scope.states = data;
@@ -46126,17 +46068,13 @@ angular.module('myApp', [
 		'schoolYear' : ''
 	};
 
-
+	/**
 	//Save Draft
 	$scope.saveDraft = function(){
 		localStorage.setItem('formData', angular.toJson($scope.formData));
 		localStorage.setItem('summative', angular.toJson($scope.orders.summative));
 		localStorage.setItem('periodic', angular.toJson($scope.orders.periodic));
-	};
-
-	$scope.testValidateAddress = function(){
-		taxService.validateAddress($scope.formData.billing.address, function(){alert('whatever');});
-	}
+	};**/
 
 	$scope.printPage = function(){
 		window.print();
@@ -46150,8 +46088,7 @@ angular.module('myApp', [
 	$scope.formData = {
 		customer: {},
 		summary:{
-			discount:{},
-			taxRate:0.0
+			discount:{}
 		}
 	};
 	$scope.orders = {
@@ -46163,7 +46100,7 @@ angular.module('myApp', [
 		}
 	}
 
-	//Load saved draft if available
+/*	//Load saved draft if available
 	var cookieFormData = localStorage.getItem('formData');
 	if(cookieFormData){
 		$scope.formData = angular.fromJson(cookieFormData);
@@ -46177,7 +46114,7 @@ angular.module('myApp', [
 	var periodicData = localStorage.getItem('periodic');
 	if(periodicData){
 		$scope.orders.periodic = angular.fromJson(periodicData);
-	}
+	}*/
 
 	$scope.updateTotals = function(){	
 		$scope.formData.summary.total = 0.0;
@@ -46191,14 +46128,18 @@ angular.module('myApp', [
 		angular.forEach($scope.orders.periodic.orders, function(order, key) {
 			$scope.formData.summary.total += order.balance;
 		});
-		// $scope.formData.summary.tax = 0.0;
-        //
-		// if($scope.formData.billing && !$scope.formData.billing.taxExempt){
-		// 	if($scope.formData.summary.taxRate){
-		// 		$scope.formData.summary.tax = $scope.formData.summary.taxRate / 100.0 * $scope.formData.summary.total;
-		// 		$scope.formData.summary.totalWithTax = $scope.formData.summary.tax + $scope.formData.summary.total;
-		// 	}
-		// }
+
+		$scope.formData.summary.tax = 0.0;
+
+		//TODO: Uncomment this code when ready to include sales tax
+		/*if($scope.formData.billing && !$scope.formData.billing.taxExempt && $scope.cost.salesTax){
+			var taxRate = $scope.cost.salesTax[$scope.formData.billing.address.zip];
+			if(taxRate){
+				$scope.formData.summary.taxRate = taxRate;
+				$scope.formData.summary.tax = taxRate * $scope.formData.summary.total;
+				$scope.formData.summary.totalWithTax = $scope.formData.summary.tax + $scope.formData.summary.total;
+			}
+		}*/
 	};
 
 	var getCost = function(administrationWindow, calendarYear, pricing){
@@ -46238,6 +46179,7 @@ angular.module('myApp', [
 			if(orders.length > 0){ //copy in the last order
 				var lastOrder = orders[orders.length - 1];
 				angular.copy(lastOrder, order);
+				order.preferredDate = ''
 			}
 
 			order.cost = getCost(administrationWindow, calendarYear, $scope.cost.pricing);	
@@ -46284,12 +46226,7 @@ angular.module('myApp', [
 				{
 					order.cost = $scope.formData.summary.discount.special.pricing.periodic;
 					if($scope.orders.summative.orders != null && $scope.orders.summative.orders.length > 0 && $scope.formData.summary.discount.special.pricing.periodicWithSummative){
-            var summativeBalances = $scope.orders.summative.orders.reduce(function(acc, order) {
-              return acc + order.online.balance + order.paper.balance;
-            }, 0);
-						if(summativeBalances > 0) {
-              order.cost = $scope.formData.summary.discount.special.pricing.periodicWithSummative;
-            }
+						order.cost = $scope.formData.summary.discount.special.pricing.periodicWithSummative;
 					}
 					order.overrideCost = true;
 				}
@@ -46445,57 +46382,16 @@ angular.module('myApp', [
 		$scope.formData.summary.discount.special.code = code.toUpperCase();
 
 		$scope.updatePeriodicOrders();
-	};
-
-	$scope.goBackToTheForm = function(){
-		$state.go('form.customer');
-	};
-
-	$scope.finalizeAndSubmit = function(){
-		emailService.sendConfirmationEmail($scope.formData, $scope.orders, $scope.cost);
 	}
     
 	// function to process the form
-	$scope.processForm = function(formData, orders) {
-		var _finalizeAndSubmit = $scope.finalizeAndSubmit;
-		formData.addressValidationError = undefined;
-
-		var taxCalculated = function(result){
-			formData.calculatingTax = false;
-
-			if(result.data.ResultCode === 'Success'){
-				formData.summary.tax = parseInt(result.data.TotalTax);
-
-				formData.summary.taxable = parseInt(result.data.TotalTaxable)
-				formData.summary.exemption = parseInt(result.data.TotalExemption)
-
-				formData.summary.totalWithTax = formData.summary.total + formData.summary.tax;
-			}
-			else{
-				formData.addressValidationError = result.data.Messages;
-			}
-		};
-
-		var taxCalculatedError = function(result){
-			formData.calculatingTax = false;
-			alert(JSON.stringify(result));
-		};
-
-    formData.calculatingTax = true;
-    $state.go('form.customer.tax');
-
-    if(formData.taxExempt) {
-      _finalizeAndSubmit();
-    }
-    else
-    {
-      taxService.calculateTax(formData.billing.address, orders, $scope.cost.pricing.taxCode, taxCalculated, taxCalculatedError);
-    }
-	};
+	$scope.processForm = function() {
+		emailService.sendConfirmationEmail($scope.formData, $scope.orders, $scope.cost);
+	};   
 
 
 	$scope.$watch('orders.summative.orders', function(newValue, oldValue){
-		$scope.updatePeriodicOrders();
+		$scope.updatePeriodicOrders();		
 	}, true);
 
 	$scope.$watch('orders.periodic.orders', function(newValue, oldValue){
@@ -46509,6 +46405,11 @@ angular.module('myApp', [
 	$scope.$watch('formData.billing.address.state', function(newValue, oldValue){
 		$scope.updatePeriodicOrders();
 	}, true);
+	//TODO: uncomment when adding back sales tax
+	//Update sales tax when billing zip or taxExempt status changes
+	// $scope.$watchCollection('[formData.billing.taxExempt, formData.billing.address.zip]', function(newValue, oldValue){
+	// 	$scope.updateTotals();
+	// }, true); 
 }]);;angular.module('myApp')
 .controller('isrController', ['$scope', '$state', '$http', '$cookies', 'IsrCostService', 'EmailService', 'schoolYearFilter', function($scope, $state, $http, $cookies, isrCostService, emailService, schoolYearFilter) {
 	$scope.cost = isrCostService.cost;
@@ -46578,127 +46479,7 @@ angular.module('myApp', [
       return schoolYearStart + ' - ' + (schoolYearStart + 1)
     }
   }
-});;angular.module('myApp').factory('TaxService', ['$http', function ($http) {
-
-	var calculateTax = function(billingAddress, orders, taxCode, callback, errorCallback){
-
-		var uri = '../../wp-json/wp/v2/calculateTax/';
-
-		var data = {
-			"Commit": "false",
-			"CustomerCode": "CustomerCode",
-			"Addresses": [
-				{
-					"AddressCode": "01",
-					"Line1": billingAddress.line1,
-					"Line2": billingAddress.line2,
-					"City": billingAddress.city,
-					"Region": billingAddress.state,
-					"Country": "US",
-					"PostalCode": billingAddress.zip
-				}
-			],
-			"Lines": [
-
-			]
-		};
-
-		var lineNo = 1;
-		var summativeAndPeriodicTaxCode = taxCode;
-
-		angular.forEach(orders.summative.orders, function(order, key) {
-			var onlineCost = (order.cost.online - order.online.totalDiscountPerStudent) * order.online.total;
-			var paperCost = (order.cost.paper - order.paper.totalDiscountPerStudent) * order.paper.total;
-			var onlineISR = order.individualReports ? ((order.cost.isr) * order.online.total * order.reportsPerStudent) : 0;
-			var paperISR = order.individualReports ? ((order.cost.isr) * order.paper.total * order.reportsPerStudent) : 0;
-			var onlineLabel = order.scoreLabels ? ((order.cost.labels) * order.online.total) : 0;
-			var paperLabel = order.scoreLabels ? ((order.cost.labels) * order.paper.total) : 0;
-
-			data.Lines.push({
-				"LineNo": lineNo++,
-				"DestinationCode": "01",
-				"Amount": onlineCost,
-				"TaxCode": summativeAndPeriodicTaxCode
-			});
-			data.Lines.push({
-				"LineNo": lineNo++,
-				"DestinationCode": "01",
-				"Amount": paperCost,
-				"TaxCode": summativeAndPeriodicTaxCode
-			});
-			data.Lines.push({
-				"LineNo": lineNo++,
-				"DestinationCode": "01",
-				"Amount": paperISR
-			});
-			data.Lines.push({
-				"LineNo": lineNo++,
-				"DestinationCode": "01",
-				"Amount": onlineISR
-			});
-			data.Lines.push({
-				"LineNo": lineNo++,
-				"DestinationCode": "01",
-				"Amount": paperLabel
-			});
-			data.Lines.push({
-				"LineNo": lineNo++,
-				"DestinationCode": "01",
-				"Amount": onlineLabel
-			});
-			data.Lines.push({
-				"LineNo": lineNo++,
-				"DestinationCode": "01",
-				"Amount": order.cost.lateFee
-			});
-		});
-
-		angular.forEach(orders.periodic.orders, function(order, key) {
-			data.Lines.push({
-				"LineNo": lineNo++,
-				"DestinationCode": "01",
-				"Amount": (order.cost - order.totalDiscountPerStudent) * order.onlineTotal,
-				"TaxCode": summativeAndPeriodicTaxCode
-			});
-		});
-
-
-		var req = {
-			method: 'POST',
-			url: uri,
-			data: data
-		}
-
-		$http(req).then(callback, errorCallback);
-	}
-
-
-	var validateAddress= function(billingAddress, callback, errorCallback){
-
-		var uri = '../../wp-json/wp/v2/validateAddress';
-
-		uri += '?Line1=' + encodeURIComponent(billingAddress.line1);
-		if(billingAddress.line2) {
-			uri += '&Line2=' + encodeURIComponent(billingAddress.line2);
-		}
-		uri += '&City=' + encodeURIComponent(billingAddress.city);
-		uri += '&Region=' + encodeURIComponent(billingAddress.state);
-		uri += '&PostalCode=' + encodeURIComponent(billingAddress.zip);
-
-		var req = {
-			method: 'GET',
-			url: uri
-		}
-
-		$http(req).then(callback, errorCallback);
-
-	}
-
-	return {
-		'validateAddress':validateAddress,
-		'calculateTax': calculateTax
-	}
-}]);;angular.module('myApp').run(['$templateCache', function($templateCache) {
+});;angular.module('myApp').run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('app/confirmation.html',
@@ -46724,14 +46505,9 @@ angular.module('myApp', [
     "  <p>\n" +
     "    Pricing valid through {{cost.pricing.validThrough}}\n" +
     "  </p>\n" +
-    "\t<p ng-show=\"false\">\n" +
-    "\t\t<button type=\"button\" class=\"pull-right btn btn-default btn-xs\" aria-label=\"Remove\" ng-click=\"saveDraft()\">\n" +
-    "\t\t\tSave Draft\n" +
-    "\t\t</button>\n" +
-    "\t</p>\n" +
     "</div>\n" +
     "<!-- use ng-submit to catch the form submission and use our Angular function -->\n" +
-    "<form id=\"customerForm\" name=\"customerForm\" ng-submit=\"processForm(formData, orders)\">\n" +
+    "<form id=\"customerForm\" name=\"customerForm\" ng-submit=\"processForm()\"> \n" +
     "\n" +
     "\t<h3>1. Contact Information</h3>\n" +
     "\n" +
@@ -46828,19 +46604,10 @@ angular.module('myApp', [
     "\t<div class=\"panel panel-default\">\n" +
     "\t    <div class=\"panel-heading\">Billing Information</div>\n" +
     "\t    <div class=\"panel-body\">\n" +
-    "\t\t\t<div class=\"row\">\n" +
-    "\t\t\t\t<div class=\"col-sm-12 form-group\">\n" +
-    "\t\t\t\t\t<label class=\"checkbox-inline\">\n" +
-    "\t\t\t\t\t\t<input type=\"checkbox\" ng-model=\"formData.taxExempt\">\n" +
-    "\t\t\t\t\t\tClick here if your organization is exempt from sales tax\n" +
-    "\t\t\t\t\t</label>\n" +
-    "\t\t\t\t</div>\n" +
-    "\t\t\t</div>\n" +
-    "\t\t\t<div class=\"row\" ng-show=\"formData.taxExempt\">\n" +
-    "\t\t\t\t<div class=\"col-sm-4 form-group required\">\n" +
-    "\t\t\t\t\t<label for=\"certFile\" class=\"control-label\">PDF Exemption Certificate</label>\n" +
-    "\t\t\t\t\t<input type = \"file\" class=\"form-control\" file-model=\"formData.certFile\" ng-required=\"formData.taxExempt\" accept=\".pdf\"/>\n" +
-    "\t\t\t\t</div>\n" +
+    "\t    \t<div class=\"row\">\n" +
+    "\t\t\t    <div class=\"col-sm-12\">\n" +
+    "\t\t\t\t    <p>If you are tax exempt, please email a copy of your exemption certificate to <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a></p>\n" +
+    "\t\t\t    </div>\n" +
     "\t\t\t</div>\n" +
     "\t        <div class=\"row\">\n" +
     "\t            <div class=\"form-group col-sm-4 required\">\n" +
@@ -46883,7 +46650,7 @@ angular.module('myApp', [
     "\n" +
     "\t            <div class=\"form-group col-sm-4 required\">\n" +
     "\t                <label for=\"zip\" class=\"control-label\">Zip</label>\n" +
-    "\t                <input type=\"text\" class=\"form-control\" name=\"zip\" ng-model=\"formData.billing.address.zip\" required=\"required\" ng-pattern=\"/^(\\d{5}-\\d{4}|\\d{5})$/\">\n" +
+    "\t                <input type=\"text\" class=\"form-control\" name=\"zip\" ng-model=\"formData.billing.address.zip\" required=\"required\">\n" +
     "\t            </div>\n" +
     "\t        </div> \n" +
     "\t        <div class=\"row\">\n" +
@@ -46931,6 +46698,14 @@ angular.module('myApp', [
     "\t\t<div ng-show=\"order.cost.lateFee\" class=\"alert alert-danger\">\n" +
     "\t\tA late fee of {{order.cost.lateFee | currency}} will be applied to this order.\n" +
     "\t\t</div>\n" +
+    "        <div ng-show=\"order.cost.dates\">\n" +
+    "            <div class=\"row\">\n" +
+    "                <div class=\"form-group col-sm-4\">\n" +
+    "                    <label for=\"preferredDate\" class=\"control-label\">What is your preferred date to administer the assessments?</label>\n" +
+    "                    <select class=\"form-control\" name=\"preferredDate\" ng-model=\"order.preferredDate\" ng-options=\"option for option in order.cost.dates\"/>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
     "\t\t<h5>Subjects</h5>\n" +
     "\t\t<div class=\"row\">\n" +
     "\t    \t<div class=\"col-sm-2 form-group\" ng-repeat=\"(subject,enabled) in order.subjects\">\n" +
@@ -47201,7 +46976,7 @@ angular.module('myApp', [
     "\t\t\t\t</tr>\n" +
     "\t\t\t\t<tr>\n" +
     "\t\t\t\t\t<td colspan=\"7\">\n" +
-    "\t\t\t\t\t\t<h4>Total: {{formData.summary.total | currency}}</h4>\n" +
+    "\t\t\t\t\t\t<h4>Total: {{formData.summary.total | currency}} <span ng-show=\"formData.summary.tax\"> + {{formData.summary.tax | currency}} ({{formData.summary.taxRate}} Sales Tax) = {{formData.summary.totalWithTax | currency}}</span></h4>\n" +
     "\t\t\t\t\t</td>\n" +
     "\t\t\t\t</tr>\n" +
     "\t\t\t</tbody>\n" +
@@ -47234,27 +47009,16 @@ angular.module('myApp', [
     "\t<div class=\"row\">\n" +
     "\t<p>* Please note - all orders shall be subject to a cancellation fee.</p>\n" +
     "\t</div>\n" +
-    "\n" +
-    "\t<div class=\"row\" ng-show=\"formData.addressValidationError\">\n" +
-    "\t\t<div class=\"col-sm-12 alert alert-danger\" role=\"alert\">\n" +
-    "\t\t\t<h4><span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span><span class=\"sr-only\">Error:</span>Invalid Billing Address</h4>\n" +
-    "\t\t\t<div ng-repeat=\"error in formData.addressValidationError\">\n" +
-    "\t\t\t\t{{error.Summary}} - {{error.Details}}\n" +
-    "\t\t\t</div>\n" +
-    "\t\t\t<div>\n" +
-    "\t\t\t\t** Please correct billing address and try again.\n" +
-    "\t\t\t</div>\n" +
-    "\t\t</div>\n" +
-    "\t</div>\n" +
-    "\n" +
+    "\t\n" +
     "\t<div class=\"row\">\n" +
     "\t    <div class=\"col-sm-4\">\n" +
-    "\t  \t\t<button type=\"submit\" class=\"btn btn-primary\" ng-disabled=\"customerForm.$invalid || customerForm.$pending || !formData.acceptTerms || !formData.summary.total\">Continue to Order Summary</button>\n" +
+    "\t  \t\t<button type=\"submit\" class=\"btn btn-primary\" ng-disabled=\"customerForm.$invalid || customerForm.$pending || !formData.acceptTerms || !formData.summary.total\">Submit Order</button>\n" +
     "\t    </div>\n" +
     "\t\t<div class=\"col-sm-4\">\n" +
     "\t  \t\t<button type=\"button\" class=\"btn btn-default\" ng-click=\"printPage()\">Print Page</button>\n" +
     "\t    </div>\n" +
     "\t</div>\n" +
+    "\n" +
     "</form>\n" +
     "</div>\n" +
     "<div ui-view></div>\n"
@@ -47751,40 +47515,6 @@ angular.module('myApp', [
     "\n" +
     "</body>\n" +
     "</html>"
-  );
-
-
-  $templateCache.put('app/tax.html',
-    " <div id=\"form-container\">\n" +
-    "     <h2>Order Summary</h2>\n" +
-    "\n" +
-    "     <div ng-show=\"formData.calculatingTax\">Calculating tax. Please wait while we finish.<img src=\"images/ring.gif\" /></div>\n" +
-    "     <div ng-show=\"!formData.calculatingTax\">\n" +
-    "         <p>Order Total : {{formData.summary.total | currency}}</p>\n" +
-    "         <span ng-show=\"formData.summary.exemption\">\n" +
-    "             <p>Taxable: {{formData.summary.taxable | currency}}</p>\n" +
-    "             <p>Tax Exempt: {{formData.summary.exemption | currency}}</p>\n" +
-    "         </span>\n" +
-    "         <p>Estimated Sales Tax<sup>*</sup> : {{formData.summary.tax | currency}}</p>\n" +
-    "         <p>Total with Tax : {{formData.summary.totalWithTax | currency}}</p>\n" +
-    "         <p>* Sales tax estimated above will appear on your initial invoice and will be reconciled to the actual amount once final test volumes are known.</p>\n" +
-    "         <p>* If your organization is exempt from sales tax, please ensure you have attached a copy of your current Certificate of Sales Tax Exemption on the previous page.</p>\n" +
-    "         <div class=\"row\">\n" +
-    "             <div class=\"col-sm-2\">\n" +
-    "                 <button type=\"button\" class=\"btn btn-default btn-warning\" aria-label=\"Remove\" ng-click=\"goBackToTheForm()\">\n" +
-    "                     <span class=\"glyphicon glyphicon-arrow-left\"></span>\n" +
-    "                     Edit Order\n" +
-    "                 </button>\n" +
-    "             </div>\n" +
-    "             <div class=\"col-sm-2\">\n" +
-    "                 <button type=\"button\" class=\"btn btn-default btn-primary\" aria-label=\"Remove\" ng-click=\"finalizeAndSubmit()\">\n" +
-    "                     Finish and Submit Order\n" +
-    "                     <span class=\"glyphicon glyphicon-arrow-right\"></span>\n" +
-    "                 </button>\n" +
-    "             </div>\n" +
-    "         </div>\n" +
-    "     </div>\n" +
-    "</div>"
   );
 
 }]);
