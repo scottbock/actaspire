@@ -129,6 +129,7 @@ angular.module('myApp')// our controller for the form
 			if(orders.length > 0){ //copy in the last order
 				var lastOrder = orders[orders.length - 1];
 				angular.copy(lastOrder, order);
+				order.preferredDate = ''
 			}
 
 			order.cost = getCost(administrationWindow, calendarYear, $scope.cost.pricing);	

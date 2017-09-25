@@ -72,7 +72,7 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 	}
 
 	var buildCsvFile = function(formData, orders, cost){
-        var fileContent = 'NS Name,Internal ID,Date,line ,School / Customer,Grade,Quantity,Item,Test Administration,Test Admin Year,Test Mode,Rev Rec,Rev Rec Date,Item Rate,Amount,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,Test Coordinator Name,Test Coordinator Email,Test Coordinator Phone,Backup Coordinator Name,Backup Coordinator Email,Backup Coordinator Phone,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,Purchase Order #,City,State,Zip,Terms And Conditions,How Heard,Discount Code,Memo\n';
+        var fileContent = 'NS Name,Internal ID,Date,line ,School / Customer,Grade,Quantity,Item,Test Administration,Test Admin Year,Test Mode,Rev Rec,Rev Rec Date,Item Rate,Amount,Preferred Test Date,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,Test Coordinator Name,Test Coordinator Email,Test Coordinator Phone,Backup Coordinator Name,Backup Coordinator Email,Backup Coordinator Phone,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,Purchase Order #,City,State,Zip,Terms And Conditions,How Heard,Discount Code,Memo\n';
 
         angular.forEach(orders.summative.orders, function(order, key) {
         	if(order.online.total){
@@ -92,6 +92,7 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 							+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 							+ (order.cost.online - order.online.totalDiscountPerStudent) + colDelim
 							+ ((order.cost.online - order.online.totalDiscountPerStudent) * grade.online) + colDelim
+							+ ((order.preferredDate || '')) + colDelim
 							+ yesNo(order.subjects.English) + colDelim
 							+ yesNo(order.subjects.Math) + colDelim
 							+ yesNo(order.subjects.Reading) + colDelim
@@ -116,6 +117,7 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 						+ (order.cost.isr * order.reportsPerStudent) + colDelim
 						+ ((order.cost.isr) * order.online.total * order.reportsPerStudent) + colDelim
+            + ((order.preferredDate || '')) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
 						+ yesNo(order.subjects.Math) + colDelim
 						+ yesNo(order.subjects.Reading) + colDelim
@@ -139,6 +141,7 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 						+ (order.cost.labels) + colDelim
 						+ ((order.cost.labels) * order.online.total) + colDelim
+            + ((order.preferredDate || '')) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
 						+ yesNo(order.subjects.Math) + colDelim
 						+ yesNo(order.subjects.Reading) + colDelim
@@ -168,6 +171,7 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 							+ revRecDate(order.calendarYear, order.administrationWindow)+ colDelim
 							+ (order.cost.paper - order.paper.totalDiscountPerStudent) + colDelim
 							+ ((order.cost.paper - order.paper.totalDiscountPerStudent) * grade.paper) + colDelim
+              + ((order.preferredDate || '')) + colDelim
 							+ yesNo(order.subjects.English) + colDelim
 							+ yesNo(order.subjects.Math) + colDelim
 							+ yesNo(order.subjects.Reading) + colDelim
@@ -193,6 +197,7 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 						+ (order.cost.isr * order.reportsPerStudent) + colDelim
 						+ ((order.cost.isr) * order.paper.total * order.reportsPerStudent) + colDelim
+            + ((order.preferredDate || '')) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
 						+ yesNo(order.subjects.Math) + colDelim
 						+ yesNo(order.subjects.Reading) + colDelim
@@ -216,6 +221,7 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 						+ (order.cost.labels) + colDelim
 						+ ((order.cost.labels) * order.paper.total) + colDelim
+            + ((order.preferredDate || '')) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
 						+ yesNo(order.subjects.Math) + colDelim
 						+ yesNo(order.subjects.Reading) + colDelim
@@ -244,6 +250,7 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 							+ revRecDate(order.calendarYear)+ colDelim
 							+ (order.cost - order.totalDiscountPerStudent) + colDelim
 							+ ((order.cost - order.totalDiscountPerStudent) * grade.online) + colDelim
+              + ((order.preferredDate || '')) + colDelim
 							+ yesNo(true) + colDelim
 							+ yesNo(true) + colDelim
 							+ yesNo(true) + colDelim
@@ -268,6 +275,7 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 					+ order.calendarYear + colDelim + colDelim + colDelim + colDelim
 					+ order.cost.lateFee + colDelim
 					+ order.cost.lateFee + colDelim
+          + ((order.preferredDate || '')) + colDelim
 					+ yesNo(true) + colDelim
 					+ yesNo(true) + colDelim
 					+ yesNo(true) + colDelim
