@@ -24,14 +24,9 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "  <p>\n" +
     "    Pricing valid through {{cost.pricing.validThrough}}\n" +
     "  </p>\n" +
-    "\t<p ng-show=\"false\">\n" +
-    "\t\t<button type=\"button\" class=\"pull-right btn btn-default btn-xs\" aria-label=\"Remove\" ng-click=\"saveDraft()\">\n" +
-    "\t\t\tSave Draft\n" +
-    "\t\t</button>\n" +
-    "\t</p>\n" +
     "</div>\n" +
     "<!-- use ng-submit to catch the form submission and use our Angular function -->\n" +
-    "<form id=\"customerForm\" name=\"customerForm\" ng-submit=\"processForm(formData, orders)\">\n" +
+    "<form id=\"customerForm\" name=\"customerForm\" ng-submit=\"processForm()\"> \n" +
     "\n" +
     "\t<h3>1. Contact Information</h3>\n" +
     "\n" +
@@ -128,19 +123,10 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t<div class=\"panel panel-default\">\n" +
     "\t    <div class=\"panel-heading\">Billing Information</div>\n" +
     "\t    <div class=\"panel-body\">\n" +
-    "\t\t\t<div class=\"row\">\n" +
-    "\t\t\t\t<div class=\"col-sm-12 form-group\">\n" +
-    "\t\t\t\t\t<label class=\"checkbox-inline\">\n" +
-    "\t\t\t\t\t\t<input type=\"checkbox\" ng-model=\"formData.taxExempt\">\n" +
-    "\t\t\t\t\t\tClick here if your organization is exempt from sales tax\n" +
-    "\t\t\t\t\t</label>\n" +
-    "\t\t\t\t</div>\n" +
-    "\t\t\t</div>\n" +
-    "\t\t\t<div class=\"row\" ng-show=\"formData.taxExempt\">\n" +
-    "\t\t\t\t<div class=\"col-sm-4 form-group required\">\n" +
-    "\t\t\t\t\t<label for=\"certFile\" class=\"control-label\">PDF Exemption Certificate</label>\n" +
-    "\t\t\t\t\t<input type = \"file\" class=\"form-control\" file-model=\"formData.certFile\" ng-required=\"formData.taxExempt\" accept=\".pdf\"/>\n" +
-    "\t\t\t\t</div>\n" +
+    "\t    \t<div class=\"row\">\n" +
+    "\t\t\t    <div class=\"col-sm-12\">\n" +
+    "\t\t\t\t    <p>If you are tax exempt, please email a copy of your exemption certificate to <a href=\"mailto:Orders@ActAspire.org\">Orders@ActAspire.org</a></p>\n" +
+    "\t\t\t    </div>\n" +
     "\t\t\t</div>\n" +
     "\t        <div class=\"row\">\n" +
     "\t            <div class=\"form-group col-sm-4 required\">\n" +
@@ -183,7 +169,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\n" +
     "\t            <div class=\"form-group col-sm-4 required\">\n" +
     "\t                <label for=\"zip\" class=\"control-label\">Zip</label>\n" +
-    "\t                <input type=\"text\" class=\"form-control\" name=\"zip\" ng-model=\"formData.billing.address.zip\" required=\"required\" ng-pattern=\"/^(\\d{5}-\\d{4}|\\d{5})$/\">\n" +
+    "\t                <input type=\"text\" class=\"form-control\" name=\"zip\" ng-model=\"formData.billing.address.zip\" required=\"required\">\n" +
     "\t            </div>\n" +
     "\t        </div> \n" +
     "\t        <div class=\"row\">\n" +
@@ -509,7 +495,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t\t\t\t</tr>\n" +
     "\t\t\t\t<tr>\n" +
     "\t\t\t\t\t<td colspan=\"7\">\n" +
-    "\t\t\t\t\t\t<h4>Total: {{formData.summary.total | currency}}</h4>\n" +
+    "\t\t\t\t\t\t<h4>Total: {{formData.summary.total | currency}} <span ng-show=\"formData.summary.tax\"> + {{formData.summary.tax | currency}} ({{formData.summary.taxRate}} Sales Tax) = {{formData.summary.totalWithTax | currency}}</span></h4>\n" +
     "\t\t\t\t\t</td>\n" +
     "\t\t\t\t</tr>\n" +
     "\t\t\t</tbody>\n" +
@@ -542,27 +528,16 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\t<div class=\"row\">\n" +
     "\t<p>* Please note - all orders shall be subject to a cancellation fee.</p>\n" +
     "\t</div>\n" +
-    "\n" +
-    "\t<div class=\"row\" ng-show=\"formData.addressValidationError\">\n" +
-    "\t\t<div class=\"col-sm-12 alert alert-danger\" role=\"alert\">\n" +
-    "\t\t\t<h4><span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span><span class=\"sr-only\">Error:</span>Invalid Billing Address</h4>\n" +
-    "\t\t\t<div ng-repeat=\"error in formData.addressValidationError\">\n" +
-    "\t\t\t\t{{error.Summary}} - {{error.Details}}\n" +
-    "\t\t\t</div>\n" +
-    "\t\t\t<div>\n" +
-    "\t\t\t\t** Please correct billing address and try again.\n" +
-    "\t\t\t</div>\n" +
-    "\t\t</div>\n" +
-    "\t</div>\n" +
-    "\n" +
+    "\t\n" +
     "\t<div class=\"row\">\n" +
     "\t    <div class=\"col-sm-4\">\n" +
-    "\t  \t\t<button type=\"submit\" class=\"btn btn-primary\" ng-disabled=\"customerForm.$invalid || customerForm.$pending || !formData.acceptTerms || !formData.summary.total\">Continue to Order Summary</button>\n" +
+    "\t  \t\t<button type=\"submit\" class=\"btn btn-primary\" ng-disabled=\"customerForm.$invalid || customerForm.$pending || !formData.acceptTerms || !formData.summary.total\">Submit Order</button>\n" +
     "\t    </div>\n" +
     "\t\t<div class=\"col-sm-4\">\n" +
     "\t  \t\t<button type=\"button\" class=\"btn btn-default\" ng-click=\"printPage()\">Print Page</button>\n" +
     "\t    </div>\n" +
     "\t</div>\n" +
+    "\n" +
     "</form>\n" +
     "</div>\n" +
     "<div ui-view></div>\n"
@@ -1059,40 +1034,6 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
     "\n" +
     "</body>\n" +
     "</html>"
-  );
-
-
-  $templateCache.put('app/tax.html',
-    " <div id=\"form-container\">\n" +
-    "     <h2>Order Summary</h2>\n" +
-    "\n" +
-    "     <div ng-show=\"formData.calculatingTax\">Calculating tax. Please wait while we finish.<img src=\"images/ring.gif\" /></div>\n" +
-    "     <div ng-show=\"!formData.calculatingTax\">\n" +
-    "         <p>Order Total : {{formData.summary.total | currency}}</p>\n" +
-    "         <span ng-show=\"formData.summary.exemption\">\n" +
-    "             <p>Taxable: {{formData.summary.taxable | currency}}</p>\n" +
-    "             <p>Tax Exempt: {{formData.summary.exemption | currency}}</p>\n" +
-    "         </span>\n" +
-    "         <p>Estimated Sales Tax<sup>*</sup> : {{formData.summary.tax | currency}}</p>\n" +
-    "         <p>Total with Tax : {{formData.summary.totalWithTax | currency}}</p>\n" +
-    "         <p>* Sales tax estimated above will appear on your initial invoice and will be reconciled to the actual amount once final test volumes are known.</p>\n" +
-    "         <p>* If your organization is exempt from sales tax, please ensure you have attached a copy of your current Certificate of Sales Tax Exemption on the previous page.</p>\n" +
-    "         <div class=\"row\">\n" +
-    "             <div class=\"col-sm-2\">\n" +
-    "                 <button type=\"button\" class=\"btn btn-default btn-warning\" aria-label=\"Remove\" ng-click=\"goBackToTheForm()\">\n" +
-    "                     <span class=\"glyphicon glyphicon-arrow-left\"></span>\n" +
-    "                     Edit Order\n" +
-    "                 </button>\n" +
-    "             </div>\n" +
-    "             <div class=\"col-sm-2\">\n" +
-    "                 <button type=\"button\" class=\"btn btn-default btn-primary\" aria-label=\"Remove\" ng-click=\"finalizeAndSubmit()\">\n" +
-    "                     Finish and Submit Order\n" +
-    "                     <span class=\"glyphicon glyphicon-arrow-right\"></span>\n" +
-    "                 </button>\n" +
-    "             </div>\n" +
-    "         </div>\n" +
-    "     </div>\n" +
-    "</div>"
   );
 
 }]);
