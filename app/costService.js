@@ -7,7 +7,6 @@ angular.module('myApp').factory('CostService', ['$http', function ($http) {
 		cost.ordersInbox = response.data.ordersInbox;
 		cost.ordersBcc = response.data.ordersBcc;
 		cost.howHeardOptions = response.data.howHeardOptions;
-		cost.taxInbox = response.data.taxInbox;
 	});
 
 	//todo: uncomment this code when ready to include sales tax
