@@ -46481,31 +46481,16 @@ angular.module('myApp', [
 			alert(JSON.stringify(result));
 		};
 
-		var addressValidatedResult = function(result){
-			if(result.data.ResultCode === 'Success'){
-				formData.calculatingTax = true;
-				$state.go('form.customer.tax');
+    formData.calculatingTax = true;
+    $state.go('form.customer.tax');
 
-				if(formData.taxExempt) {
-					_finalizeAndSubmit();
-				}
-				else
-				{
-					taxService.calculateTax(formData.billing.address, orders, $scope.cost.pricing.taxCode, taxCalculated, taxCalculatedError);
-				}
-
-			}
-			else{
-				formData.addressValidationError = result.data.Messages;
-			}
-
-		};
-
-		var addressValidatedError = function(result){
-			alert(result);
-		};
-
-		taxService.validateAddress(formData.billing.address, addressValidatedResult, addressValidatedError);
+    if(formData.taxExempt) {
+      _finalizeAndSubmit();
+    }
+    else
+    {
+      taxService.calculateTax(formData.billing.address, orders, $scope.cost.pricing.taxCode, taxCalculated, taxCalculatedError);
+    }
 	};
 
 
