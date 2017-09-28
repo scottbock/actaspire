@@ -46701,7 +46701,7 @@ angular.module('myApp', [
     "        <div ng-show=\"order.cost.dates\">\n" +
     "            <div class=\"row\">\n" +
     "                <div class=\"form-group col-sm-4\">\n" +
-    "                    <label for=\"preferredDate\" class=\"control-label\">What is your preferred date to administer the assessments?</label>\n" +
+    "                    <label for=\"preferredDate\" class=\"control-label\">What is your preferred start date to administer the assessments?</label>\n" +
     "                    <select class=\"form-control\" name=\"preferredDate\" ng-model=\"order.preferredDate\" ng-options=\"option for option in order.cost.dates\"/>\n" +
     "                </div>\n" +
     "            </div>\n" +
