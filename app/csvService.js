@@ -6,6 +6,14 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 		return 'No';
 	};
 
+	var truncate = function(string, maxLength) {
+		if(!string){
+			return string;
+		}
+
+    return string.substring(0, Math.min(maxLength,string.length));
+	}
+
 	var colDelim = '","'
         ,rowDelim = '"\r\n'
         ,today = dateFilter(new Date(), 'MM/dd/yy');
@@ -26,7 +34,6 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 			+ formData.implementationContact.phone + colDelim
 			+ formData.backupContact.name + colDelim
 			+ formData.backupContact.email + colDelim
-			+ formData.backupContact.phone + colDelim
 			+ formData.billingContact.name + colDelim
 			+ formData.billingContact.email + colDelim
 			+ formData.billingContact.phone + colDelim
@@ -72,7 +79,7 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 	}
 
 	var buildCsvFile = function(formData, orders, cost){
-        var fileContent = 'NS Name,Internal ID,Date,line ,School / Customer,Grade,Quantity,Item,Test Administration,Test Admin Year,Test Mode,Rev Rec,Rev Rec Date,Item Rate,Amount,Preferred Test Date,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,Test Coordinator Name,Test Coordinator Email,Test Coordinator Phone,Backup Coordinator Name,Backup Coordinator Email,Backup Coordinator Phone,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,Purchase Order #,City,State,Zip,Terms And Conditions,How Heard,Discount Code,Memo\n';
+        var fileContent = 'QB Customer,Internal ID,Transaction Date,line ,School / Customer,cfi-Grade,Quantity,Item,cfi-Test Admin,cfi-Test Admin Year,cfi-Test Mode,Price,Amount,cfc-Preferred Test Date,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,cfc-Implementation Contact Name,cfc-Implementation Contact Email,cfc-Implementation Contact Phone,cfc-Backup Contact Name,cfc-Backup Contact Email,Billing Contact Name,Email,Phone,Billing Address Line 1,BillTo Line2,PO Number,BillTo City,BillTo State,BillTo PostalCode,Terms And Conditions,How Heard,cfc-Discount Code,Memo\n';
 
         angular.forEach(orders.summative.orders, function(order, key) {
         	if(order.online.total){
@@ -88,8 +95,6 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 							+ order.administrationWindow + colDelim
 							+ order.calendarYear + colDelim
 							+ 'Online' + colDelim
-							+ 'Summative Test Rev Rec Template' + colDelim
-							+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 							+ (order.cost.online - order.online.totalDiscountPerStudent) + colDelim
 							+ ((order.cost.online - order.online.totalDiscountPerStudent) * grade.online) + colDelim
 							+ ((order.preferredDate || '')) + colDelim
@@ -113,8 +118,6 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ colDelim
-						+ 'Ancillary Rev Rec Template' + colDelim
-						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 						+ (order.cost.isr * order.reportsPerStudent) + colDelim
 						+ ((order.cost.isr) * order.online.total * order.reportsPerStudent) + colDelim
             + ((order.preferredDate || '')) + colDelim
@@ -137,8 +140,6 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ colDelim
-						+ 'Ancillary Rev Rec Template' + colDelim
-						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 						+ (order.cost.labels) + colDelim
 						+ ((order.cost.labels) * order.online.total) + colDelim
             + ((order.preferredDate || '')) + colDelim
@@ -167,8 +168,6 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 							+ order.administrationWindow + colDelim
 							+ order.calendarYear + colDelim
 							+ 'Paper' + colDelim
-							+ 'Summative Test Rev Rec Template' + colDelim
-							+ revRecDate(order.calendarYear, order.administrationWindow)+ colDelim
 							+ (order.cost.paper - order.paper.totalDiscountPerStudent) + colDelim
 							+ ((order.cost.paper - order.paper.totalDiscountPerStudent) * grade.paper) + colDelim
               + ((order.preferredDate || '')) + colDelim
@@ -193,8 +192,6 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ colDelim
-						+ 'Ancillary Rev Rec Template' + colDelim
-						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 						+ (order.cost.isr * order.reportsPerStudent) + colDelim
 						+ ((order.cost.isr) * order.paper.total * order.reportsPerStudent) + colDelim
             + ((order.preferredDate || '')) + colDelim
@@ -217,8 +214,6 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ colDelim
-						+ 'Ancillary Rev Rec Template' + colDelim
-						+ revRecDate(order.calendarYear, order.administrationWindow) + colDelim
 						+ (order.cost.labels) + colDelim
 						+ ((order.cost.labels) * order.paper.total) + colDelim
             + ((order.preferredDate || '')) + colDelim
@@ -246,8 +241,6 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 							+ 'School Year' + colDelim
 							+ schoolYearFilter(order.calendarYear) + colDelim
 							+ 'Online' + colDelim
-							+ 'Periodic Test Rev Rec Template' + colDelim
-							+ revRecDate(order.calendarYear)+ colDelim
 							+ (order.cost - order.totalDiscountPerStudent) + colDelim
 							+ ((order.cost - order.totalDiscountPerStudent) * grade.online) + colDelim
               + ((order.preferredDate || '')) + colDelim
@@ -272,7 +265,7 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 					+ 1 + colDelim
 					+ 'Late Fee' + colDelim
 					+ order.administrationWindow + colDelim
-					+ order.calendarYear + colDelim + colDelim + colDelim + colDelim
+					+ order.calendarYear + colDelim + colDelim
 					+ order.cost.lateFee + colDelim
 					+ order.cost.lateFee + colDelim
           + ((order.preferredDate || '')) + colDelim
@@ -290,7 +283,7 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 	};
 
 	var buildTrainingCsvFile = function(formData, trainingOrders, cost){
-		var fileContent = 'NS Name,Internal ID,Admin,Year,Date,line,School / Customer,Training Description,Length (hours),Mode,Capacity,Preferred Date,Preferred Year,Preferred Time,Price,Quantity,Total,Rev Rec,Start Date,End Date,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,Memo 2\n';
+		var fileContent = 'QB Customer,Internal ID,Admin,Year,Transaction Date,line,School / Customer,Training Description,Length (hours),Mode,Capacity,Preferred Date,Preferred Year,Preferred Time,Price,Quantity,Total,Start Date,End Date,Contact Name,Email,Phone,BillTo Line1,BillTo Line2,Memo 2\n';
 
 		var index = 0;
         angular.forEach(trainingOrders, function(training, key) {
@@ -301,7 +294,7 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 				+ today + colDelim 
 				+ (index++) + colDelim
 				+ formData.customer.organization + colDelim
-				+ training.title + colDelim
+				+ truncate(training.title, 31) + colDelim
 				+ training.duration + colDelim
 				+ training.mode + colDelim
 				+ (training.maxParticipants * training.quantity) + colDelim
@@ -311,7 +304,6 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 				+ training.cost + colDelim
 				+ training.quantity + colDelim
 				+ (training.cost * training.quantity) + colDelim
-				+ 'Training Rev Rec Template' + colDelim
 				+ dateFilter(training.preferredDate, 'MM/dd/yy') + colDelim
 				+ dateFilter(training.preferredDate, 'MM/dd/yy') + colDelim
 				+ formData.billingContact.name + colDelim
@@ -331,7 +323,7 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 	}
 
 	var buildIsrCsvFile = function(formData, cost){
-		var fileContent = 'NS Name,Internal ID,Grade,Admin,Year,Date,line,School / Customer,Report Description,Price,Quantity,Total,Special Notes,Rev Rec,Rev Rec Date,Name,Job Title,Contact email,Billing Contact Name,Billing Contact Email,Billing Contact Phone,Billing Address Line 1,Billing Address Line 2,City,State,Zip,Terms And Conditions,Memo 2\n';
+		var fileContent = 'QB Customer,Internal ID,cfi-Grade,Admin,Year,Transaction Date,line,School / Customer,Report Description,Price,Quantity,Total,Special Notes,Name,Job Title,Contact email,Contact Name,Email,Phone,BillTo Line1,BillTo Line2,BillTo City,BillTo State,BillTo PostalCode,Terms And Conditions,Memo 2\n';
 
 		var index = 0;
         angular.forEach(cost.reportGroups, function(reportGroup, key) {
@@ -348,8 +340,6 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 						+ report.amount + colDelim
 						+ (report.cost * report.amount) + colDelim
 						+ formData.comments + colDelim
-						+ 'Ancillary Rev Rec Template' + colDelim
-						+ revRecDate(cost.currentYear, cost.currentSemester) + colDelim
 						+ formData.customer.firstName + ' ' + formData.customer.lastName + colDelim
 						+ formData.customer.jobTitle + colDelim
 						+ formData.customer.email + colDelim
