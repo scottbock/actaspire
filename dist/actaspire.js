@@ -45487,7 +45487,7 @@ angular.module('myApp', [
 						+ 'Individual Score Reports ' + order.reportsPerStudent + 'x' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
-						+ colDelim
+						+ 'n/a' + colDelim
 						+ (order.cost.isr * order.reportsPerStudent) + colDelim
 						+ ((order.cost.isr) * order.online.total * order.reportsPerStudent) + colDelim
             + ((order.preferredDate || '')) + colDelim
@@ -45509,7 +45509,7 @@ angular.module('myApp', [
 						+ 'Score Labels 1x' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
-						+ colDelim
+						+ 'n/a' + colDelim
 						+ (order.cost.labels) + colDelim
 						+ ((order.cost.labels) * order.online.total) + colDelim
             + ((order.preferredDate || '')) + colDelim
@@ -45561,7 +45561,7 @@ angular.module('myApp', [
 						+ 'Individual Score Reports ' + order.reportsPerStudent + 'x' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
-						+ colDelim
+						+ 'n/a' + colDelim
 						+ (order.cost.isr * order.reportsPerStudent) + colDelim
 						+ ((order.cost.isr) * order.paper.total * order.reportsPerStudent) + colDelim
             + ((order.preferredDate || '')) + colDelim
@@ -45583,7 +45583,7 @@ angular.module('myApp', [
 						+ 'Score Labels 1x' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
-						+ colDelim
+						+ 'n/a' + colDelim
 						+ (order.cost.labels) + colDelim
 						+ ((order.cost.labels) * order.paper.total) + colDelim
             + ((order.preferredDate || '')) + colDelim
@@ -45653,16 +45653,15 @@ angular.module('myApp', [
 	};
 
 	var buildTrainingCsvFile = function(formData, trainingOrders, cost){
-		var fileContent = 'QB Customer,Internal ID,Admin,Year,Transaction Date,line,School / Customer,Training Description,Length (hours),Mode,Capacity,Preferred Date,Preferred Year,Preferred Time,Price,Quantity,Total,Start Date,End Date,Contact Name,Email,Phone,BillTo Line1,BillTo Line2,Memo 2\n';
+		var fileContent = 'QB Customer,Account No,cfi-Test Mode,cfi-Test Admin,cfi-Test Admin Year,Transaction Date,School / Customer,Training Description,Length (hours),Mode,Capacity,Preferred Date,Preferred Year,Preferred Time,Price,Quantity,Total,Start Date,End Date,Contact Name,Email,Phone,BillTo Line1,BillTo Line2,BillTo City,BillTo State,BillTo PostalCode,Memo 2\n';
 
 		var index = 0;
         angular.forEach(trainingOrders, function(training, key) {
 
-			fileContent += ',,"' 
+			fileContent += ',,n/a,"'
 				+ cost.currentSemester + colDelim
 				+ cost.currentYear + colDelim	
-				+ today + colDelim 
-				+ (index++) + colDelim
+				+ today + colDelim
 				+ formData.customer.organization + colDelim
 				+ truncate(training.title, 31) + colDelim
 				+ training.duration + colDelim
@@ -45682,8 +45681,15 @@ angular.module('myApp', [
 				+ formData.billing.address.line1 + colDelim;
 
 				if(formData.billing.address.line2){
-					fileContent += formData.billing.address.line2
+					fileContent += formData.billing.address.line2 + colDelim
 				}
+        else{
+          fileContent += colDelim;
+        }
+
+				fileContent +=	formData.billing.address.city + colDelim
+					+ formData.billing.address.state + colDelim
+					+ formData.billing.address.zip + colDelim
 
 				fileContent += colDelim + rowDelim;
 
@@ -45693,17 +45699,16 @@ angular.module('myApp', [
 	}
 
 	var buildIsrCsvFile = function(formData, cost){
-		var fileContent = 'QB Customer,Internal ID,cfi-Grade,Admin,Year,Transaction Date,line,School / Customer,Report Description,Price,Quantity,Total,Special Notes,Name,Job Title,Contact email,Contact Name,Email,Phone,BillTo Line1,BillTo Line2,BillTo City,BillTo State,BillTo PostalCode,Terms And Conditions,Memo 2\n';
+		var fileContent = 'QB Customer,Account No,cfi-Test Mode,cfi-Grade,cfi-Test Admin,cfi-Test Admin Year,Transaction Date,School / Customer,Report Description,Price,Quantity,Total,Special Notes,Name,Job Title,Contact email,Contact Name,Email,Phone,BillTo Line1,BillTo Line2,BillTo City,BillTo State,BillTo PostalCode,Terms And Conditions,Memo 2\n';
 
 		var index = 0;
         angular.forEach(cost.reportGroups, function(reportGroup, key) {
         	angular.forEach(reportGroup.reports, function(report, key) {
         		if(report.amount){
-					fileContent += ',,0,"' 
+					fileContent += ',,n/a,0,"'
 						+ cost.currentSemester + colDelim
 						+ cost.currentYear + colDelim
-						+ today + colDelim 
-						+ (index++) + colDelim
+						+ today + colDelim
 						+ formData.customer.organization + colDelim
 						+ reportGroup.name + ' ' + report.number + 'x' + colDelim
 						+ report.cost + colDelim
