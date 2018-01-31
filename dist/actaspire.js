@@ -45376,6 +45376,13 @@ angular.module('myApp', [
 		return 'No';
 	};
 
+	var getEmailSuffix = function(emailAddress){
+		if(emailAddress && emailAddress.indexOf('@') > -1){
+			return emailAddress.split('@')[1];
+		}
+		return '';
+	}
+
 	var truncate = function(string, maxLength) {
 		if(!string){
 			return string;
@@ -45399,13 +45406,17 @@ angular.module('myApp', [
 		fileContent += formData.customer.firstName + ' ' + formData.customer.lastName + colDelim
 			+ formData.customer.jobTitle + colDelim
 			+ formData.customer.email + colDelim
+			+ getEmailSuffix(formData.customer.email) + colDelim
 			+ formData.implementationContact.name + colDelim
 			+ formData.implementationContact.email + colDelim
+      + getEmailSuffix(formData.implementationContact.email) + colDelim
 			+ formData.implementationContact.phone + colDelim
 			+ formData.backupContact.name + colDelim
 			+ formData.backupContact.email + colDelim
+      + getEmailSuffix(formData.backupContact.email) + colDelim
 			+ formData.billingContact.name + colDelim
 			+ formData.billingContact.email + colDelim
+      + getEmailSuffix(formData.billingContact.email) + colDelim
 			+ formData.billingContact.phone + colDelim
 			+ formData.billing.address.line1 + colDelim;
 
@@ -45449,7 +45460,7 @@ angular.module('myApp', [
 	}
 
 	var buildCsvFile = function(formData, orders, cost){
-        var fileContent = 'QB Customer,Internal ID,Transaction Date,line ,School / Customer,cfi-Grade,Quantity,Item,cfi-Test Admin,cfi-Test Admin Year,cfi-Test Mode,Price,Amount,cfc-Preferred Test Date,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,cfc-Implementation Contact Name,cfc-Implementation Contact Email,cfc-Implementation Contact Phone,cfc-Backup Contact Name,cfc-Backup Contact Email,Billing Contact Name,Email,Phone,Billing Address Line 1,BillTo Line2,PO Number,BillTo City,BillTo State,BillTo PostalCode,Terms And Conditions,How Heard,cfc-Discount Code,Memo\n';
+        var fileContent = 'QB Customer,Internal ID,Transaction Date,line ,School / Customer,cfi-Grade,Quantity,Item,cfi-Test Admin,cfi-Test Admin Year,cfi-Test Mode,Price,Amount,cfc-Preferred Test Date,English,Mathematics,Reading,Science,Writing,Group Order,Group Creator Name,Name,Job Title,Contact email,Contact email Suffix,cfc-Implementation Contact Name,cfc-Implementation Contact Email,cfc-Implementation Contact Email Suffix,cfc-Implementation Contact Phone,cfc-Backup Contact Name,cfc-Backup Contact Email,cfc-Backup Contact Email Suffix,Billing Contact Name,Email,Email Suffix,Phone,Billing Address Line 1,BillTo Line2,PO Number,BillTo City,BillTo State,BillTo PostalCode,Terms And Conditions,How Heard,cfc-Discount Code,Memo\n';
 
         angular.forEach(orders.summative.orders, function(order, key) {
         	if(order.online.total){
@@ -45653,7 +45664,7 @@ angular.module('myApp', [
 	};
 
 	var buildTrainingCsvFile = function(formData, trainingOrders, cost){
-		var fileContent = 'QB Customer,Account No,cfi-Test Mode,cfi-Test Admin,cfi-Test Admin Year,Transaction Date,School / Customer,Training Description,Length (hours),Mode,Capacity,Preferred Date,Preferred Year,Preferred Time,Price,Quantity,Total,Start Date,End Date,Contact Name,Email,Phone,BillTo Line1,BillTo Line2,BillTo City,BillTo State,BillTo PostalCode,Memo 2\n';
+		var fileContent = 'QB Customer,Account No,cfi-Test Mode,cfi-Test Admin,cfi-Test Admin Year,Transaction Date,School / Customer,Training Description,Length (hours),Mode,Capacity,Preferred Date,Preferred Year,Preferred Time,Price,Quantity,Total,Start Date,End Date,Contact Name,Email,Email Suffix,Phone,BillTo Line1,BillTo Line2,BillTo City,BillTo State,BillTo PostalCode,Memo 2\n';
 
 		var index = 0;
         angular.forEach(trainingOrders, function(training, key) {
@@ -45677,6 +45688,7 @@ angular.module('myApp', [
 				+ dateFilter(training.preferredDate, 'MM/dd/yy') + colDelim
 				+ formData.billingContact.name + colDelim
 				+ formData.billingContact.email + colDelim
+        + getEmailSuffix(formData.billingContact.email) + colDelim
 				+ formData.billingContact.phone + colDelim
 				+ formData.billing.address.line1 + colDelim;
 
@@ -45699,7 +45711,7 @@ angular.module('myApp', [
 	}
 
 	var buildIsrCsvFile = function(formData, cost){
-		var fileContent = 'QB Customer,Account No,cfi-Test Mode,cfi-Grade,cfi-Test Admin,cfi-Test Admin Year,Transaction Date,School / Customer,Report Description,Price,Quantity,Total,Special Notes,Name,Job Title,Contact email,Contact Name,Email,Phone,BillTo Line1,BillTo Line2,BillTo City,BillTo State,BillTo PostalCode,Terms And Conditions,Memo 2\n';
+		var fileContent = 'QB Customer,Account No,cfi-Test Mode,cfi-Grade,cfi-Test Admin,cfi-Test Admin Year,Transaction Date,School / Customer,Report Description,Price,Quantity,Total,Special Notes,Name,Job Title,Contact email,Contact email Suffix,Contact Name,Email,Email Suffix,Phone,BillTo Line1,BillTo Line2,BillTo City,BillTo State,BillTo PostalCode,Terms And Conditions,Memo 2\n';
 
 		var index = 0;
         angular.forEach(cost.reportGroups, function(reportGroup, key) {
@@ -45718,8 +45730,10 @@ angular.module('myApp', [
 						+ formData.customer.firstName + ' ' + formData.customer.lastName + colDelim
 						+ formData.customer.jobTitle + colDelim
 						+ formData.customer.email + colDelim
+            + getEmailSuffix(formData.customer.email) + colDelim
 						+ formData.billingContact.name + colDelim
 						+ formData.billingContact.email + colDelim
+            + getEmailSuffix(formData.billingContact.email) + colDelim
 						+ formData.billingContact.phone + colDelim
 						+ formData.billing.address.line1 + colDelim;
 
