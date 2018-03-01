@@ -546,7 +546,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
 
   $templateCache.put('app/form-isr.html',
     "<div ng-show=\"$state.is('form.isr')\">\n" +
-    "\t<p>This form should be filled out by organizations wishing to purchase printed score reports and labels for the <strong>{{cost.currentSemester}} {{cost.currentYear}}</strong> test administration of ACT Aspire.</p>\t\n" +
+    "\t<p>This form should be filled out by organizations wishing to purchase printed score reports and labels for the <strong>{{cost.currentSemester}} {{cost.currentYear}}</strong> test administration of ACT Aspire. The deadline for ordering <strong>{{cost.currentSemester}} {{cost.currentYear}}</strong> reports is {{cost.deadline}}</p>\n" +
     "\n" +
     "\t<form id=\"trainingForm\" name=\"trainingForm\" ng-submit=\"processForm()\"> \n" +
     "\n" +
