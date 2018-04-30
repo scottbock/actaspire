@@ -546,163 +546,198 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
 
   $templateCache.put('app/form-isr.html',
     "<div ng-show=\"$state.is('form.isr')\">\n" +
-    "\t<p>This form should be filled out by organizations wishing to purchase printed score reports and labels for the <strong>{{cost.currentSemester}} {{cost.currentYear}}</strong> test administration of ACT Aspire. The deadline for ordering <strong>{{cost.currentSemester}} {{cost.currentYear}}</strong> reports is {{cost.deadline}}</p>\n" +
+    "    <p>This form should be filled out by organizations wishing to purchase printed score reports and labels for the\n" +
+    "        <strong>{{cost.currentSemester}} {{cost.currentYear}}</strong> test administration of ACT Aspire. The deadline\n" +
+    "        for ordering <strong>{{cost.currentSemester}} {{cost.currentYear}}</strong> reports is {{cost.deadline}}</p>\n" +
     "\n" +
-    "\t<form id=\"trainingForm\" name=\"trainingForm\" ng-submit=\"processForm()\"> \n" +
+    "    <form id=\"trainingForm\" name=\"trainingForm\" ng-submit=\"processForm()\">\n" +
     "\n" +
-    "\t\t<div class=\"row\"><div class=\"col-sm-12\"><h4>Date: {{date | date:'yyyy-MM-dd'}}</h4></div></div>\n" +
+    "        <div class=\"row\">\n" +
+    "            <div class=\"col-sm-12\"><h4>Date: {{date | date:'yyyy-MM-dd'}}</h4></div>\n" +
+    "        </div>\n" +
     "\n" +
-    "\t\t<div class=\"panel panel-default\">\n" +
-    "\t\t    <div class=\"panel-heading\">Contact Information</div>\n" +
-    "\t\t    <div class=\"panel-body\">\n" +
-    "\t\t\t\t<div class=\"row\">\n" +
-    "\t\t\t\t    <div class=\"form-group col-sm-3 required\">\n" +
-    "\t\t\t\t        <label for=\"firstName\" class=\"control-label\">First Name</label>\n" +
-    "\t\t\t\t        <input type=\"text\" class=\"form-control\" name=\"firstName\" ng-model=\"formData.customer.firstName\" required=\"required\">\n" +
-    "\t\t\t\t    </div>\n" +
+    "        <div class=\"panel panel-default\">\n" +
+    "            <div class=\"panel-heading\">Contact Information</div>\n" +
+    "            <div class=\"panel-body\">\n" +
+    "                <div class=\"row\">\n" +
+    "                    <div class=\"form-group col-sm-3 required\">\n" +
+    "                        <label for=\"firstName\" class=\"control-label\">First Name</label>\n" +
+    "                        <input type=\"text\" class=\"form-control\" name=\"firstName\" ng-model=\"formData.customer.firstName\"\n" +
+    "                               required=\"required\">\n" +
+    "                    </div>\n" +
     "\n" +
-    "\t\t\t\t    <div class=\"form-group col-sm-3 required\">\n" +
-    "\t\t\t\t        <label for=\"lastName\" class=\"control-label\">Last Name</label>\n" +
-    "\t\t\t\t        <input type=\"text\" class=\"form-control\" name=\"lastName\" ng-model=\"formData.customer.lastName\" required=\"required\">\n" +
-    "\t\t\t\t    </div>\n" +
+    "                    <div class=\"form-group col-sm-3 required\">\n" +
+    "                        <label for=\"lastName\" class=\"control-label\">Last Name</label>\n" +
+    "                        <input type=\"text\" class=\"form-control\" name=\"lastName\" ng-model=\"formData.customer.lastName\"\n" +
+    "                               required=\"required\">\n" +
+    "                    </div>\n" +
     "\n" +
-    "\t\t\t\t    <div class=\"form-group col-sm-6 required\">\n" +
-    "\t\t\t\t        <label for=\"organization\" class=\"control-label\">School / District / Organization</label>\n" +
-    "\t\t\t\t        <input type=\"text\" class=\"form-control\" name=\"organization\" ng-model=\"formData.customer.organization\" required=\"required\">\n" +
-    "\t\t\t\t    </div>\n" +
-    "\t\t\t\t</div>\n" +
+    "                    <div class=\"form-group col-sm-6 required\">\n" +
+    "                        <label for=\"organization\" class=\"control-label\">School / District / Organization</label>\n" +
+    "                        <input type=\"text\" class=\"form-control\" name=\"organization\"\n" +
+    "                               ng-model=\"formData.customer.organization\" required=\"required\">\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
     "\n" +
-    "\t\t\t\t<div class=\"row\">\n" +
-    "\t\t\t\t    <div class=\"form-group col-sm-6 required\">\n" +
-    "\t\t\t\t        <label for=\"jobTitle\" class=\"control-label\">Job Title</label>\n" +
-    "\t\t\t\t        <input type=\"text\" class=\"form-control\" name=\"jobTitle\" ng-model=\"formData.customer.jobTitle\" required=\"required\">\n" +
-    "\t\t\t\t    </div>\n" +
+    "                <div class=\"row\">\n" +
+    "                    <div class=\"form-group col-sm-6 required\">\n" +
+    "                        <label for=\"jobTitle\" class=\"control-label\">Job Title</label>\n" +
+    "                        <input type=\"text\" class=\"form-control\" name=\"jobTitle\" ng-model=\"formData.customer.jobTitle\"\n" +
+    "                               required=\"required\">\n" +
+    "                    </div>\n" +
     "\n" +
-    "\t\t\t\t    <div class=\"form-group col-sm-4 required\">\n" +
-    "\t\t\t\t        <label for=\"email\" class=\"control-label\">Email</label>\n" +
-    "\t\t\t\t        <input type=\"email\" class=\"form-control\" name=\"email\" ng-model=\"formData.customer.email\" required=\"required\">\n" +
-    "\t\t\t\t    </div>\n" +
-    "\t\t\t\t</div>\n" +
-    "\t\t\t</div>\n" +
-    "\t\t</div>\n" +
+    "                    <div class=\"form-group col-sm-4 required\">\n" +
+    "                        <label for=\"email\" class=\"control-label\">Email</label>\n" +
+    "                        <input type=\"email\" class=\"form-control\" name=\"email\" ng-model=\"formData.customer.email\"\n" +
+    "                               required=\"required\">\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
     "\n" +
-    "\t\t<div class=\"panel panel-default\">\n" +
-    "\t\t    <div class=\"panel-heading\">Billing Information</div>\n" +
-    "\t\t    <div class=\"panel-body\">\n" +
-    "\t\t        <div class=\"row\">\n" +
-    "\t\t            <div class=\"form-group col-sm-4 required\">\n" +
-    "\t\t                <label for=\"billingName\" class=\"control-label\">Billing Contact Name</label>\n" +
-    "\t\t                <input type=\"text\" class=\"form-control\" name=\"billingName\" ng-model=\"formData.billingContact.name\" required=\"required\">\n" +
-    "\t\t            </div>\n" +
+    "        <div class=\"panel panel-default\">\n" +
+    "            <div class=\"panel-heading\">Billing Information</div>\n" +
+    "            <div class=\"panel-body\">\n" +
+    "                <div class=\"row\">\n" +
+    "                    <div class=\"form-group col-sm-4 required\">\n" +
+    "                        <label for=\"billingName\" class=\"control-label\">Billing Contact Name</label>\n" +
+    "                        <input type=\"text\" class=\"form-control\" name=\"billingName\"\n" +
+    "                               ng-model=\"formData.billingContact.name\" required=\"required\">\n" +
+    "                    </div>\n" +
     "\n" +
-    "\t\t            <div class=\"form-group col-sm-4 required\">\n" +
-    "\t\t                <label for=\"billingEmail\" class=\"control-label\">Billing Contact Email</label>\n" +
-    "\t\t                <input type=\"email\" class=\"form-control\" name=\"billingEmail\" ng-model=\"formData.billingContact.email\" required=\"required\">\n" +
-    "\t\t            </div>\n" +
+    "                    <div class=\"form-group col-sm-4 required\">\n" +
+    "                        <label for=\"billingEmail\" class=\"control-label\">Billing Contact Email</label>\n" +
+    "                        <input type=\"email\" class=\"form-control\" name=\"billingEmail\"\n" +
+    "                               ng-model=\"formData.billingContact.email\" required=\"required\">\n" +
+    "                    </div>\n" +
     "\n" +
-    "\t\t            <div class=\"form-group col-sm-4 required\">\n" +
-    "\t\t                <label for=\"billingPhone\" class=\"control-label\">Billing Contact Phone</label>\n" +
-    "\t\t                <input type=\"tel\" class=\"form-control\" name=\"billingPhone\" ng-model=\"formData.billingContact.phone\" required=\"required\" ng-pattern=\"/^[(]{0,1}[0-9]{3}[)\\.\\- ]{0,1}[0-9]{3}[\\.\\- ]{0,1}[0-9]{4}$/\">\n" +
-    "\t\t            </div>\n" +
-    "\t\t        </div>    \n" +
-    "\t\t        <div class=\"row\">\n" +
-    "\t\t            <div class=\"form-group col-sm-12 required\">\n" +
-    "\t\t                <label for=\"billingAddress\" class=\"control-label\">Billing Address Line 1</label>\n" +
-    "\t\t                <input type=\"text\" class=\"form-control\" name=\"billingAddress\" ng-model=\"formData.billing.address.line1\" required=\"required\">\n" +
-    "\t\t            </div>\n" +
-    "\t\t        </div>\n" +
-    "\t\t        <div class=\"row\">\n" +
-    "\t\t            <div class=\"form-group col-sm-12\">\n" +
-    "\t\t                <label for=\"billingAddress\" class=\"control-label\">Billing Address Line 2</label>\n" +
-    "\t\t                <input type=\"text\" class=\"form-control\" name=\"billingAddress\" ng-model=\"formData.billing.address.line2\">\n" +
-    "\t\t            </div>\n" +
-    "\t\t        </div>        \n" +
-    "\t\t        <div class=\"row\">\n" +
-    "\t\t            <div class=\"form-group col-sm-4 required\">\n" +
-    "\t\t                <label for=\"city\" class=\"control-label\">City</label>\n" +
-    "\t\t                <input type=\"text\" class=\"form-control\" name=\"city\" ng-model=\"formData.billing.address.city\" required=\"required\">\n" +
-    "\t\t            </div>\n" +
+    "                    <div class=\"form-group col-sm-4 required\">\n" +
+    "                        <label for=\"billingPhone\" class=\"control-label\">Billing Contact Phone</label>\n" +
+    "                        <input type=\"tel\" class=\"form-control\" name=\"billingPhone\"\n" +
+    "                               ng-model=\"formData.billingContact.phone\" required=\"required\"\n" +
+    "                               ng-pattern=\"/^[(]{0,1}[0-9]{3}[)\\.\\- ]{0,1}[0-9]{3}[\\.\\- ]{0,1}[0-9]{4}$/\">\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "                <div class=\"row\">\n" +
+    "                    <div class=\"form-group col-sm-12 required\">\n" +
+    "                        <label for=\"billingAddress\" class=\"control-label\">Billing Address Line 1</label>\n" +
+    "                        <input type=\"text\" class=\"form-control\" name=\"billingAddress\"\n" +
+    "                               ng-model=\"formData.billing.address.line1\" required=\"required\">\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "                <div class=\"row\">\n" +
+    "                    <div class=\"form-group col-sm-12\">\n" +
+    "                        <label for=\"billingAddress\" class=\"control-label\">Billing Address Line 2</label>\n" +
+    "                        <input type=\"text\" class=\"form-control\" name=\"billingAddress\"\n" +
+    "                               ng-model=\"formData.billing.address.line2\">\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "                <div class=\"row\">\n" +
+    "                    <div class=\"form-group col-sm-4 required\">\n" +
+    "                        <label for=\"city\" class=\"control-label\">City</label>\n" +
+    "                        <input type=\"text\" class=\"form-control\" name=\"city\" ng-model=\"formData.billing.address.city\"\n" +
+    "                               required=\"required\">\n" +
+    "                    </div>\n" +
     "\n" +
-    "\t\t            <div class=\"form-group col-sm-4 required\">\n" +
-    "\t\t                <label for=\"state\" class=\"control-label\">State</label>\n" +
-    "\t\t        \t\t<select class=\"form-control\" name=\"state\" ng-model=\"formData.billing.address.state\" ng-options=\"key as value for (key , value) in states\" required=\"required\"></select>\n" +
-    "\t\t            </div>\n" +
+    "                    <div class=\"form-group col-sm-4 required\">\n" +
+    "                        <label for=\"state\" class=\"control-label\">State</label>\n" +
+    "                        <select class=\"form-control\" name=\"state\" ng-model=\"formData.billing.address.state\"\n" +
+    "                                ng-options=\"key as value for (key , value) in states\" required=\"required\"></select>\n" +
+    "                    </div>\n" +
     "\n" +
-    "\t\t            <div class=\"form-group col-sm-4 required\">\n" +
-    "\t\t                <label for=\"zip\" class=\"control-label\">Zip</label>\n" +
-    "\t\t                <input type=\"text\" class=\"form-control\" name=\"zip\" ng-model=\"formData.billing.address.zip\" required=\"required\">\n" +
-    "\t\t            </div>\n" +
-    "\t\t        </div>    \n" +
-    "\t\t    </div>\n" +
-    "\t\t</div>\n" +
+    "                    <div class=\"form-group col-sm-4 required\">\n" +
+    "                        <label for=\"zip\" class=\"control-label\">Zip</label>\n" +
+    "                        <input type=\"text\" class=\"form-control\" name=\"zip\" ng-model=\"formData.billing.address.zip\"\n" +
+    "                               required=\"required\">\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
     "\n" +
+    "        <div class=\"panel panel-default\">\n" +
+    "            <div class=\"panel-heading\">\n" +
+    "                Available Reports\n" +
+    "            </div>\n" +
+    "            <div class=\"panel-body\">\n" +
+    "                <div class=\"row\">\n" +
+    "                    <div class=\"form-group col-sm-12 required\">\n" +
+    "                        <label for=\"administrativeWindow\" class=\"control-label\">What administrative window and year would you like to order reports for?</label>\n" +
+    "                        <select class=\"form-control\" name=\"administrativeWindow\" ng-model=\"formData.administrativeWindow\"\n" +
+    "                                ng-options=\"option for option in cost.administrativeWindows\" required=\"required\"></select>\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
+    "            <table class=\"table table-striped\">\n" +
+    "                <thead>\n" +
+    "                <th>Printed Reports</th>\n" +
+    "                <th>Amount</th>\n" +
+    "                <th>Estimated Student Count</th>\n" +
+    "                <th>Estimated Total</th>\n" +
+    "                </thead>\n" +
+    "                <tbody ng-repeat=\"reportGroup in cost.reportGroups\">\n" +
+    "                <tr ng-repeat=\"report in reportGroup.reports\">\n" +
+    "                    <td><label><input type=\"radio\" name=\"{{reportGroup.name}}\" value=\"{{report.number}}\"\n" +
+    "                                      ng-model=\"reportGroup.selectedReport\"\n" +
+    "                                      ng-change=\"selectReport(report, reportGroup)\" /> {{reportGroup.name}}\n" +
+    "                        (x{{report.number}} per student)</label></td>\n" +
+    "                    <td>{{report.cost | currency:\"\"}}</td>\n" +
+    "                    <td><input type=\"number\" ng-model=\"report.amount\" min=\"0\"\n" +
+    "                               ng-disabled=\"reportGroup.selectedReport != report.number\" /></td>\n" +
+    "                    <td>{{report.cost * report.amount | currency:\"\"}}</td>\n" +
+    "                </tr>\n" +
+    "                </tbody>\n" +
+    "                <tfoot>\n" +
+    "                <tr>\n" +
+    "                    <td colspan=\"6\">\n" +
+    "                        <div class=\"pull-right\"><h4>Total: {{getTotal() | currency:\"\"}}</h4></div>\n" +
+    "                    </td>\n" +
+    "                </tr>\n" +
+    "                </tfoot>\n" +
+    "            </table>\n" +
+    "        </div>\n" +
     "\n" +
+    "        <div class=\"panel panel-default\">\n" +
+    "            <div class=\"panel-heading\">Additional Comments</div>\n" +
+    "            <div class=\"panel-body\">\n" +
+    "                <textarea class=\"form-control\" rows=\"3\" ng-model=\"formData.comments\"></textarea>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
     "\n" +
-    "\t\t<div class=\"panel panel-default\">\n" +
-    "\t\t\t<div class=\"panel-heading\">\n" +
-    "\t\t\tAvailable Reports\n" +
-    "\t\t\t</div>\n" +
+    "        <div class=\"row gutter\">\n" +
+    "            <h4>Important Next Steps:</h4>\n" +
+    "            <ul>\n" +
+    "                <li>You will be invoiced upon receipt of your order</li>\n" +
+    "                <li>If you would like to purchase printed reports and/or score labels for future testing adminstrations\n" +
+    "                    please call 1-855-730-0400 .\n" +
+    "                </li>\n" +
+    "            </ul>\n" +
+    "        </div>\n" +
     "\n" +
-    "\t\t\t<table class=\"table table-striped\">\n" +
-    "\t\t\t\t<thead>\n" +
-    "\t\t\t\t\t<th>Printed Reports</th>\n" +
-    "\t\t\t\t\t<th>Amount</th>\n" +
-    "\t\t\t\t\t<th>Estimated Student Count</th>\n" +
-    "\t\t\t\t\t<th>Estimated Total</th>\n" +
-    "\t\t\t\t</thead>\n" +
-    "\t\t\t\t<tbody ng-repeat=\"reportGroup in cost.reportGroups\">\n" +
-    "\t\t\t\t<tr ng-repeat=\"report in reportGroup.reports\">\n" +
-    "\t\t\t\t\t<td><label><input type=\"radio\" name=\"{{reportGroup.name}}\" value=\"{{report.number}}\" ng-model=\"reportGroup.selectedReport\" ng-change=\"selectReport(report, reportGroup)\"/>  {{reportGroup.name}} (x{{report.number}} per student)</label></td>\t\t\t\t\t\n" +
-    "\t\t\t\t\t<td>{{report.cost | currency:\"\"}}</td>\n" +
-    "\t\t\t\t\t<td><input type=\"number\" ng-model=\"report.amount\" min=\"0\" ng-disabled=\"reportGroup.selectedReport != report.number\"/></td>\n" +
-    "\t\t\t\t\t<td>{{report.cost * report.amount | currency:\"\"}}</td>\n" +
-    "\t\t\t\t</tr>\n" +
-    "\t\t\t\t</tbody>\n" +
-    "\t\t\t\t<tfoot>\n" +
-    "\t\t\t\t\t<tr>\n" +
-    "\t\t\t\t\t\t<td colspan=\"6\">\n" +
-    "\t\t\t\t\t\t\t<div class=\"pull-right\"><h4>Total: {{getTotal() | currency:\"\"}}</h4></div>\n" +
-    "\t\t\t\t\t\t</td>\n" +
-    "\t\t\t\t\t</tr>\n" +
-    "\t\t\t\t</tfoot>\n" +
-    "\t\t\t</table>\n" +
-    "\t\t</div>\n" +
-    "\n" +
-    "\t\t<div class=\"panel panel-default\">\n" +
-    "\t\t\t<div class=\"panel-heading\">Additional Comments</div>\n" +
-    "\t\t\t<div class=\"panel-body\">\n" +
-    "\t\t\t\t<textarea class=\"form-control\" rows=\"3\" ng-model=\"formData.comments\"></textarea>\n" +
-    "\t\t\t</div>\n" +
-    "\t\t</div>\n" +
-    "\n" +
-    "\t\t<div class=\"row gutter\">\n" +
-    "\t\t\t<h4>Important Next Steps:</h4>\n" +
-    "\t\t\t<ul>\n" +
-    "\t\t\t\t<li>You will be invoiced upon receipt of your order</li>\n" +
-    "\t\t\t\t<li>If you would like to purchase printed reports and/or score labels for future testing adminstrations please call 1-855-730-0400 .</li>\n" +
-    "\t\t\t</ul>\n" +
-    "\t\t</div>\n" +
-    "\n" +
-    "\t\t<div class=\"row\">\n" +
-    "\t\t\t<div class=\"col-sm-12 form-group\">\n" +
-    "\t\t\t    <label class=\"checkbox-inline\">\n" +
-    "\t\t\t    \t<input type=\"checkbox\" ng-model=\"formData.acceptTerms\">\n" +
-    "\t\t\t    \tI agree to ACT Aspire's <a href=\"./json/ActAspireTermsAndConditions.pdf\" target=\"_blank\">Terms and Conditions</a>\n" +
-    "\t\t\t    </label>\n" +
-    "\t\t\t</div>\n" +
-    "\t\t</div>\n" +
-    "\t\t<div class=\"row\" ng-show=\"formData.acceptTerms\">\n" +
-    "\t\t    <div class=\"form-group col-sm-12 required\">\n" +
-    "\t\t        <label for=\"firstName\" class=\"control-label\">Signature:</label>\n" +
-    "\t\t        <input type=\"text\" class=\"form-control\" name=\"firstName\" ng-model=\"formData.customer.signature\" required=\"required\" placeholder=\"Enter your name as a signature\">\n" +
-    "\t\t    </div>\n" +
-    "\t\t</div>\n" +
-    "\t\t<div class=\"row\">\n" +
-    "\t\t    <div class=\"col-sm-4\">\n" +
-    "\t\t  \t\t<button type=\"submit\" class=\"btn btn-primary\" ng-disabled=\"trainingForm.$invalid || trainingForm.$pending || !formData.acceptTerms \">Submit Order</button>\n" +
-    "\t\t    </div>\n" +
-    "\t\t</div>\n" +
-    "\t</form>\n" +
+    "        <div class=\"row\">\n" +
+    "            <div class=\"col-sm-12 form-group\">\n" +
+    "                <label class=\"checkbox-inline\">\n" +
+    "                    <input type=\"checkbox\" ng-model=\"formData.acceptTerms\">\n" +
+    "                    I agree to ACT Aspire's <a href=\"./json/ActAspireTermsAndConditions.pdf\" target=\"_blank\">Terms and\n" +
+    "                    Conditions</a>\n" +
+    "                </label>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "        <div class=\"row\" ng-show=\"formData.acceptTerms\">\n" +
+    "            <div class=\"form-group col-sm-12 required\">\n" +
+    "                <label for=\"firstName\" class=\"control-label\">Signature:</label>\n" +
+    "                <input type=\"text\" class=\"form-control\" name=\"firstName\" ng-model=\"formData.customer.signature\"\n" +
+    "                       required=\"required\" placeholder=\"Enter your name as a signature\">\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "        <div class=\"row\">\n" +
+    "            <div class=\"col-sm-4\">\n" +
+    "                <button type=\"submit\" class=\"btn btn-primary\"\n" +
+    "                        ng-disabled=\"trainingForm.$invalid || trainingForm.$pending || !formData.acceptTerms \">Submit\n" +
+    "                    Order\n" +
+    "                </button>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "    </form>\n" +
     "</div>\n" +
     "<div ui-view></div>"
   );

@@ -1,160 +1,195 @@
 <div ng-show="$state.is('form.isr')">
-	<p>This form should be filled out by organizations wishing to purchase printed score reports and labels for the <strong>{{cost.currentSemester}} {{cost.currentYear}}</strong> test administration of ACT Aspire. The deadline for ordering <strong>{{cost.currentSemester}} {{cost.currentYear}}</strong> reports is {{cost.deadline}}</p>
+    <p>This form should be filled out by organizations wishing to purchase printed score reports and labels for the
+        <strong>{{cost.currentSemester}} {{cost.currentYear}}</strong> test administration of ACT Aspire. The deadline
+        for ordering <strong>{{cost.currentSemester}} {{cost.currentYear}}</strong> reports is {{cost.deadline}}</p>
 
-	<form id="trainingForm" name="trainingForm" ng-submit="processForm()"> 
+    <form id="trainingForm" name="trainingForm" ng-submit="processForm()">
 
-		<div class="row"><div class="col-sm-12"><h4>Date: {{date | date:'yyyy-MM-dd'}}</h4></div></div>
+        <div class="row">
+            <div class="col-sm-12"><h4>Date: {{date | date:'yyyy-MM-dd'}}</h4></div>
+        </div>
 
-		<div class="panel panel-default">
-		    <div class="panel-heading">Contact Information</div>
-		    <div class="panel-body">
-				<div class="row">
-				    <div class="form-group col-sm-3 required">
-				        <label for="firstName" class="control-label">First Name</label>
-				        <input type="text" class="form-control" name="firstName" ng-model="formData.customer.firstName" required="required">
-				    </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">Contact Information</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-sm-3 required">
+                        <label for="firstName" class="control-label">First Name</label>
+                        <input type="text" class="form-control" name="firstName" ng-model="formData.customer.firstName"
+                               required="required">
+                    </div>
 
-				    <div class="form-group col-sm-3 required">
-				        <label for="lastName" class="control-label">Last Name</label>
-				        <input type="text" class="form-control" name="lastName" ng-model="formData.customer.lastName" required="required">
-				    </div>
+                    <div class="form-group col-sm-3 required">
+                        <label for="lastName" class="control-label">Last Name</label>
+                        <input type="text" class="form-control" name="lastName" ng-model="formData.customer.lastName"
+                               required="required">
+                    </div>
 
-				    <div class="form-group col-sm-6 required">
-				        <label for="organization" class="control-label">School / District / Organization</label>
-				        <input type="text" class="form-control" name="organization" ng-model="formData.customer.organization" required="required">
-				    </div>
-				</div>
+                    <div class="form-group col-sm-6 required">
+                        <label for="organization" class="control-label">School / District / Organization</label>
+                        <input type="text" class="form-control" name="organization"
+                               ng-model="formData.customer.organization" required="required">
+                    </div>
+                </div>
 
-				<div class="row">
-				    <div class="form-group col-sm-6 required">
-				        <label for="jobTitle" class="control-label">Job Title</label>
-				        <input type="text" class="form-control" name="jobTitle" ng-model="formData.customer.jobTitle" required="required">
-				    </div>
+                <div class="row">
+                    <div class="form-group col-sm-6 required">
+                        <label for="jobTitle" class="control-label">Job Title</label>
+                        <input type="text" class="form-control" name="jobTitle" ng-model="formData.customer.jobTitle"
+                               required="required">
+                    </div>
 
-				    <div class="form-group col-sm-4 required">
-				        <label for="email" class="control-label">Email</label>
-				        <input type="email" class="form-control" name="email" ng-model="formData.customer.email" required="required">
-				    </div>
-				</div>
-			</div>
-		</div>
+                    <div class="form-group col-sm-4 required">
+                        <label for="email" class="control-label">Email</label>
+                        <input type="email" class="form-control" name="email" ng-model="formData.customer.email"
+                               required="required">
+                    </div>
+                </div>
+            </div>
+        </div>
 
-		<div class="panel panel-default">
-		    <div class="panel-heading">Billing Information</div>
-		    <div class="panel-body">
-		        <div class="row">
-		            <div class="form-group col-sm-4 required">
-		                <label for="billingName" class="control-label">Billing Contact Name</label>
-		                <input type="text" class="form-control" name="billingName" ng-model="formData.billingContact.name" required="required">
-		            </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">Billing Information</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-sm-4 required">
+                        <label for="billingName" class="control-label">Billing Contact Name</label>
+                        <input type="text" class="form-control" name="billingName"
+                               ng-model="formData.billingContact.name" required="required">
+                    </div>
 
-		            <div class="form-group col-sm-4 required">
-		                <label for="billingEmail" class="control-label">Billing Contact Email</label>
-		                <input type="email" class="form-control" name="billingEmail" ng-model="formData.billingContact.email" required="required">
-		            </div>
+                    <div class="form-group col-sm-4 required">
+                        <label for="billingEmail" class="control-label">Billing Contact Email</label>
+                        <input type="email" class="form-control" name="billingEmail"
+                               ng-model="formData.billingContact.email" required="required">
+                    </div>
 
-		            <div class="form-group col-sm-4 required">
-		                <label for="billingPhone" class="control-label">Billing Contact Phone</label>
-		                <input type="tel" class="form-control" name="billingPhone" ng-model="formData.billingContact.phone" required="required" ng-pattern="/^[(]{0,1}[0-9]{3}[)\.\- ]{0,1}[0-9]{3}[\.\- ]{0,1}[0-9]{4}$/">
-		            </div>
-		        </div>    
-		        <div class="row">
-		            <div class="form-group col-sm-12 required">
-		                <label for="billingAddress" class="control-label">Billing Address Line 1</label>
-		                <input type="text" class="form-control" name="billingAddress" ng-model="formData.billing.address.line1" required="required">
-		            </div>
-		        </div>
-		        <div class="row">
-		            <div class="form-group col-sm-12">
-		                <label for="billingAddress" class="control-label">Billing Address Line 2</label>
-		                <input type="text" class="form-control" name="billingAddress" ng-model="formData.billing.address.line2">
-		            </div>
-		        </div>        
-		        <div class="row">
-		            <div class="form-group col-sm-4 required">
-		                <label for="city" class="control-label">City</label>
-		                <input type="text" class="form-control" name="city" ng-model="formData.billing.address.city" required="required">
-		            </div>
+                    <div class="form-group col-sm-4 required">
+                        <label for="billingPhone" class="control-label">Billing Contact Phone</label>
+                        <input type="tel" class="form-control" name="billingPhone"
+                               ng-model="formData.billingContact.phone" required="required"
+                               ng-pattern="/^[(]{0,1}[0-9]{3}[)\.\- ]{0,1}[0-9]{3}[\.\- ]{0,1}[0-9]{4}$/">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-12 required">
+                        <label for="billingAddress" class="control-label">Billing Address Line 1</label>
+                        <input type="text" class="form-control" name="billingAddress"
+                               ng-model="formData.billing.address.line1" required="required">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-12">
+                        <label for="billingAddress" class="control-label">Billing Address Line 2</label>
+                        <input type="text" class="form-control" name="billingAddress"
+                               ng-model="formData.billing.address.line2">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-4 required">
+                        <label for="city" class="control-label">City</label>
+                        <input type="text" class="form-control" name="city" ng-model="formData.billing.address.city"
+                               required="required">
+                    </div>
 
-		            <div class="form-group col-sm-4 required">
-		                <label for="state" class="control-label">State</label>
-		        		<select class="form-control" name="state" ng-model="formData.billing.address.state" ng-options="key as value for (key , value) in states" required="required"></select>
-		            </div>
+                    <div class="form-group col-sm-4 required">
+                        <label for="state" class="control-label">State</label>
+                        <select class="form-control" name="state" ng-model="formData.billing.address.state"
+                                ng-options="key as value for (key , value) in states" required="required"></select>
+                    </div>
 
-		            <div class="form-group col-sm-4 required">
-		                <label for="zip" class="control-label">Zip</label>
-		                <input type="text" class="form-control" name="zip" ng-model="formData.billing.address.zip" required="required">
-		            </div>
-		        </div>    
-		    </div>
-		</div>
+                    <div class="form-group col-sm-4 required">
+                        <label for="zip" class="control-label">Zip</label>
+                        <input type="text" class="form-control" name="zip" ng-model="formData.billing.address.zip"
+                               required="required">
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Available Reports
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-sm-12 required">
+                        <label for="administrativeWindow" class="control-label">What administrative window and year would you like to order reports for?</label>
+                        <select class="form-control" name="administrativeWindow" ng-model="formData.administrativeWindow"
+                                ng-options="option for option in cost.administrativeWindows" required="required"></select>
+                    </div>
+                </div>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                <th>Printed Reports</th>
+                <th>Amount</th>
+                <th>Estimated Student Count</th>
+                <th>Estimated Total</th>
+                </thead>
+                <tbody ng-repeat="reportGroup in cost.reportGroups">
+                <tr ng-repeat="report in reportGroup.reports">
+                    <td><label><input type="radio" name="{{reportGroup.name}}" value="{{report.number}}"
+                                      ng-model="reportGroup.selectedReport"
+                                      ng-change="selectReport(report, reportGroup)" /> {{reportGroup.name}}
+                        (x{{report.number}} per student)</label></td>
+                    <td>{{report.cost | currency:""}}</td>
+                    <td><input type="number" ng-model="report.amount" min="0"
+                               ng-disabled="reportGroup.selectedReport != report.number" /></td>
+                    <td>{{report.cost * report.amount | currency:""}}</td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="6">
+                        <div class="pull-right"><h4>Total: {{getTotal() | currency:""}}</h4></div>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
 
+        <div class="panel panel-default">
+            <div class="panel-heading">Additional Comments</div>
+            <div class="panel-body">
+                <textarea class="form-control" rows="3" ng-model="formData.comments"></textarea>
+            </div>
+        </div>
 
-		<div class="panel panel-default">
-			<div class="panel-heading">
-			Available Reports
-			</div>
+        <div class="row gutter">
+            <h4>Important Next Steps:</h4>
+            <ul>
+                <li>You will be invoiced upon receipt of your order</li>
+                <li>If you would like to purchase printed reports and/or score labels for future testing adminstrations
+                    please call 1-855-730-0400 .
+                </li>
+            </ul>
+        </div>
 
-			<table class="table table-striped">
-				<thead>
-					<th>Printed Reports</th>
-					<th>Amount</th>
-					<th>Estimated Student Count</th>
-					<th>Estimated Total</th>
-				</thead>
-				<tbody ng-repeat="reportGroup in cost.reportGroups">
-				<tr ng-repeat="report in reportGroup.reports">
-					<td><label><input type="radio" name="{{reportGroup.name}}" value="{{report.number}}" ng-model="reportGroup.selectedReport" ng-change="selectReport(report, reportGroup)"/>  {{reportGroup.name}} (x{{report.number}} per student)</label></td>					
-					<td>{{report.cost | currency:""}}</td>
-					<td><input type="number" ng-model="report.amount" min="0" ng-disabled="reportGroup.selectedReport != report.number"/></td>
-					<td>{{report.cost * report.amount | currency:""}}</td>
-				</tr>
-				</tbody>
-				<tfoot>
-					<tr>
-						<td colspan="6">
-							<div class="pull-right"><h4>Total: {{getTotal() | currency:""}}</h4></div>
-						</td>
-					</tr>
-				</tfoot>
-			</table>
-		</div>
-
-		<div class="panel panel-default">
-			<div class="panel-heading">Additional Comments</div>
-			<div class="panel-body">
-				<textarea class="form-control" rows="3" ng-model="formData.comments"></textarea>
-			</div>
-		</div>
-
-		<div class="row gutter">
-			<h4>Important Next Steps:</h4>
-			<ul>
-				<li>You will be invoiced upon receipt of your order</li>
-				<li>If you would like to purchase printed reports and/or score labels for future testing adminstrations please call 1-855-730-0400 .</li>
-			</ul>
-		</div>
-
-		<div class="row">
-			<div class="col-sm-12 form-group">
-			    <label class="checkbox-inline">
-			    	<input type="checkbox" ng-model="formData.acceptTerms">
-			    	I agree to ACT Aspire's <a href="./json/ActAspireTermsAndConditions.pdf" target="_blank">Terms and Conditions</a>
-			    </label>
-			</div>
-		</div>
-		<div class="row" ng-show="formData.acceptTerms">
-		    <div class="form-group col-sm-12 required">
-		        <label for="firstName" class="control-label">Signature:</label>
-		        <input type="text" class="form-control" name="firstName" ng-model="formData.customer.signature" required="required" placeholder="Enter your name as a signature">
-		    </div>
-		</div>
-		<div class="row">
-		    <div class="col-sm-4">
-		  		<button type="submit" class="btn btn-primary" ng-disabled="trainingForm.$invalid || trainingForm.$pending || !formData.acceptTerms ">Submit Order</button>
-		    </div>
-		</div>
-	</form>
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label class="checkbox-inline">
+                    <input type="checkbox" ng-model="formData.acceptTerms">
+                    I agree to ACT Aspire's <a href="./json/ActAspireTermsAndConditions.pdf" target="_blank">Terms and
+                    Conditions</a>
+                </label>
+            </div>
+        </div>
+        <div class="row" ng-show="formData.acceptTerms">
+            <div class="form-group col-sm-12 required">
+                <label for="firstName" class="control-label">Signature:</label>
+                <input type="text" class="form-control" name="firstName" ng-model="formData.customer.signature"
+                       required="required" placeholder="Enter your name as a signature">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <button type="submit" class="btn btn-primary"
+                        ng-disabled="trainingForm.$invalid || trainingForm.$pending || !formData.acceptTerms ">Submit
+                    Order
+                </button>
+            </div>
+        </div>
+    </form>
 </div>
 <div ui-view></div>

@@ -256,6 +256,7 @@ angular.module('myApp').factory('EmailService', ['$http', 'currencyFilter', 'dat
 		}
 		emailBody += '\n' + formData.billing.address.city + ', ' + formData.billing.address.state + ' ' + formData.billing.address.zip;
 
+		emailBody += '\n\n' + formData.administrativeWindow;
 		angular.forEach(reportGroups, function(reportGroup, key) {
 			angular.forEach(reportGroup.reports, function(report, key){
 				if(report.amount){

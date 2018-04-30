@@ -7,6 +7,7 @@ angular.module('myApp').factory('IsrCostService', ['$http', function ($http) {
 		cost.ordersInbox = response.data.ordersInbox;
 		cost.ordersBcc = response.data.ordersBcc;
 		cost.deadline = response.data.deadline;
+		cost.administrativeWindows = response.data.administrativeWindows;
 	});
 
 	return {

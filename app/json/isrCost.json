@@ -27,6 +27,11 @@
 			]
 		}
 	],
+	"administrativeWindows":[
+		"Spring 2018",
+		"Fall 2018",
+		"Spring 2019"
+	],
 	"currentSemester":"Fall",
 	"currentYear":2017,
 	"deadline":"March 29, 2018",

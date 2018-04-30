@@ -343,13 +343,17 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 	var buildIsrCsvFile = function(formData, cost){
 		var fileContent = 'QB Customer,Account No,cfi-Test Mode,cfi-Grade,cfi-Test Admin,cfi-Test Admin Year,Transaction Date,School / Customer,Report Description,Price,Quantity,Total,Special Notes,Name,Job Title,Contact email,Contact email Suffix,Contact Name,Email,Email Suffix,Phone,BillTo Line1,BillTo Line2,BillTo City,BillTo State,BillTo PostalCode,Terms And Conditions,Memo 2\n';
 
+		var adminWindow = formData.administrativeWindow.split(' ');
+		var semester = adminWindow[0];
+		var year = adminWindow[1];
+
 		var index = 0;
         angular.forEach(cost.reportGroups, function(reportGroup, key) {
         	angular.forEach(reportGroup.reports, function(report, key) {
         		if(report.amount){
 					fileContent += ',,n/a,0,"'
-						+ cost.currentSemester + colDelim
-						+ cost.currentYear + colDelim
+						+ semester + colDelim
+						+ year + colDelim
 						+ today + colDelim
 						+ formData.customer.organization + colDelim
 						+ reportGroup.name + ' ' + report.number + 'x' + colDelim
