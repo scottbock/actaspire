@@ -47257,10 +47257,7 @@ angular.module('myApp', [
     "\t\t\t</p>\n" +
     "\t\t\t<p>\n" +
     "\t\t\t\tIf you have questions regarding the order form below, please contact Orders@ActAspire.org or 1-855-730-0400. \n" +
-    "\t\t\t</p>\n" +
-    "\t\t\t<p>\n" +
-    "\t\t\t\tPricing is valid through {{cost.validThrough}}\n" +
-    "\t\t\t</p>\n" +
+    "\t\t\t</p> \n" +
     "\t\t</div>\n" +
     "\n" +
     "\t\t<div class=\"row\">\n" +
