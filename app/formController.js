@@ -120,7 +120,7 @@ angular.module('myApp')// our controller for the form
 			alreadyInList = alreadyInList || (order.administrationWindow == administrationWindow && order.calendarYear == calendarYear);
 		});
 		if(!alreadyInList){
-			var order = { reportsPerStudent:1 };
+			var order = { reportsPerStudent:1, scoreLabelsPerStudent: 1 };
 			if(administrationWindow){
 				order.subjects = {};
 				angular.copy($scope.subjects, order.subjects);	
@@ -276,7 +276,9 @@ angular.module('myApp')// our controller for the form
 					}
 				}
 
-				order.online.price = order.cost.online + (order.individualReports ? (order.reportsPerStudent * order.cost.isr) : 0.0) + (order.scoreLabels ? order.cost.labels : 0.0);
+				order.online.price = order.cost.online
+					+ (order.individualReports ? (order.reportsPerStudent * order.cost.isr) : 0.0)
+          + (order.scoreLabels ? (order.scoreLabelsPerStudent * order.cost.labels) : 0.0);
 				order.online.extendedPrice = order.online.price * order.online.total;
 
 				order.online.totalDiscountPerStudent = 0.0;
@@ -308,7 +310,9 @@ angular.module('myApp')// our controller for the form
 					}
 				}
 
-				order.paper.price = order.cost.paper + (order.individualReports ? (order.reportsPerStudent * order.cost.isr) : 0.0) + (order.scoreLabels ? order.cost.labels : 0.0);
+				order.paper.price = order.cost.paper
+					+ (order.individualReports ? (order.reportsPerStudent * order.cost.isr) : 0.0)
+          + (order.scoreLabels ? (order.scoreLabelsPerStudent * order.cost.labels) : 0.0);
 				order.paper.extendedPrice = order.paper.price * order.paper.total;
 
 				order.paper.totalDiscountPerStudent = 0.0;

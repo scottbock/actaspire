@@ -51,7 +51,7 @@ angular.module('myApp').factory('EmailService', ['$http', 'currencyFilter', 'dat
 					emailBody += '\n' + currencyFilter(order.reportsPerStudent * order.cost.isr) + '\t\tPrinted Individual Reports';
 				}
 				if(order.scoreLabels){
-					emailBody += '\n' + currencyFilter(order.cost.labels) + '\t\tPrinted Score Labels';
+					emailBody += '\n' + currencyFilter(order.cost.labels * order.scoreLabelsPerStudent) + '\t\tPrinted Score Labels';
 				}
 				if(order.online.discounts.volume){
 					emailBody += '\n(' + currencyFilter(order.online.discounts.volume) + ')\t\tDiscount - Volume';
@@ -93,7 +93,7 @@ angular.module('myApp').factory('EmailService', ['$http', 'currencyFilter', 'dat
 					emailBody += '\n' + currencyFilter(order.reportsPerStudent * order.cost.isr) + '\t\tPrinted Individual Reports';
 				}
 				if(order.scoreLabels){
-					emailBody += '\n' + currencyFilter(order.cost.labels) + '\t\tPrinted Score Labels';
+					emailBody += '\n' + currencyFilter(order.cost.labels * order.scoreLabelsPerStudent) + '\t\tPrinted Score Labels';
 				}
 				if(order.paper.discounts.volume){
 					emailBody += '\n(' + currencyFilter(order.paper.discounts.volume) + ')\t\tDiscount - Volume';

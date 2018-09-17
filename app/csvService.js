@@ -147,12 +147,12 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
 						+ (order.online.total) + colDelim
-						+ 'Score Labels 1x' + colDelim
+						+ 'Score Labels ' + order.scoreLabelsPerStudent + 'x' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'n/a' + colDelim
-						+ (order.cost.labels) + colDelim
-						+ ((order.cost.labels) * order.online.total) + colDelim
+						+ (order.cost.labels * order.scoreLabelsPerStudent) + colDelim
+						+ ((order.cost.labels * order.scoreLabelsPerStudent) * order.online.total) + colDelim
             + ((order.preferredDate || '')) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
 						+ yesNo(order.subjects.Math) + colDelim
@@ -221,12 +221,12 @@ angular.module('myApp').factory('CsvService', ['$http', 'currencyFilter', 'dateF
 						+ formData.customer.organization + colDelim
 						+ '0' + colDelim
 						+ (order.paper.total) + colDelim
-						+ 'Score Labels 1x' + colDelim
+						+ 'Score Labels ' + order.scoreLabelsPerStudent + 'x' + colDelim
 						+ order.administrationWindow + colDelim
 						+ order.calendarYear + colDelim
 						+ 'n/a' + colDelim
-						+ (order.cost.labels) + colDelim
-						+ ((order.cost.labels) * order.paper.total) + colDelim
+						+ (order.cost.labels * order.scoreLabelsPerStudent) + colDelim
+						+ ((order.cost.labels * order.scoreLabelsPerStudent) * order.paper.total) + colDelim
             + ((order.preferredDate || '')) + colDelim
 						+ yesNo(order.subjects.English) + colDelim
 						+ yesNo(order.subjects.Math) + colDelim
